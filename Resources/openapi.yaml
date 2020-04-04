@@ -1,0 +1,288 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: Environment Platform
+  description: This is the RESTfull API specification for the environment platform which is developed for the environment ministry
+paths:
+  /users/{user-id}/requests:
+    get:
+      description: Returns all the requests related to the user
+      parameters:
+        - name: user-id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successfully returned a list of requests
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  form_type:
+                    type: string
+                    enum: ["tree removal", "log transpotation", "etc"]
+                  fields:
+                    type: object
+                    items:
+                      type: string
+    post:
+      description: Post a new requst
+      parameters:
+        - name: user-id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successfully made the request
+  /users/{user-id}/requests/{request-id}:
+    get:
+      description: Return the specific request information
+      parameters:
+        - name: user-id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: request-id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successfully return the request innformation
+    patch:
+      description: Update the exsisting information on the request or assign a ministry
+      parameters:
+        - name: user-id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: request-id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successfully update the request
+  /users/{user-id}/drafts:
+    get:
+      description: Returns all the drafts made by the user
+      parameters:
+        - name: user-id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successfully returned a list of drafts
+    post:
+      description: Post a new request as a draft
+      parameters:
+        - name: user-id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successfully post as a draft
+  /users/{user-id}/draft/{draft-id}:
+    get:
+      description: Return the specific draft information
+      parameters:
+        - name: user-id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: draft-id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successfully return the draft innformation
+    patch:
+      description: Update exsisting draft information
+      parameters:
+        - name: user-id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: draft-id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successfully update the draft
+    delete:
+      description: Delete a specific draft
+      parameters:
+        - name: user-id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: draft-id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successfully delete the draft
+  /users/{user-id}/conversations:
+    get:
+      description: Get all the message conversations regarding the requests
+      parameters:
+        - name: user-id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successfully retrive all the messages
+  /users/{user-id}/conversations/{conversation-id}:
+    get:
+      description: Get the conversation regarding to the specific request
+      parameters:
+        - name: user-id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: conversation-id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+    post:
+      description: Post a new message to the connversation
+      parameters:
+        - name: user-id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: conversation-id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+  /validate:
+    post:
+      description: This is for the validation part of the map
+      responses:
+        "200":
+          description: OK
+  /ministries/{ministry-id}/requests:
+    get:
+      description: Get all the requests
+      parameters:
+        - name: ministry-id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+  /ministries/{ministry-id}/requests/{request-id}:
+    get:
+      description: get a specific request
+      parameters:
+        - name: ministry-id
+          description: description
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: request-id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+    patch:
+      description: Update the exsisting information on the request or assign a ministry
+      parameters:
+        - name: ministry-id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: request-id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successfully update the request
+  /ministries/{ministry-id}/conversations:
+    get:
+      description: Get all the message conversations regarding the requests
+      parameters:
+        - name: ministry-id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successfully retrive all the messages
+  /ministries/{ministry-id}/conversations/{conversation-id}:
+    get:
+      description: Get the conversation regarding to the specific request
+      parameters:
+        - name: ministry-id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: conversation-id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+    post:
+      description: Post a new message to the connversation
+      parameters:
+        - name: ministry-id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: conversation-id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
