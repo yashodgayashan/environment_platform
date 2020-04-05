@@ -16,14 +16,14 @@ paths:
             type: string
       responses:
         "200":
-          description: Successfully returned a list of requests
+          description: Successfull response(Success)
           content:
             application/json:
               schema:
                 anyOf:
                   - $ref: "#/components/schemas/TreeRemovalBasicData"
         "401":
-          description: This will return when the authentication failed
+          description: Authentication failure(Unauthorized)
           content:
             application/json:
               schema:
@@ -32,7 +32,7 @@ paths:
                   reason:
                     type: string
     post:
-      description: Post a new requst
+      description: Creates a new requst
       parameters:
         - name: user-id
           in: path
@@ -46,8 +46,8 @@ paths:
             schema:
               $ref: "#/components/schemas/TreeRemovalForm"
       responses:
-        "200":
-          description: Successfully save the request
+        "201":
+          description: Created request(Created)
           content:
             application/json:
               schema:
@@ -56,7 +56,7 @@ paths:
                   reason:
                     type: string
         "401":
-          description: This will return when the authentication failed
+          description: Authentication failure(Unauthorized)
           content:
             application/json:
               schema:
@@ -65,7 +65,7 @@ paths:
                   reason:
                     type: string
         "406":
-          description: This is returned when the form validation is failed.
+          description: Failure in form data verification(Not Accepteble)
           content:
             application/json:
               schema:
@@ -75,7 +75,7 @@ paths:
                     type: string
   /users/{user-id}/requests/{request-id}:
     get:
-      description: Return the specific request information
+      description: Returns information of a specific request
       parameters:
         - name: user-id
           in: path
@@ -89,13 +89,13 @@ paths:
             type: string
       responses:
         "200":
-          description: Successfully return the request innformation
+          description: Successfull response(Success)
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/TreeRemovalObject"
         "401":
-          description: This will return when the authentication failed
+          description: Authentication failure(Unauthorized)
           content:
             application/json:
               schema:
@@ -104,7 +104,7 @@ paths:
                   reason:
                     type: string
         "404":
-          description: This is return because when the request cannot be found
+          description: Request not found(Not Found)
           content:
             application/json:
               schema:
@@ -123,13 +123,13 @@ paths:
             type: string
       responses:
         "200":
-          description: Successfully returned a list of drafts
+          description: Successfull response(Success)
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/TreeRemovalDraftBasicdata"
         "401":
-          description: This will return when the authentication failed
+          description: Authentication failure(Unauthorized)
           content:
             application/json:
               schema:
@@ -138,7 +138,7 @@ paths:
                   reason:
                     type: string
     post:
-      description: Post a new request as a draft
+      description: Creates a new request as a draft
       parameters:
         - name: user-id
           in: path
@@ -152,8 +152,8 @@ paths:
             schema:
               $ref: "#/components/schemas/TreeRemovalForm"
       responses:
-        "200":
-          description: Successfully save the draft
+        "201":
+          description: Created request(Created)
           content:
             application/json:
               schema:
@@ -162,7 +162,7 @@ paths:
                   reason:
                     type: string
         "401":
-          description: This will return when the authentication failed
+          description: Authentication failure(Unauthorized)
           content:
             application/json:
               schema:
@@ -171,7 +171,7 @@ paths:
                   reason:
                     type: string
         "406":
-          description: This is returned when the form validation is failed.
+          description: Failure in form data verification(Not Accepteble)
           content:
             application/json:
               schema:
@@ -181,7 +181,7 @@ paths:
                     type: string
   /users/{user-id}/draft/{draft-id}:
     get:
-      description: Return the specific draft information
+      description: Return information of a specific draft
       parameters:
         - name: user-id
           in: path
@@ -195,13 +195,13 @@ paths:
             type: string
       responses:
         "200":
-          description: Successfully return the request innformation
+          description: Successfull response(Success)
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/TreeRemovalForm"
         "401":
-          description: This will return when the authentication failed
+          description: Authentication failure(Unauthorized)
           content:
             application/json:
               schema:
@@ -210,7 +210,7 @@ paths:
                   reason:
                     type: string
         "404":
-          description: This is return because when the draft cannot be found
+          description: Request draft not found(Not Found)
           content:
             application/json:
               schema:
@@ -219,7 +219,7 @@ paths:
                   reason:
                     type: string
     put:
-      description: Update exsisting draft information
+      description: Update information in an existing draft
       parameters:
         - name: user-id
           in: path
@@ -238,7 +238,7 @@ paths:
               $ref: "#/components/schemas/TreeRemovalForm"
       responses:
         "200":
-          description: Successfully update the draft
+          description: Successfull response(Success)
           content:
             application/json:
               schema:
@@ -247,7 +247,7 @@ paths:
                   reason:
                     type: string
         "401":
-          description: This will return when the authentication failed
+          description: Authentication failure(Unauthorized)
           content:
             application/json:
               schema:
@@ -256,7 +256,7 @@ paths:
                   reason:
                     type: string
         "404":
-          description: This is return because when the draft cannot be found
+          description: Request draft not found(Not Found)
           content:
             application/json:
               schema:
@@ -265,7 +265,7 @@ paths:
                   reason:
                     type: string
     delete:
-      description: Delete a specific draft
+      description: Delete a request draft
       parameters:
         - name: user-id
           in: path
@@ -279,7 +279,7 @@ paths:
             type: string
       responses:
         "200":
-          description: Successfully delete the draft
+          description: Successfull response(Success)
           content:
             application/json:
               schema:
@@ -288,7 +288,7 @@ paths:
                   reason:
                     type: string
         "401":
-          description: This will return when the authentication failed
+          description: Authentication failure(Unauthorized)
           content:
             application/json:
               schema:
@@ -297,7 +297,7 @@ paths:
                   reason:
                     type: string
         "404":
-          description: This is return because when the draft cannot be found
+          description: Request draft not found(Not Found)
           content:
             application/json:
               schema:
@@ -307,7 +307,7 @@ paths:
                     type: string
   /users/{user-id}/conversations:
     get:
-      description: Get all the message conversations regarding the requests
+      description: Get all the conversations linked to the requests of a specific user
       parameters:
         - name: user-id
           in: path
@@ -316,13 +316,13 @@ paths:
             type: string
       responses:
         "200":
-          description: Successfully retrive all the messages
+          description: Successfull response(Success)
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Conversations"
         "401":
-          description: This will return when the authentication failed
+          description: Authentication failure(Unauthorized)
           content:
             application/json:
               schema:
@@ -332,7 +332,7 @@ paths:
                     type: string
   /users/{user-id}/conversations/{conversation-id}:
     get:
-      description: Get the conversation regarding to the specific request
+      description: Get the conversation linked to a specific request of a specific user
       parameters:
         - name: user-id
           in: path
@@ -346,13 +346,13 @@ paths:
             type: string
       responses:
         "200":
-          description: Successfully retrive all the messages
+          description: Successfull response(Success)
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/SpecificConversation"
         "401":
-          description: This will return when the authentication failed
+          description: Authentication failure(Unauthorized)
           content:
             application/json:
               schema:
@@ -361,7 +361,7 @@ paths:
                   reason:
                     type: string
         "404":
-          description: This is return because when the conversation cannot be found
+          description: Conversation not found(Not Found)
           content:
             application/json:
               schema:
@@ -370,7 +370,7 @@ paths:
                   reason:
                     type: string
     post:
-      description: Post a new message to the connversation
+      description: Creates a new message on a specific conversation
       parameters:
         - name: user-id
           in: path
@@ -388,8 +388,8 @@ paths:
             schema:
               $ref: "#/components/schemas/Message"
       responses:
-        "200":
-          description: Successfully post the message
+        "201":
+          description: Created new message(Created)
           content:
             application/json:
               schema:
@@ -398,7 +398,7 @@ paths:
                   reason:
                     type: string
         "401":
-          description: This will return when the authentication failed
+          description: Authentication failure(Unauthorized)
           content:
             application/json:
               schema:
@@ -407,7 +407,7 @@ paths:
                   reason:
                     type: string
         "404":
-          description: This is return because when the draft cannot be found
+          description: Conversation not found(Not Found)
           content:
             application/json:
               schema:
@@ -417,7 +417,7 @@ paths:
                     type: string
   /validate:
     post:
-      description: This is for the validation part of the map and the map coordinates are send to validation
+      description: Validates the map and it's coordinates
       requestBody:
         content:
           application/json:
@@ -434,7 +434,7 @@ paths:
                   reason:
                     type: string
         "401":
-          description: This will return when the authentication failed
+          description: Authentication failure(Unauthorized)
           content:
             application/json:
               schema:
@@ -443,7 +443,7 @@ paths:
                   reason:
                     type: string
         "406":
-          description: Not accepteble
+          description: Failure in validating the map(Not accepteble)
           content:
             application/json:
               schema:
@@ -462,14 +462,14 @@ paths:
             type: string
       responses:
         "200":
-          description: Successfully returned a list of requests
+          description: Successfull response(Success)
           content:
             application/json:
               schema:
                 anyOf:
                   - $ref: "#/components/schemas/TreeRemovalBasicData"
         "401":
-          description: This will return when the authentication failed
+          description: Authentication failure(Unauthorized)
           content:
             application/json:
               schema:
@@ -479,7 +479,7 @@ paths:
                     type: string
   /ministries/{ministry-id}/requests/{request-id}:
     get:
-      description: get a specific request
+      description: Get a specific request
       parameters:
         - name: ministry-id
           description: description
@@ -494,13 +494,13 @@ paths:
             type: string
       responses:
         "200":
-          description: Successfully return the request innformation
+          description: Successfull response(Success)
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/TreeRemovalObject"
         "401":
-          description: This will return when the authentication failed
+          description: Authentication failure(Unauthorized)
           content:
             application/json:
               schema:
@@ -509,7 +509,7 @@ paths:
                   reason:
                     type: string
         "404":
-          description: This is return because when the request cannot be found
+          description: Request not found(Not Found)
           content:
             application/json:
               schema:
@@ -518,7 +518,7 @@ paths:
                   reason:
                     type: string
     patch:
-      description: Update the exsisting information on the request or assign a ministry
+      description: Update the exsisting information of the request or assign a ministry
       parameters:
         - name: ministry-id
           in: path
@@ -539,7 +539,7 @@ paths:
                 - $ref: "#/components/schemas/StatusChange"
       responses:
         "200":
-          description: Successfully update the request
+          description: Successfull response(Success)
           content:
             application/json:
               schema:
@@ -548,7 +548,7 @@ paths:
                   reason:
                     type: string
         "401":
-          description: This will return when the authentication failed
+          description: Authentication failure(Unauthorized)
           content:
             application/json:
               schema:
@@ -557,7 +557,7 @@ paths:
                   reason:
                     type: string
         "404":
-          description: This is return because when the request cannot be found
+          description: Request not found(Not Found)
           content:
             application/json:
               schema:
@@ -567,7 +567,7 @@ paths:
                     type: string
   /ministries/{ministry-id}/conversations:
     get:
-      description: Get all the message conversations regarding the requests
+      description: Get all the conversations regarding the requests
       parameters:
         - name: ministry-id
           in: path
@@ -576,13 +576,13 @@ paths:
             type: string
       responses:
         "200":
-          description: Successfully retrive all the messages
+          description: Successfull response(Success)
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Conversations"
         "401":
-          description: This will return when the authentication failed
+          description: Authentication failure(Unauthorized)
           content:
             application/json:
               schema:
@@ -592,7 +592,7 @@ paths:
                     type: string
   /ministries/{ministry-id}/conversations/{conversation-id}:
     get:
-      description: Get the conversation regarding to the specific request
+      description: Get the conversation linked to the specific request
       parameters:
         - name: ministry-id
           in: path
@@ -606,13 +606,13 @@ paths:
             type: string
       responses:
         "200":
-          description: Successfully retrive all the messages
+          description: Successfull response(Success)
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/SpecificConversation"
         "401":
-          description: This will return when the authentication failed
+          description: Authentication failure(Unauthorized)
           content:
             application/json:
               schema:
@@ -621,7 +621,7 @@ paths:
                   reason:
                     type: string
         "404":
-          description: This is return because when the conversation cannot be found
+          description: Conversation not found(Not Found)
           content:
             application/json:
               schema:
@@ -630,7 +630,7 @@ paths:
                   reason:
                     type: string
     post:
-      description: Post a new message to the connversation
+      description: Create a new message on the conversation
       parameters:
         - name: ministry-id
           in: path
@@ -648,8 +648,8 @@ paths:
             schema:
               $ref: "#/components/schemas/Message"
       responses:
-        "200":
-          description: Successfully post the message
+        "201":
+          description: Created message(Created)
           content:
             application/json:
               schema:
@@ -658,7 +658,7 @@ paths:
                   reason:
                     type: string
         "401":
-          description: This will return when the authentication failed
+          description: Authentication failure(Unauthorized)
           content:
             application/json:
               schema:
@@ -667,7 +667,7 @@ paths:
                   reason:
                     type: string
         "404":
-          description: This is return because when the draft cannot be found
+          description: Conversation not found(Not Found)
           content:
             application/json:
               schema:
@@ -688,7 +688,7 @@ components:
             description: The title of the request
           removalDate:
             type: string
-            description: date of the removal
+            description: Date of the removal
           status:
             type: string
             description: The status of the request
