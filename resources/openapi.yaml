@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   version: 1.0.0
   title: Environment Platform
-  description: This is the RESTfull API specification for the environment platform which is developed for the environment ministry
+  description: This is the RESTful API Specification for the Environment Platform developed for the Environment Ministry of Sri Lanka
 
 paths:
   /users/{user-id}/requests:
@@ -16,7 +16,7 @@ paths:
             type: string
       responses:
         "200":
-          description: Successfull response(Success)
+          description: Successful response(Success)
           content:
             application/json:
               schema:
@@ -32,7 +32,7 @@ paths:
                   reason:
                     type: string
     post:
-      description: Creates a new requst
+      description: Creates a new request
       parameters:
         - name: user-id
           in: path
@@ -89,7 +89,7 @@ paths:
             type: string
       responses:
         "200":
-          description: Successfull response(Success)
+          description: Successful response(Success)
           content:
             application/json:
               schema:
@@ -123,7 +123,7 @@ paths:
             type: string
       responses:
         "200":
-          description: Successfull response(Success)
+          description: Successful response(Success)
           content:
             application/json:
               schema:
@@ -195,7 +195,7 @@ paths:
             type: string
       responses:
         "200":
-          description: Successfull response(Success)
+          description: Successful response(Success)
           content:
             application/json:
               schema:
@@ -238,7 +238,7 @@ paths:
               $ref: "#/components/schemas/TreeRemovalForm"
       responses:
         "200":
-          description: Successfull response(Success)
+          description: Successful response(Success)
           content:
             application/json:
               schema:
@@ -279,7 +279,7 @@ paths:
             type: string
       responses:
         "200":
-          description: Successfull response(Success)
+          description: Successful response(Success)
           content:
             application/json:
               schema:
@@ -316,7 +316,7 @@ paths:
             type: string
       responses:
         "200":
-          description: Successfull response(Success)
+          description: Successful response(Success)
           content:
             application/json:
               schema:
@@ -346,7 +346,7 @@ paths:
             type: string
       responses:
         "200":
-          description: Successfull response(Success)
+          description: Successful response(Success)
           content:
             application/json:
               schema:
@@ -417,7 +417,7 @@ paths:
                     type: string
   /validate:
     post:
-      description: Validates the map and it's coordinates
+      description: Validates the map and its coordinates
       requestBody:
         content:
           application/json:
@@ -462,7 +462,7 @@ paths:
             type: string
       responses:
         "200":
-          description: Successfull response(Success)
+          description: Successful response(Success)
           content:
             application/json:
               schema:
@@ -494,7 +494,7 @@ paths:
             type: string
       responses:
         "200":
-          description: Successfull response(Success)
+          description: Successful response(Success)
           content:
             application/json:
               schema:
@@ -518,7 +518,7 @@ paths:
                   reason:
                     type: string
     patch:
-      description: Update the exsisting information of the request or assign a ministry
+      description: Update the existing information of the request or assign a ministry
       parameters:
         - name: ministry-id
           in: path
@@ -539,7 +539,7 @@ paths:
                 - $ref: "#/components/schemas/StatusChange"
       responses:
         "200":
-          description: Successfull response(Success)
+          description: Successful response(Success)
           content:
             application/json:
               schema:
@@ -576,7 +576,7 @@ paths:
             type: string
       responses:
         "200":
-          description: Successfull response(Success)
+          description: Successful response(Success)
           content:
             application/json:
               schema:
@@ -606,7 +606,7 @@ paths:
             type: string
       responses:
         "200":
-          description: Successfull response(Success)
+          description: Successful response(Success)
           content:
             application/json:
               schema:
@@ -743,7 +743,7 @@ components:
                 description: This should be in meters
               girth:
                 type: number
-                description: The girth at the brest height and this should be in centimeters
+                description: The girth at the breast height and this should be in centimeters
               logDetails:
                 type: array
                 items:
@@ -751,13 +751,13 @@ components:
                   properties:
                     minGirth:
                       type: number
-                      description: minimum girth of the log
+                      description: Minimum girth of the log
                     maxGirth:
                       type: number
-                      description: maximum girth of the log
+                      description: Maximum girth of the log
                     height:
                       type: number
-                      description: length of the log
+                      description: Length of the log
     TreeRemovalObject:
       type: object
       properties:
@@ -773,7 +773,7 @@ components:
           type: string
         requestedBy:
           type: string
-          description: The person who is requesting
+          description: Name of Requester
         permitRequired:
           type: boolean
         landOwner:
@@ -814,10 +814,10 @@ components:
                 enum: ["Merchantable", "Top"]
               height:
                 type: number
-                description: This should be in meters
+                description: Height (in m)
               girth:
                 type: number
-                description: The girth at the brest height and this should be in centimeters
+                description: The girth at the breast height and this should be in centimeters
               logDetails:
                 type: array
                 items:
@@ -825,13 +825,13 @@ components:
                   properties:
                     minGirth:
                       type: number
-                      description: minimum girth of the log
+                      description: Minimum girth of the log
                     maxGirth:
                       type: number
-                      description: maximum girth of the log
+                      description: Maximum girth of the log
                     height:
                       type: number
-                      description: length of the log
+                      description: Length of the log
         progress:
           type: array
           items:
@@ -842,7 +842,7 @@ components:
                 description: This is the respective authority
               status:
                 type: string
-                description: current status of the request processed by a particular authority
+                description: Current status of the request processed by a particular authority
     TreeRemovalDraftBasicdata:
       type: array
       items:
@@ -853,7 +853,7 @@ components:
             description: The title of the request
           removalDate:
             type: string
-            description: date of the removal
+            description: Date of removal
     Conversations:
       type: array
       items:
@@ -861,7 +861,7 @@ components:
         properties:
           title:
             type: string
-            description: This is the request title which is been discussing
+            description: This is the request title which is being discussed
           last_message:
             type: object
             description: The last message recieved or sent
@@ -879,7 +879,7 @@ components:
                 type: string
           completed:
             type: boolean
-            description: whether the conversation is end or not
+            description: Whether the conversation is end or not
     SpecificConversation:
       type: object
       properties:
@@ -892,7 +892,7 @@ components:
             $ref: "#/components/schemas/Message"
         completed:
           type: boolean
-          description: whether the conversation is end or not
+          description: Whether the conversation has ended or not
     Message:
       type: object
       properties:
@@ -904,7 +904,7 @@ components:
           description: The message sent time
         hasRead:
           type: boolean
-          description: If it is recieved whether read or not
+          description: If the message has been read or not
         message:
           type: string
     Location:
@@ -922,7 +922,7 @@ components:
       properties:
         ministryName:
           type: string
-        assigneBy:
+        assignedBy:
           type: string
           description: The person who assigned the ministry
     StatusChange:
