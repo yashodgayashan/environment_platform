@@ -171,9 +171,49 @@ paths:
           required: true
           schema:
             type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TreeRemovalForm"
       responses:
         "200":
-          description: Successfully post as a draft
+          description: Successfully save the draft
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+        "401":
+          description: This will return when the authentication failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+        "406":
+          description: This is returned when the form validation is failed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_type:
+                    type: string
+        "404":
+          description: This is return because when user cannot be found in user id
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
   /users/{user-id}/draft/{draft-id}:
     get:
       description: Return the specific draft information
@@ -190,8 +230,30 @@ paths:
             type: string
       responses:
         "200":
-          description: Successfully return the draft innformation
-    patch:
+          description: Successfully return the request innformation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TreeRemovalForm"
+        "401":
+          description: This will return when the authentication failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+        "404":
+          description: This is return because either when user or draft cannot be found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+    put:
       description: Update exsisting draft information
       parameters:
         - name: user-id
@@ -204,9 +266,39 @@ paths:
           required: true
           schema:
             type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TreeRemovalForm"
       responses:
         "200":
           description: Successfully update the draft
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+        "401":
+          description: This will return when the authentication failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+        "404":
+          description: This is return because either when user or draft cannot be found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
     delete:
       description: Delete a specific draft
       parameters:
@@ -223,6 +315,31 @@ paths:
       responses:
         "200":
           description: Successfully delete the draft
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+        "401":
+          description: This will return when the authentication failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+        "404":
+          description: This is return because either when user or draft cannot be found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
   /users/{user-id}/conversations:
     get:
       description: Get all the message conversations regarding the requests
