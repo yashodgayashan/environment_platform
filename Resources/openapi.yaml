@@ -19,15 +19,17 @@ paths:
           content:
             application/json:
               schema:
+                anyOf:
+                  - $ref: "#/components/schemas/TreeRemovalBasicData"
+        "401":
+          description: This will return when the authentication failed
+          content:
+            application/json:
+              schema:
                 type: object
                 properties:
-                  form_type:
+                  reason:
                     type: string
-                    enum: ["tree removal", "log transpotation", "etc"]
-                  fields:
-                    type: object
-                    items:
-                      type: string
     post:
       description: Post a new requst
       parameters:
@@ -36,9 +38,33 @@ paths:
           required: true
           schema:
             type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TreeRemovalForm"
       responses:
         "200":
           description: Successfully made the request
+        "401":
+          description: This will return when the authentication failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+        "406":
+          description: This is returned when the form validation is failed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_type:
+                    type: string
   /users/{user-id}/requests/{request-id}:
     get:
       description: Return the specific request information
@@ -286,3 +312,94 @@ paths:
       responses:
         "200":
           description: OK
+
+components:
+  schemas:
+    TreeRemovalBasicData:
+      type: array
+      items:
+        type: object
+        properties:
+          title:
+            type: string
+            description: The title of the form
+          removalDate:
+            type: string
+            description: date of the removal
+          status:
+            type: string
+            description: The status of the request
+    TreeRemovalForm:
+      type: object
+      properties:
+        title:
+          type: string
+          description: The title of the title
+        removalDate:
+          type: string
+          description: Removal date of the trees
+        reason:
+          type: string
+        type:
+          type: string
+        requestedBy:
+          type: string
+          description: The person who is requesting
+        permitRequired:
+          type: boolean
+        landOwner:
+          type: string
+          description: Name of the landowner
+        treeRemovalAutrhority:
+          type: string
+        city:
+          type: string
+        district:
+          type: string
+        nameOfTheLand:
+          type: string
+        planNumber:
+          type: string
+        location:
+          type: array
+          description: This includes all the points in the polygon
+          items:
+            type: object
+            properties:
+              latitude:
+                type: number
+              longitude:
+                type: number
+        treeInformation:
+          type: array
+          description: This includes all the inforemation about the trees which are to be cut
+          items:
+            type: object
+            properties:
+              species:
+                type: string
+              treeNumber:
+                type: string
+              heightType:
+                type: string
+                enum: ["Merchantable", "Top"]
+              height:
+                type: number
+                description: This should be in meters
+              girth:
+                type: number
+                description: The girth at the brest height and this should be in centimeters
+              logDetails:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    minGirth:
+                      type: number
+                      description: minimum girth of the log
+                    maxGirth:
+                      type: number
+                      description: maximum girth of the log
+                    height:
+                      type: number
+                      description: length of the log
