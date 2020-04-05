@@ -30,15 +30,6 @@ paths:
                 properties:
                   reason:
                     type: string
-        "404":
-          description: This is return because when user cannot be found in user id
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  reason:
-                    type: string
     post:
       description: Post a new requst
       parameters:
@@ -81,15 +72,6 @@ paths:
                 properties:
                   error_type:
                     type: string
-        "404":
-          description: This is return because when user cannot be found in user id
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  reason:
-                    type: string
   /users/{user-id}/requests/{request-id}:
     get:
       description: Return the specific request information
@@ -121,7 +103,7 @@ paths:
                   reason:
                     type: string
         "404":
-          description: This is return because either when user or request cannot be found
+          description: This is return because when the request cannot be found
           content:
             application/json:
               schema:
@@ -147,15 +129,6 @@ paths:
                 $ref: "#/components/schemas/TreeRemovalDraftBasicdata"
         "401":
           description: This will return when the authentication failed
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  reason:
-                    type: string
-        "404":
-          description: This is return because user cannot be found
           content:
             application/json:
               schema:
@@ -205,15 +178,6 @@ paths:
                 properties:
                   error_type:
                     type: string
-        "404":
-          description: This is return because when user cannot be found in user id
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  reason:
-                    type: string
   /users/{user-id}/draft/{draft-id}:
     get:
       description: Return the specific draft information
@@ -245,7 +209,7 @@ paths:
                   reason:
                     type: string
         "404":
-          description: This is return because either when user or draft cannot be found
+          description: This is return because when the draft cannot be found
           content:
             application/json:
               schema:
@@ -291,7 +255,7 @@ paths:
                   reason:
                     type: string
         "404":
-          description: This is return because either when user or draft cannot be found
+          description: This is return because when the draft cannot be found
           content:
             application/json:
               schema:
@@ -332,7 +296,7 @@ paths:
                   reason:
                     type: string
         "404":
-          description: This is return because either when user or draft cannot be found
+          description: This is return because when the draft cannot be found
           content:
             application/json:
               schema:
@@ -352,6 +316,19 @@ paths:
       responses:
         "200":
           description: Successfully retrive all the messages
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BasicConversation"
+        "401":
+          description: This will return when the authentication failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
   /users/{user-id}/conversations/{conversation-id}:
     get:
       description: Get the conversation regarding to the specific request
@@ -669,3 +646,27 @@ components:
           removalDate:
             type: string
             description: date of the removal
+    BasicConversation:
+      type: array
+      items:
+        type: object
+        properties:
+          title:
+            type: string
+            description: This is the request title which is been discussing
+          last_message:
+            type: object
+            description: The last message recieved or sent
+            properties:
+              user:
+                type: string
+                description: The person who sent the message
+              time:
+                type: string
+                description: The message sent time
+              hasRead:
+                type: boolean
+                description: If it is recieved whether read or not
+          completed:
+            type: boolean
+            description: whether the conversation is end or not
