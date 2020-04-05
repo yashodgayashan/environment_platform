@@ -416,10 +416,40 @@ paths:
                     type: string
   /validate:
     post:
-      description: This is for the validation part of the map
+      description: This is for the validation part of the map and the map coordinates are send to validation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Location"
       responses:
         "200":
-          description: OK
+          description: Validated the map object
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+        "401":
+          description: This will return when the authentication failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+        "406":
+          description: Not accepteble
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
   /ministries/{ministry-id}/requests:
     get:
       description: Get all the requests
@@ -560,15 +590,7 @@ components:
         planNumber:
           type: string
         location:
-          type: array
-          description: This includes all the points in the polygon
-          items:
-            type: object
-            properties:
-              latitude:
-                type: number
-              longitude:
-                type: number
+          $ref: "#/components/schemas/Location"
         treeInformation:
           type: array
           description: This includes all the inforemation about the trees which are to be cut
@@ -751,3 +773,13 @@ components:
           description: If it is recieved whether read or not
         message:
           type: string
+    Location:
+      type: array
+      description: This includes all the points in the polygon
+      items:
+        type: object
+        properties:
+          latitude:
+            type: number
+          longitude:
+            type: number
