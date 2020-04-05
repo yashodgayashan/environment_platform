@@ -23,7 +23,7 @@ paths:
                 anyOf:
                   - $ref: "#/components/schemas/TreeRemovalBasicData"
         "401":
-          description: Authentication failure(Unauthorized)
+          description: Authorization failure(Unauthorized)
           content:
             application/json:
               schema:
@@ -56,7 +56,7 @@ paths:
                   reason:
                     type: string
         "401":
-          description: Authentication failure(Unauthorized)
+          description: Authorization failure(Unauthorized)
           content:
             application/json:
               schema:
@@ -95,7 +95,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/TreeRemovalObject"
         "401":
-          description: Authentication failure(Unauthorized)
+          description: Authorization failure(Unauthorized)
           content:
             application/json:
               schema:
@@ -129,7 +129,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/TreeRemovalDraftBasicdata"
         "401":
-          description: Authentication failure(Unauthorized)
+          description: Authorization failure(Unauthorized)
           content:
             application/json:
               schema:
@@ -162,7 +162,7 @@ paths:
                   reason:
                     type: string
         "401":
-          description: Authentication failure(Unauthorized)
+          description: Authorization failure(Unauthorized)
           content:
             application/json:
               schema:
@@ -201,7 +201,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/TreeRemovalForm"
         "401":
-          description: Authentication failure(Unauthorized)
+          description: Authorization failure(Unauthorized)
           content:
             application/json:
               schema:
@@ -247,7 +247,7 @@ paths:
                   reason:
                     type: string
         "401":
-          description: Authentication failure(Unauthorized)
+          description: Authorization failure(Unauthorized)
           content:
             application/json:
               schema:
@@ -288,7 +288,7 @@ paths:
                   reason:
                     type: string
         "401":
-          description: Authentication failure(Unauthorized)
+          description: Authorization failure(Unauthorized)
           content:
             application/json:
               schema:
@@ -322,7 +322,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Conversations"
         "401":
-          description: Authentication failure(Unauthorized)
+          description: Authorization failure(Unauthorized)
           content:
             application/json:
               schema:
@@ -352,7 +352,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/SpecificConversation"
         "401":
-          description: Authentication failure(Unauthorized)
+          description: Authorization failure(Unauthorized)
           content:
             application/json:
               schema:
@@ -398,7 +398,7 @@ paths:
                   reason:
                     type: string
         "401":
-          description: Authentication failure(Unauthorized)
+          description: Authorization failure(Unauthorized)
           content:
             application/json:
               schema:
@@ -434,7 +434,7 @@ paths:
                   reason:
                     type: string
         "401":
-          description: Authentication failure(Unauthorized)
+          description: Authorization failure(Unauthorized)
           content:
             application/json:
               schema:
@@ -469,7 +469,7 @@ paths:
                 anyOf:
                   - $ref: "#/components/schemas/TreeRemovalBasicData"
         "401":
-          description: Authentication failure(Unauthorized)
+          description: Authorization failure(Unauthorized)
           content:
             application/json:
               schema:
@@ -500,7 +500,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/TreeRemovalObject"
         "401":
-          description: Authentication failure(Unauthorized)
+          description: Authorization failure(Unauthorized)
           content:
             application/json:
               schema:
@@ -548,7 +548,7 @@ paths:
                   reason:
                     type: string
         "401":
-          description: Authentication failure(Unauthorized)
+          description: Authorization failure(Unauthorized)
           content:
             application/json:
               schema:
@@ -582,7 +582,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Conversations"
         "401":
-          description: Authentication failure(Unauthorized)
+          description: Authorization failure(Unauthorized)
           content:
             application/json:
               schema:
@@ -612,7 +612,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/SpecificConversation"
         "401":
-          description: Authentication failure(Unauthorized)
+          description: Authorization failure(Unauthorized)
           content:
             application/json:
               schema:
@@ -658,7 +658,7 @@ paths:
                   reason:
                     type: string
         "401":
-          description: Authentication failure(Unauthorized)
+          description: Authorization failure(Unauthorized)
           content:
             application/json:
               schema:
