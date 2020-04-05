@@ -30,6 +30,15 @@ paths:
                 properties:
                   reason:
                     type: string
+        "404":
+          description: This is return because when user cannot be found in user id
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
     post:
       description: Post a new requst
       parameters:
@@ -46,7 +55,14 @@ paths:
               $ref: "#/components/schemas/TreeRemovalForm"
       responses:
         "200":
-          description: Successfully made the request
+          description: Successfully save the request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
         "401":
           description: This will return when the authentication failed
           content:
@@ -65,6 +81,15 @@ paths:
                 properties:
                   error_type:
                     type: string
+        "404":
+          description: This is return because when user cannot be found in user id
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
   /users/{user-id}/requests/{request-id}:
     get:
       description: Return the specific request information
@@ -82,22 +107,28 @@ paths:
       responses:
         "200":
           description: Successfully return the request innformation
-    patch:
-      description: Update the exsisting information on the request or assign a ministry
-      parameters:
-        - name: user-id
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: request-id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: Successfully update the request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TreeRemovalObject"
+        "401":
+          description: This will return when the authentication failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+        "404":
+          description: This is return because either when user or request cannot be found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
   /users/{user-id}/drafts:
     get:
       description: Returns all the drafts made by the user
@@ -110,6 +141,28 @@ paths:
       responses:
         "200":
           description: Successfully returned a list of drafts
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TreeRemovalDraftBasicdata"
+        "401":
+          description: This will return when the authentication failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+        "404":
+          description: This is return because user cannot be found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
     post:
       description: Post a new request as a draft
       parameters:
@@ -322,7 +375,7 @@ components:
         properties:
           title:
             type: string
-            description: The title of the form
+            description: The title of the request
           removalDate:
             type: string
             description: date of the removal
@@ -330,6 +383,80 @@ components:
             type: string
             description: The status of the request
     TreeRemovalForm:
+      type: object
+      properties:
+        title:
+          type: string
+          description: The title of the request
+        removalDate:
+          type: string
+          description: Removal date of the trees
+        reason:
+          type: string
+        type:
+          type: string
+        requestedBy:
+          type: string
+          description: The person who is requesting
+        permitRequired:
+          type: boolean
+        landOwner:
+          type: string
+          description: Name of the landowner
+        treeRemovalAutrhority:
+          type: string
+        city:
+          type: string
+        district:
+          type: string
+        nameOfTheLand:
+          type: string
+        planNumber:
+          type: string
+        location:
+          type: array
+          description: This includes all the points in the polygon
+          items:
+            type: object
+            properties:
+              latitude:
+                type: number
+              longitude:
+                type: number
+        treeInformation:
+          type: array
+          description: This includes all the inforemation about the trees which are to be cut
+          items:
+            type: object
+            properties:
+              species:
+                type: string
+              treeNumber:
+                type: string
+              heightType:
+                type: string
+                enum: ["Merchantable", "Top"]
+              height:
+                type: number
+                description: This should be in meters
+              girth:
+                type: number
+                description: The girth at the brest height and this should be in centimeters
+              logDetails:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    minGirth:
+                      type: number
+                      description: minimum girth of the log
+                    maxGirth:
+                      type: number
+                      description: maximum girth of the log
+                    height:
+                      type: number
+                      description: length of the log
+    TreeRemovalObject:
       type: object
       properties:
         title:
@@ -403,3 +530,25 @@ components:
                     height:
                       type: number
                       description: length of the log
+        progress:
+          type: array
+          items:
+            type: object
+            properties:
+              authority:
+                type: string
+                description: This is the respective authority
+              status:
+                type: string
+                description: current status of the request processed by a particular authority
+    TreeRemovalDraftBasicdata:
+      type: array
+      items:
+        type: object
+        properties:
+          title:
+            type: string
+            description: The title of the request
+          removalDate:
+            type: string
+            description: date of the removal
