@@ -3,6 +3,7 @@ info:
   version: 1.0.0
   title: Environment Platform
   description: This is the RESTfull API specification for the environment platform which is developed for the environment ministry
+
 paths:
   /users/{user-id}/requests:
     get:
@@ -452,7 +453,7 @@ paths:
                     type: string
   /ministries/{ministry-id}/requests:
     get:
-      description: Get all the requests
+      description: Get all the requests related to the ministries
       parameters:
         - name: ministry-id
           in: path
@@ -461,7 +462,21 @@ paths:
             type: string
       responses:
         "200":
-          description: OK
+          description: Successfully returned a list of requests
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - $ref: "#/components/schemas/TreeRemovalBasicData"
+        "401":
+          description: This will return when the authentication failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
   /ministries/{ministry-id}/requests/{request-id}:
     get:
       description: get a specific request
@@ -479,7 +494,29 @@ paths:
             type: string
       responses:
         "200":
-          description: OK
+          description: Successfully return the request innformation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TreeRemovalObject"
+        "401":
+          description: This will return when the authentication failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+        "404":
+          description: This is return because when the request cannot be found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
     patch:
       description: Update the exsisting information on the request or assign a ministry
       parameters:
@@ -493,9 +530,41 @@ paths:
           required: true
           schema:
             type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              anyOf:
+                - $ref: "#/components/schemas/AssignMinistry"
+                - $ref: "#/components/schemas/StatusChange"
       responses:
         "200":
           description: Successfully update the request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+        "401":
+          description: This will return when the authentication failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+        "404":
+          description: This is return because when the request cannot be found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
   /ministries/{ministry-id}/conversations:
     get:
       description: Get all the message conversations regarding the requests
@@ -508,6 +577,19 @@ paths:
       responses:
         "200":
           description: Successfully retrive all the messages
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Conversations"
+        "401":
+          description: This will return when the authentication failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
   /ministries/{ministry-id}/conversations/{conversation-id}:
     get:
       description: Get the conversation regarding to the specific request
@@ -524,7 +606,29 @@ paths:
             type: string
       responses:
         "200":
-          description: OK
+          description: Successfully retrive all the messages
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SpecificConversation"
+        "401":
+          description: This will return when the authentication failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+        "404":
+          description: This is return because when the conversation cannot be found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
     post:
       description: Post a new message to the connversation
       parameters:
@@ -538,9 +642,39 @@ paths:
           required: true
           schema:
             type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Message"
       responses:
         "200":
-          description: OK
+          description: Successfully post the message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+        "401":
+          description: This will return when the authentication failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+        "404":
+          description: This is return because when the draft cannot be found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
 
 components:
   schemas:
@@ -783,3 +917,20 @@ components:
             type: number
           longitude:
             type: number
+    AssignMinistry:
+      type: object
+      properties:
+        ministryName:
+          type: string
+        assigneBy:
+          type: string
+          description: The person who assigned the ministry
+    StatusChange:
+      type: object
+      properties:
+        ministry:
+          type: string
+          description: Name of the ministry
+        status:
+          type: string
+          description: The current progress of the request
