@@ -1,0 +1,866 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: Environment Platform
+  description: This is the RESTfull API specification for the environment platform which is developed for the environment ministry
+
+paths:
+  /applications:
+    get:
+      description: Return all the applications related to the user or apoint to the ministry
+      parameters:
+        - in: query
+          name: user-id
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: ministry-id
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: draft
+          required: false
+          schema:
+            type: boolean
+      responses:
+        "200":
+          description: Successful response(Success)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TreeRemovalData"
+        "401":
+          description: Authorization failure(Unauthorized)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+        "404":
+          description: Request not found(Not Found)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+    post:
+      description: Creates a new application or a draft
+      parameters:
+        - in: query
+          name: user-id
+          required: true
+          description: The id of the user
+          schema:
+            type: string
+        - in: query
+          name: draft
+          required: false
+          description: Draft is true when this is for only for save
+          schema:
+            type: boolean
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TreeRemovalForm"
+      responses:
+        "201":
+          description: Created application(Created)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+        "401":
+          description: Authorization failure(Unauthorized)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+        "404":
+          description: Request not found(Not Found)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+        "406":
+          description: Failure in form data verification(Not Accepteble)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_type:
+                    type: string
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+  /applications/{application-id}:
+    get:
+      description: Returns information of a specific application or a draft
+      parameters:
+        - name: application-id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: draft
+          in: query
+          required: false
+          schema:
+            type: boolean
+        - name: user-id
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: ministry-id
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful response(Success)
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - $ref: "#/components/schemas/TreeRemovalObject"
+                  - $ref: "#/components/schemas/TreeRemovalDraft"
+        "401":
+          description: Authorization failure(Unauthorized)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+        "404":
+          description: Request not found(Not Found)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+    put:
+      description: Update information in a draft
+      parameters:
+        - name: application-id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: draft
+          in: query
+          required: false
+          schema:
+            type: boolean
+        - name: user-id
+          in: query
+          required: false
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TreeRemovalDraft"
+      responses:
+        "200":
+          description: Successful response(Success)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+        "401":
+          description: Authorization failure(Unauthorized)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+        "404":
+          description: Request draft not found(Not Found)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+    delete:
+      description: Delete a application draft
+      parameters:
+        - name: application-id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: draft
+          in: query
+          required: false
+          schema:
+            type: boolean
+        - name: user-id
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful response(Success)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+        "401":
+          description: Authorization failure(Unauthorized)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+        "404":
+          description: Request draft not found(Not Found)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+    patch:
+      description: Update the existing information of the request or assign a ministry or add a new field
+      parameters:
+        - name: application-id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: ministry-id
+          in: query
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              anyOf:
+                - $ref: "#/components/schemas/AssignMinistry"
+                - $ref: "#/components/schemas/Progress"
+                - $ref: "#/components/schemas/Field"
+      responses:
+        "200":
+          description: Successful response(Success)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+        "401":
+          description: Authorization failure(Unauthorized)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+        "404":
+          description: Request not found(Not Found)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+  /validate:
+    post:
+      description: Validates the map and its coordinates
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Location"
+      responses:
+        "200":
+          description: Validated the map object
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+        "401":
+          description: Authorization failure(Unauthorized)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+        "406":
+          description: Failure in validating the map(Not accepteble)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+  /conversations:
+    get:
+      description: Get all the conversations regarding the applications
+      parameters:
+        - name: ministry-id
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: user-id
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful response(Success)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Conversations"
+        "401":
+          description: Authorization failure(Unauthorized)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+  /conversations/{conversation-id}:
+    get:
+      description: Get the conversation linked to the specific application
+      parameters:
+        - name: conversation-id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: user-id
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: ministry-id
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful response(Success)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SpecificConversation"
+        "401":
+          description: Authorization failure(Unauthorized)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+        "404":
+          description: Conversation not found(Not Found)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+    post:
+      description: Create a new message on the conversation
+      parameters:
+        - name: ministry-id
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: user-id
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: conversation-id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Message"
+      responses:
+        "201":
+          description: Created message(Created)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+        "401":
+          description: Authorization failure(Unauthorized)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+        "404":
+          description: Conversation not found(Not Found)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+
+components:
+  schemas:
+    TreeRemovalData:
+      type: array
+      items:
+        type: object
+        properties:
+          application-id:
+            type: string
+          title:
+            type: string
+            description: The title of the request
+          reason:
+            type: string
+            description: Reason to remove the tree
+          applicationCreatedDate:
+            $ref: "#/components/schemas/Date"
+          status:
+            $ref: "#/components/schemas/Progress"
+          isFlagged:
+            type: boolean
+            description: The application is flagged by the user. (The user might be admin, ministry or user)
+    TreeRemovalForm:
+      type: object
+      properties:
+        title:
+          type: string
+          description: The title of the request
+        applicationCreatedDate:
+          $ref: "#/components/schemas/Date"
+        removalDate:
+          $ref: "#/components/schemas/Date"
+          description: Removal date of the trees
+        reason:
+          type: string
+        type:
+          type: string
+        requestedBy:
+          type: string
+          description: The person who is requesting
+        permitRequired:
+          type: boolean
+        landOwner:
+          type: string
+          description: Name of the landowner
+        treeRemovalAutrhority:
+          type: string
+        city:
+          type: string
+        district:
+          type: string
+        nameOfTheLand:
+          type: string
+        planNumber:
+          type: string
+        location:
+          $ref: "#/components/schemas/Location"
+        treeInformation:
+          type: array
+          description: This includes all the inforemation about the trees which are to be cut
+          items:
+            $ref: "#/components/schemas/TreeInformation"
+    TreeRemovalObject:
+      type: object
+      properties:
+        title:
+          type: string
+          description: The title of the title
+        applicationCreatedDate:
+          $ref: "#/components/schemas/Date"
+        removalDate:
+          $ref: "#/components/schemas/Date"
+        reason:
+          type: string
+        type:
+          type: string
+        requestedBy:
+          type: string
+          description: Name of Requester
+        permitRequired:
+          type: boolean
+        landOwner:
+          type: string
+          description: Name of the landowner
+        treeRemovalAutrhority:
+          type: string
+        city:
+          type: string
+        district:
+          type: string
+        nameOfTheLand:
+          type: string
+        planNumber:
+          type: string
+        location:
+          type: array
+          description: This includes all the points in the polygon
+          items:
+            type: object
+            properties:
+              latitude:
+                type: number
+              longitude:
+                type: number
+        treeInformation:
+          type: array
+          description: This includes all the inforemation about the trees which are to be cut
+          items:
+            $ref: "#/components/schemas/TreeInformation"
+        progress:
+          type: array
+          items:
+            type: object
+            properties:
+              authority:
+                type: string
+                description: This is the respective authority
+              status:
+                type: string
+                description: Current status of the request processed by a particular authority
+        addedFields:
+          type: array
+          items:
+            $ref: "#/components/schemas/Field"
+    TreeRemovalDraft:
+      type: object
+      properties:
+        title:
+          type: string
+          description: The title of the title
+        removalDate:
+          $ref: "#/components/schemas/Date"
+        reason:
+          type: string
+        type:
+          type: string
+        requestedBy:
+          type: string
+          description: Name of Requester
+        permitRequired:
+          type: boolean
+        landOwner:
+          type: string
+          description: Name of the landowner
+        treeRemovalAutrhority:
+          type: string
+        city:
+          type: string
+        district:
+          type: string
+        nameOfTheLand:
+          type: string
+        planNumber:
+          type: string
+        location:
+          type: array
+          description: This includes all the points in the polygon
+          items:
+            type: object
+            properties:
+              latitude:
+                type: number
+              longitude:
+                type: number
+        treeInformation:
+          type: array
+          description: This includes all the inforemation about the trees which are to be cut
+          items:
+            $ref: "#/components/schemas/TreeInformation"
+    Conversations:
+      type: array
+      items:
+        type: object
+        properties:
+          title:
+            type: string
+            description: This is the request title which is being discussed
+          last_message:
+            type: object
+            description: The last message recieved or sent
+            properties:
+              user:
+                type: string
+                description: The person who sent the message
+              time:
+                type: string
+                description: The message sent time
+              hasRead:
+                type: boolean
+                description: If it is recieved whether read or not
+              message:
+                type: string
+          completed:
+            type: boolean
+            description: Whether the application is end or not
+    SpecificConversation:
+      type: object
+      properties:
+        title:
+          type: string
+          description: The title of the request
+        messages:
+          type: array
+          items:
+            $ref: "#/components/schemas/Message"
+        completed:
+          type: boolean
+          description: Whether the conversation has ended or not
+    Message:
+      type: object
+      properties:
+        user:
+          type: string
+          description: The person who sent the message
+        time:
+          type: string
+          description: The message sent time
+        hasRead:
+          type: boolean
+          description: If the message has been read or not
+        message:
+          type: string
+    Location:
+      type: array
+      description: This includes all the points in the polygon
+      items:
+        type: object
+        properties:
+          latitude:
+            type: number
+          longitude:
+            type: number
+    Date:
+      type: object
+      properties:
+        year:
+          type: integer
+        month:
+          type: integer
+        day:
+          type: integer
+        hour:
+          type: integer
+        minute:
+          type: integer
+    Progress:
+      type: object
+      properties:
+        ministry-name:
+          type: string
+        progress:
+          type: string
+        reason:
+          type: string
+          description: The reason field is only added if the application is cancelled.
+    TreeInformation:
+      type: object
+      properties:
+        species:
+          type: string
+        treeNumber:
+          type: string
+        heightType:
+          type: string
+          enum: ["Merchantable", "Top"]
+        height:
+          type: number
+          description: Height (in m)
+        girth:
+          type: number
+          description: The girth at the breast height and this should be in centimeters
+        logDetails:
+          type: array
+          items:
+            type: object
+            properties:
+              minGirth:
+                type: number
+                description: Minimum girth of the log
+              maxGirth:
+                type: number
+                description: Maximum girth of the log
+              height:
+                type: number
+                description: Length of the log
+    AssignMinistry:
+      type: object
+      properties:
+        ministryName:
+          type: string
+        assignedBy:
+          type: string
+          description: The person who assigned the ministry
+        assignedTime:
+          $ref: "#/components/schemas/Date"
+    Field:
+      type: object
+      properties:
+        fieldName:
+          type: string
+        data:
+          type: string
+          description: This is the data regarding the document and this may be a document
+        personAdded:
+          type: string
+          description: Ministry id
+        dateAdded:
+          $ref: "#/components/schemas/Date"
