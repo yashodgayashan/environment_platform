@@ -7,7 +7,7 @@ info:
 paths:
   /applications:
     get:
-      description: Return all the applications related to the user or apoint to the ministry
+      description: Return all the applications related to a user or the apointted ministry
       parameters:
         - in: query
           name: user-id
@@ -50,7 +50,7 @@ paths:
                   reason:
                     type: string
         "500":
-          description: Server error
+          description: Server error(Internal Server Error)
           content:
             application/json:
               schema:
@@ -117,7 +117,7 @@ paths:
                   error_type:
                     type: string
         "500":
-          description: Server error
+          description: Server error(Internal Server Error)
           content:
             application/json:
               schema:
@@ -127,7 +127,7 @@ paths:
                     type: string
   /applications/{application-id}:
     get:
-      description: Returns information of a specific application or a draft
+      description: Returns the information of a specific application or a draft
       parameters:
         - name: application-id
           in: path
@@ -177,7 +177,7 @@ paths:
                   reason:
                     type: string
         "500":
-          description: Server error
+          description: Server error(Internal Server Error)
           content:
             application/json:
               schema:
@@ -186,7 +186,7 @@ paths:
                   reason:
                     type: string
     put:
-      description: Update information in a draft
+      description: Update the information in a draft
       parameters:
         - name: application-id
           in: path
@@ -228,7 +228,7 @@ paths:
                   reason:
                     type: string
         "404":
-          description: Request draft not found(Not Found)
+          description: Requested draft not found(Not Found)
           content:
             application/json:
               schema:
@@ -237,7 +237,7 @@ paths:
                   reason:
                     type: string
         "500":
-          description: Server error
+          description: Server error(Internal Server Error)
           content:
             application/json:
               schema:
@@ -246,7 +246,7 @@ paths:
                   reason:
                     type: string
     delete:
-      description: Delete a application draft
+      description: Delete an application draft
       parameters:
         - name: application-id
           in: path
@@ -292,7 +292,7 @@ paths:
                   reason:
                     type: string
         "500":
-          description: Server error
+          description: Server error(Internal Server Error)
           content:
             application/json:
               schema:
@@ -301,7 +301,7 @@ paths:
                   reason:
                     type: string
     patch:
-      description: Update the existing information of the request or assign a ministry or add a new field
+      description: Update the existing information of the request, assign a ministry or add a new field
       parameters:
         - name: application-id
           in: path
@@ -350,7 +350,7 @@ paths:
                   reason:
                     type: string
         "500":
-          description: Server error
+          description: Server error(Internal Server Error)
           content:
             application/json:
               schema:
@@ -368,7 +368,7 @@ paths:
               $ref: "#/components/schemas/Location"
       responses:
         "200":
-          description: Validated the map object
+          description: Validated the map object successfully(Success)
           content:
             application/json:
               schema:
@@ -395,7 +395,7 @@ paths:
                   reason:
                     type: string
         "500":
-          description: Server error
+          description: Server error(Internal Server Error)
           content:
             application/json:
               schema:
@@ -405,7 +405,7 @@ paths:
                     type: string
   /conversations:
     get:
-      description: Get all the conversations regarding the applications
+      description: Get all the conversations which has taken place in applications
       parameters:
         - name: ministry-id
           in: query
@@ -434,7 +434,7 @@ paths:
                   reason:
                     type: string
         "500":
-          description: Server error
+          description: Server error(Internal Server Error)
           content:
             application/json:
               schema:
@@ -444,7 +444,7 @@ paths:
                     type: string
   /conversations/{conversation-id}:
     get:
-      description: Get the conversation linked to the specific application
+      description: Get the conversation linked to a specific application
       parameters:
         - name: conversation-id
           in: path
@@ -487,7 +487,7 @@ paths:
                   reason:
                     type: string
         "500":
-          description: Server error
+          description: Server error(Internal Server Error)
           content:
             application/json:
               schema:
@@ -496,7 +496,7 @@ paths:
                   reason:
                     type: string
     post:
-      description: Create a new message on the conversation
+      description: Amend a new message to the conversation
       parameters:
         - name: ministry-id
           in: query
@@ -520,7 +520,7 @@ paths:
               $ref: "#/components/schemas/Message"
       responses:
         "201":
-          description: Created message(Created)
+          description: Amended message(Created)
           content:
             application/json:
               schema:
@@ -547,7 +547,7 @@ paths:
                   reason:
                     type: string
         "500":
-          description: Server error
+          description: Server error(Internal Server Error)
           content:
             application/json:
               schema:
@@ -570,7 +570,7 @@ components:
             description: The title of the request
           reason:
             type: string
-            description: Reason to remove the tree
+            description: Reason for tree removal
           applicationCreatedDate:
             $ref: "#/components/schemas/Date"
           status:
@@ -615,7 +615,7 @@ components:
           $ref: "#/components/schemas/Location"
         treeInformation:
           type: array
-          description: This includes all the inforemation about the trees which are to be cut
+          description: Information of the trees to be cut off
           items:
             $ref: "#/components/schemas/TreeInformation"
     TreeRemovalObject:
@@ -634,7 +634,7 @@ components:
           type: string
         requestedBy:
           type: string
-          description: Name of Requester
+          description: Name of the Requester
         permitRequired:
           type: boolean
         landOwner:
@@ -652,7 +652,7 @@ components:
           type: string
         location:
           type: array
-          description: This includes all the points in the polygon
+          description: All the points in the polygon
           items:
             type: object
             properties:
@@ -662,7 +662,7 @@ components:
                 type: number
         treeInformation:
           type: array
-          description: This includes all the inforemation about the trees which are to be cut
+          description: Information of the trees to be cut off
           items:
             $ref: "#/components/schemas/TreeInformation"
         progress:
@@ -694,7 +694,7 @@ components:
           type: string
         requestedBy:
           type: string
-          description: Name of Requester
+          description: Name of the Requester
         permitRequired:
           type: boolean
         landOwner:
@@ -712,7 +712,7 @@ components:
           type: string
         location:
           type: array
-          description: This includes all the points in the polygon
+          description: All the points in the polygon
           items:
             type: object
             properties:
@@ -722,7 +722,7 @@ components:
                 type: number
         treeInformation:
           type: array
-          description: This includes all the inforemation about the trees which are to be cut
+          description: Information of the trees to be cut off
           items:
             $ref: "#/components/schemas/TreeInformation"
     Conversations:
@@ -732,7 +732,7 @@ components:
         properties:
           title:
             type: string
-            description: This is the request title which is being discussed
+            description: This is the request title of the converstion
           last_message:
             type: object
             description: The last message recieved or sent
@@ -742,15 +742,15 @@ components:
                 description: The person who sent the message
               time:
                 type: string
-                description: The message sent time
+                description: The time which the message was sent
               hasRead:
                 type: boolean
-                description: If it is recieved whether read or not
+                description: Whether the message is read or not
               message:
                 type: string
           completed:
             type: boolean
-            description: Whether the application is end or not
+            description: Whether the application is resolved or not
     SpecificConversation:
       type: object
       properties:
@@ -772,15 +772,15 @@ components:
           description: The person who sent the message
         time:
           type: string
-          description: The message sent time
+          description: The time which the message was sent
         hasRead:
           type: boolean
-          description: If the message has been read or not
+          description: Whether the message is read or not
         message:
           type: string
     Location:
       type: array
-      description: This includes all the points in the polygon
+      description: All the points in the polygon
       items:
         type: object
         properties:
