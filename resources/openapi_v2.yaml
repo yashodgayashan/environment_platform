@@ -382,7 +382,7 @@ paths:
                   reason:
                     type: string
     post:
-      description: This will update the exsisting tree removal application and create a new version of the application
+      description: This will update the existing tree removal application and create a new version of the application.
       parameters:
         - name: application-id
           in: path
