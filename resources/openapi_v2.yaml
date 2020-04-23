@@ -62,7 +62,7 @@ paths:
                   reason:
                     type: string
     post:
-      description: User can submit an application or save applicationusing the state field in the body.
+      description: A user can submit an application or save the application using the state field in the body.
       requestBody:
         required: true
         content:
