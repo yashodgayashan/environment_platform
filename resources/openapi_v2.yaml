@@ -126,7 +126,7 @@ paths:
             type: string
         - name: draft
           in: query
-          description: The user can get drafts using this parameter
+          description: This parameter is used to get a specific draft application of a user.
           required: false
           schema:
             type: boolean
