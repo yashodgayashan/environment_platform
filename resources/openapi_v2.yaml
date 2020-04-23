@@ -17,7 +17,7 @@ paths:
             type: string
         - in: query
           name: ministry-id
-          description: The ministry-id is used to query the applications appointed to the ministry and privilage is only assigned to admin.
+          description: Used to query applications appointed to a specific ministry(privileges for access are set to administrators only).
           required: false
           schema:
             type: string
