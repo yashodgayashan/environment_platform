@@ -943,7 +943,7 @@ components:
           type: string
     Location:
       type: array
-      description: This includes all the points in the polygon
+      description: This includes all the points of the land in the form of a polygon.
       items:
         type: object
         properties:
