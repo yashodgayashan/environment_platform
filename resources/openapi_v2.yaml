@@ -7,7 +7,7 @@ info:
 paths:
   /applications:
     get:
-      description: Return all the applications related to a user or the appointed ministry using the authentication token and admin or ministry can query the application by user-id or ministry-id and user can query the application using draft.
+      description: Return all the applications related to a user or the appointed ministry
       parameters:
         - in: query
           name: user-id
