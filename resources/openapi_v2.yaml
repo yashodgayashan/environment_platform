@@ -1047,7 +1047,7 @@ components:
         landOwner:
           type: string
           description: Name of the land owner.
-        treeRemovalAutrhority:
+        treeRemovalAuthority:
           type: string
         city:
           type: string
