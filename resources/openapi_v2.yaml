@@ -1069,6 +1069,6 @@ components:
                 type: number
         treeInformation:
           type: array
-          description: This includes all the inforemation about the trees which are to be cut
+          description: This includes all the information about the trees which are to be cut.
           items:
             $ref: "#/components/schemas/TreeInformation"
