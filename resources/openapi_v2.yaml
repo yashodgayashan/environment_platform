@@ -11,7 +11,7 @@ paths:
       parameters:
         - in: query
           name: user-id
-          description: Used to query application related to a specific user(privileges for access are set to ministries and adminstrators only).
+          description: Used to query applications related to a specific user(privileges for access are set to ministries and adminstrators only).
           required: false
           schema:
             type: string
