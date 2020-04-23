@@ -973,7 +973,7 @@ components:
           type: string
         personChanged:
           type: string
-          description: The person who changes the status
+          description: The person who changed the status.
         reason:
           type: string
           description: The reason field is only added if the application is cancelled.
