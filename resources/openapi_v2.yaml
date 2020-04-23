@@ -117,7 +117,7 @@ paths:
                     type: string
   /applications/{application-id}:
     get:
-      description: Returns the information of a latest version of a specific application or a draft.
+      description: Returns the information of the latest version of a specific application or a draft.
       parameters:
         - name: application-id
           in: path
