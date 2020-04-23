@@ -132,7 +132,7 @@ paths:
             type: boolean
         - name: user-id
           in: query
-          description: The user-id is used to query the applications related to the user and the privilage is only assigned to ministries and admin.
+          description: Used to query applications related to a specific user(privileges for access are set to ministries and adminstrators only).
           required: false
           schema:
             type: string
