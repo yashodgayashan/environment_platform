@@ -7,20 +7,23 @@ info:
 paths:
   /applications:
     get:
-      description: Return all the applications related to a user or the apointted ministry
+      description: Return all the applications related to a user or the appointed ministry using the authentication token and admin or ministry can query the application by user-id or ministry-id and user can query the application using draft.
       parameters:
         - in: query
           name: user-id
+          description: The user-id is used to query the applications related to the user and the privilage is only assigned to ministries and admin.
           required: false
           schema:
             type: string
         - in: query
           name: ministry-id
+          description: The ministry-id is used to query the applications appointed to the ministry and privilage is only assigned to admin.
           required: false
           schema:
             type: string
         - in: query
           name: draft
+          description: The user can get drafts using this parameter
           required: false
           schema:
             type: boolean
@@ -59,20 +62,7 @@ paths:
                   reason:
                     type: string
     post:
-      description: Creates a new application or a draft
-      parameters:
-        - in: query
-          name: user-id
-          required: true
-          description: The id of the user
-          schema:
-            type: string
-        - in: query
-          name: draft
-          required: false
-          description: Draft is true when this is for only for save
-          schema:
-            type: boolean
+      description: User can submit an application or save applicationusing the state field in the body.
       requestBody:
         required: true
         content:
@@ -127,7 +117,7 @@ paths:
                     type: string
   /applications/{application-id}:
     get:
-      description: Returns the information of a specific application or a draft
+      description: Returns the information of a latest version of a specific application or a draft.
       parameters:
         - name: application-id
           in: path
@@ -136,16 +126,19 @@ paths:
             type: string
         - name: draft
           in: query
+          description: The user can get drafts using this parameter
           required: false
           schema:
             type: boolean
         - name: user-id
           in: query
+          description: The user-id is used to query the applications related to the user and the privilage is only assigned to ministries and admin.
           required: false
           schema:
             type: string
         - name: ministry-id
           in: query
+          description: The ministry-id is used to query the applications appointed to the ministry and privilage is only assigned to admin.
           required: false
           schema:
             type: string
@@ -191,16 +184,6 @@ paths:
         - name: application-id
           in: path
           required: true
-          schema:
-            type: string
-        - name: draft
-          in: query
-          required: false
-          schema:
-            type: boolean
-        - name: user-id
-          in: query
-          required: false
           schema:
             type: string
       requestBody:
@@ -253,16 +236,6 @@ paths:
           required: true
           schema:
             type: string
-        - name: draft
-          in: query
-          required: false
-          schema:
-            type: boolean
-        - name: user-id
-          in: query
-          required: false
-          schema:
-            type: string
       responses:
         "200":
           description: Successful response(Success)
@@ -292,7 +265,7 @@ paths:
                   reason:
                     type: string
         "500":
-          description: Server error(Internal Server Error)
+          description: Server error
           content:
             application/json:
               schema:
@@ -305,11 +278,6 @@ paths:
       parameters:
         - name: application-id
           in: path
-          required: true
-          schema:
-            type: string
-        - name: ministry-id
-          in: query
           required: true
           schema:
             type: string
@@ -350,6 +318,169 @@ paths:
                   reason:
                     type: string
         "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+  /application/{application-id}/versions:
+    get:
+      description: This will return all the version information of a particular application
+      parameters:
+        - in: query
+          name: user-id
+          description: The user-id is used to query the applications related to the user and the privilage is only assigned to ministries and admin.
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: ministry-id
+          description: The ministry-id is used to query the applications appointed to the ministry and privilage is only assigned to admin.
+          required: false
+          schema:
+            type: string
+        - name: application-id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful response(Success)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TreeRemovalObjectWithVersions"
+        "401":
+          description: Authorization failure(Unauthorized)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+        "404":
+          description: Request not found(Not Found)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+    post:
+      description: This will update the exsisting tree removal application and create a new version of the application
+      parameters:
+        - name: application-id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TreeInformationForVersioning"
+      responses:
+        "201":
+          description: Created application(Created)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+        "401":
+          description: Authorization failure(Unauthorized)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+        "404":
+          description: Request not found(Not Found)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+        "406":
+          description: Failure in form data verification(Not Accepteble)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_type:
+                    type: string
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+  /application/{application-id}/versions/{version-id}:
+    get:
+      description: This will return a spesific version of the application
+      parameters:
+        - name: application-id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: version-id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful response(Success)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TreeRemovalObject"
+        "401":
+          description: Authorization failure(Unauthorized)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+        "404":
+          description: Request not found(Not Found)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+        "500":
           description: Server error(Internal Server Error)
           content:
             application/json:
@@ -368,7 +499,7 @@ paths:
               $ref: "#/components/schemas/Location"
       responses:
         "200":
-          description: Validated the map object successfully(Success)
+          description: Validated the map object
           content:
             application/json:
               schema:
@@ -403,17 +534,12 @@ paths:
                 properties:
                   reason:
                     type: string
-  /conversations:
+  /applications/{application-id}/comments:
     get:
       description: Get all the conversations which has taken place in applications
       parameters:
-        - name: ministry-id
-          in: query
-          required: false
-          schema:
-            type: string
-        - name: user-id
-          in: query
+        - name: application-id
+          in: path
           required: true
           schema:
             type: string
@@ -442,11 +568,66 @@ paths:
                 properties:
                   reason:
                     type: string
-  /conversations/{conversation-id}:
-    get:
-      description: Get the conversation linked to a specific application
+    post:
+      description: Amend a new message on the conversation
       parameters:
-        - name: conversation-id
+        - name: application-id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Message"
+      responses:
+        "201":
+          description: Created message(Created)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+        "401":
+          description: Authorization failure(Unauthorized)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+        "404":
+          description: Conversation not found(Not Found)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+        "500":
+          description: Server error(Internal Server Error)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+  /applications/{application-id}/comments/{comment-id}:
+    get:
+      description: Get the conversation linked to the specific application
+      parameters:
+        - name: application-id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: comment-id
           in: path
           required: true
           schema:
@@ -495,66 +676,6 @@ paths:
                 properties:
                   reason:
                     type: string
-    post:
-      description: Amend a new message to the conversation
-      parameters:
-        - name: ministry-id
-          in: query
-          required: true
-          schema:
-            type: string
-        - name: user-id
-          in: query
-          required: true
-          schema:
-            type: string
-        - name: conversation-id
-          in: path
-          required: true
-          schema:
-            type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/Message"
-      responses:
-        "201":
-          description: Amended message(Created)
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  reason:
-                    type: string
-        "401":
-          description: Authorization failure(Unauthorized)
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  reason:
-                    type: string
-        "404":
-          description: Conversation not found(Not Found)
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  reason:
-                    type: string
-        "500":
-          description: Server error(Internal Server Error)
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  reason:
-                    type: string
 
 components:
   schemas:
@@ -570,7 +691,7 @@ components:
             description: The title of the request
           reason:
             type: string
-            description: Reason for tree removal
+            description: Reason to remove the tree
           applicationCreatedDate:
             $ref: "#/components/schemas/Date"
           status:
@@ -581,6 +702,9 @@ components:
     TreeRemovalForm:
       type: object
       properties:
+        status:
+          type: string
+          enum: ["save", "submit"]
         title:
           type: string
           description: The title of the request
@@ -615,12 +739,19 @@ components:
           $ref: "#/components/schemas/Location"
         treeInformation:
           type: array
-          description: Information of the trees to be cut off
+          description: This includes all the inforemation about the trees which are to be cut
           items:
             $ref: "#/components/schemas/TreeInformation"
     TreeRemovalObject:
       type: object
       properties:
+        numberOfVersions:
+          type: integer
+          description: This indicates number of versions having for particular application
+        versionNumber:
+          type: integer
+        applicationId:
+          type: string
         title:
           type: string
           description: The title of the title
@@ -634,7 +765,7 @@ components:
           type: string
         requestedBy:
           type: string
-          description: Name of the Requester
+          description: Name of Requester
         permitRequired:
           type: boolean
         landOwner:
@@ -680,6 +811,38 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/Field"
+    TreeRemovalObjectWithVersions:
+      type: object
+      properties:
+        numberOfVersions:
+          type: integer
+          description: This indicates number of versions having for particular application
+        applicationId:
+          type: string
+        title:
+          type: string
+          description: The title of the title
+        reason:
+          type: string
+        versions:
+          type: array
+          items:
+            $ref: "#/components/schemas/TreeInformationForVersioning"
+        progress:
+          type: array
+          items:
+            type: object
+            properties:
+              authority:
+                type: string
+                description: This is the respective authority
+              status:
+                type: string
+                description: Current status of the request processed by a particular authority
+        addedFields:
+          type: array
+          items:
+            $ref: "#/components/schemas/Field"
     TreeRemovalDraft:
       type: object
       properties:
@@ -694,7 +857,7 @@ components:
           type: string
         requestedBy:
           type: string
-          description: Name of the Requester
+          description: Name of Requester
         permitRequired:
           type: boolean
         landOwner:
@@ -712,7 +875,7 @@ components:
           type: string
         location:
           type: array
-          description: All the points in the polygon
+          description: This includes all the points in the polygon
           items:
             type: object
             properties:
@@ -722,7 +885,7 @@ components:
                 type: number
         treeInformation:
           type: array
-          description: Information of the trees to be cut off
+          description: This includes all the inforemation about the trees which are to be cut
           items:
             $ref: "#/components/schemas/TreeInformation"
     Conversations:
@@ -732,7 +895,7 @@ components:
         properties:
           title:
             type: string
-            description: This is the request title of the converstion
+            description: This is the request title which is being discussed
           last_message:
             type: object
             description: The last message recieved or sent
@@ -742,15 +905,15 @@ components:
                 description: The person who sent the message
               time:
                 type: string
-                description: The time which the message was sent
+                description: The message sent time
               hasRead:
                 type: boolean
-                description: Whether the message is read or not
+                description: If it is recieved and whether read or not
               message:
                 type: string
           completed:
             type: boolean
-            description: Whether the application is resolved or not
+            description: Whether the application is end or not
     SpecificConversation:
       type: object
       properties:
@@ -772,15 +935,15 @@ components:
           description: The person who sent the message
         time:
           type: string
-          description: The time which the message was sent
+          description: The message sent time
         hasRead:
           type: boolean
-          description: Whether the message is read or not
+          description: If the message has been read or not
         message:
           type: string
     Location:
       type: array
-      description: All the points in the polygon
+      description: This includes all the points in the polygon
       items:
         type: object
         properties:
@@ -808,6 +971,9 @@ components:
           type: string
         progress:
           type: string
+        personChanged:
+          type: string
+          description: The person who changes the status
         reason:
           type: string
           description: The reason field is only added if the application is cancelled.
@@ -864,3 +1030,45 @@ components:
           description: Ministry id
         dateAdded:
           $ref: "#/components/schemas/Date"
+    TreeInformationForVersioning:
+      type: object
+      properties:
+        applicationCreatedDate:
+          $ref: "#/components/schemas/Date"
+        removalDate:
+          $ref: "#/components/schemas/Date"
+        type:
+          type: string
+        requestedBy:
+          type: string
+          description: Name of Requester
+        permitRequired:
+          type: boolean
+        landOwner:
+          type: string
+          description: Name of the landowner
+        treeRemovalAutrhority:
+          type: string
+        city:
+          type: string
+        district:
+          type: string
+        nameOfTheLand:
+          type: string
+        planNumber:
+          type: string
+        location:
+          type: array
+          description: This includes all the points in the polygon
+          items:
+            type: object
+            properties:
+              latitude:
+                type: number
+              longitude:
+                type: number
+        treeInformation:
+          type: array
+          description: This includes all the inforemation about the trees which are to be cut
+          items:
+            $ref: "#/components/schemas/TreeInformation"
