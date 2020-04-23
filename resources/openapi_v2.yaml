@@ -1041,7 +1041,7 @@ components:
           type: string
         requestedBy:
           type: string
-          description: Name of Requester
+          description: Name of the requester.
         permitRequired:
           type: boolean
         landOwner:
