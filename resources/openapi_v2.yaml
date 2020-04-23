@@ -443,7 +443,7 @@ paths:
                     type: string
   /application/{application-id}/versions/{version-id}:
     get:
-      description: This will return a spesific version of the application
+      description: This will return a specific version of the application.
       parameters:
         - name: application-id
           in: path
