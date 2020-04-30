@@ -34,7 +34,7 @@ paths:
             application/json:
               schema:
                 anyOf:
-                  - $ref: "#/components/schemas/TreeRemovalFormCollection"
+                  - $ref: "#/components/schemas/TreeRemovalApplicationCollection"
                   - $ref: "#/components/schemas/TreeRemovalDraftCollection"
         "401":
           description: Authorization failure(Unauthorized).
@@ -117,10 +117,55 @@ paths:
                 properties:
                   reason:
                     type: string
+  /applications/{application-id}:
+    get:
+      description: Returns the information of the latest version of a specific application or a draft.
+      parameters:
+        - name: application-id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful response(Success).
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - $ref: "#/components/schemas/TreeRemovalApplication"
+                  - $ref: "#/components/schemas/TreeRemovalForm"
+        "401":
+          description: Authorization failure(Unauthorized).
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+        "404":
+          description: Request not found(Not Found).
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+        "500":
+          description: Server error(Internal Server Error).
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
 
 components:
   schemas:
-    TreeRemovalFormCollection:
+    TreeRemovalApplicationCollection:
       type: array
       items:
         type: object
@@ -143,6 +188,64 @@ components:
             type: boolean
             description: The application is flagged by the user. (The user might be admin, ministry or user).
           message:
+            $ref: "#/components/schemas/Message"
+    TreeRemovalApplication:
+      type: object
+      properties:
+        numberOfVersions:
+          type: integer
+          description: This indicates number of versions having for particular application.
+        versionNumber:
+          type: integer
+        applicationId:
+          type: string
+        title:
+          type: string
+          description: The title of the title.
+        applicationCreatedDate:
+          $ref: "#/components/schemas/Date"
+        removalDate:
+          $ref: "#/components/schemas/Date"
+        reason:
+          type: string
+        type:
+          type: string
+        requestedBy:
+          type: string
+          description: Name of Requester.
+        permitRequired:
+          type: boolean
+        landOwner:
+          type: string
+          description: Name of the landowner.
+        treeRemovalAutrhority:
+          type: string
+        city:
+          type: string
+        district:
+          type: string
+        nameOfTheLand:
+          type: string
+        planNumber:
+          type: string
+        location:
+          $ref: "#/components/schemas/Location"
+        treeInformation:
+          type: array
+          description: Information of the trees to be cut off.
+          items:
+            $ref: "#/components/schemas/TreeInformation"
+        progress:
+          type: array
+          items:
+            $ref: "#/components/schemas/Progress"
+        addedFields:
+          type: array
+          items:
+            $ref: "#/components/schemas/Field"
+        comments:
+          type: array
+          items:
             $ref: "#/components/schemas/Message"
     TreeRemovalDraftCollection:
       type: array
@@ -250,9 +353,6 @@ components:
             - $ref: "#/components/schemas/Ministry"
         timestamp:
           $ref: "#/components/schemas/Date"
-        hasRead:
-          type: boolean
-          description: If the message has been read or not.
         message:
           type: string
     Person:
@@ -297,3 +397,18 @@ components:
           description: The reason field is only added if the application is cancelled.
         timestamp:
           $ref: "#/components/schemas/Date"
+    Field:
+      type: object
+      properties:
+        fieldName:
+          type: string
+        data:
+          type: string
+          description: This is the data regarding the document and this may be a document.
+        personAdded:
+          type: string
+          description: Ministry id
+        dateAdded:
+          $ref: "#/components/schemas/Date"
+        edited:
+          type: boolean
