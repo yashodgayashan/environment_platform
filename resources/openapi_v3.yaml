@@ -1,0 +1,299 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: Environment Platform
+  description: This is the RESTfull API specification for the environment platform which is developed for the environment ministry.
+
+paths:
+  /applications:
+    get:
+      description: Return all the applications related to a user, admin or the appointed ministry.
+      parameters:
+        - in: query
+          name: user-id
+          description: Used to query applications related to a specific user.
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: ministry-id
+          description: Used to query applications appointed to a specific ministry.
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: draft
+          description: This parameter is used to get the draft applications.
+          required: false
+          schema:
+            type: boolean
+      responses:
+        "200":
+          description: Successful response(Success).
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - $ref: "#/components/schemas/TreeRemovalFormCollection"
+                  - $ref: "#/components/schemas/TreeRemovalDraftCollection"
+        "401":
+          description: Authorization failure(Unauthorized).
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+        "404":
+          description: Request not found(Not Found).
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+        "500":
+          description: Server error(Internal Server Error).
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+    post:
+      description: A user can submit an application or save a draft.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TreeRemovalForm"
+      responses:
+        "201":
+          description: Created application(Created).
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+        "401":
+          description: Authorization failure(Unauthorized).
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+        "404":
+          description: Request not found(Not Found).
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+        "406":
+          description: Failure in form data verification(Not Accepteble).
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_type:
+                    type: string
+        "500":
+          description: Server error(Internal Server Error).
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+
+components:
+  schemas:
+    TreeRemovalFormCollection:
+      type: array
+      items:
+        type: object
+        properties:
+          application-id:
+            type: string
+          title:
+            type: string
+            description: The title of the request.
+          reason:
+            type: string
+            description: Reason to remove the tree.
+          applicationCreatedDate:
+            $ref: "#/components/schemas/Date"
+          status:
+            type: array
+            items:
+              $ref: "#/components/schemas/Progress"
+          isFlagged:
+            type: boolean
+            description: The application is flagged by the user. (The user might be admin, ministry or user).
+          message:
+            $ref: "#/components/schemas/Message"
+    TreeRemovalDraftCollection:
+      type: array
+      items:
+        type: object
+        properties:
+          application-id:
+            type: string
+          title:
+            type: string
+            description: The title of the request.
+          reason:
+            type: string
+            description: Reason to remove the tree.
+          applicationCreatedDate:
+            $ref: "#/components/schemas/Date"
+    TreeRemovalForm:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: ["save", "submit"]
+        title:
+          type: string
+          description: The title of the request.
+        applicationCreatedDate:
+          $ref: "#/components/schemas/Date"
+        removalDate:
+          $ref: "#/components/schemas/Date"
+        reason:
+          type: string
+        type:
+          type: string
+        requestedBy:
+          type: string
+          description: The person who is requesting.
+        permitRequired:
+          type: boolean
+        landOwner:
+          type: string
+          description: Name of the landowner.
+        treeRemovalAutrhority:
+          type: string
+        city:
+          type: string
+        district:
+          type: string
+        nameOfTheLand:
+          type: string
+        planNumber:
+          type: string
+        location:
+          $ref: "#/components/schemas/Location"
+        treeInformation:
+          type: array
+          description: This includes all the inforemation about the trees which are to be cut.
+          items:
+            $ref: "#/components/schemas/TreeInformation"
+    Location:
+      type: array
+      description: This includes all the points of the land in the form of a polygon.
+      items:
+        type: object
+        properties:
+          latitude:
+            type: number
+          longitude:
+            type: number
+    TreeInformation:
+      type: object
+      properties:
+        species:
+          type: string
+        treeNumber:
+          type: string
+        heightType:
+          type: string
+          enum: ["Merchantable", "Top"]
+        height:
+          type: number
+          description: Height (in m)
+        girth:
+          type: number
+          description: The girth at the breast height and this should be in centimeters.
+        logDetails:
+          type: array
+          items:
+            type: object
+            properties:
+              minGirth:
+                type: number
+                description: Minimum girth of the log.
+              maxGirth:
+                type: number
+                description: Maximum girth of the log.
+              height:
+                type: number
+                description: Length of the log.
+    Message:
+      type: object
+      properties:
+        sender:
+          anyOf:
+            - $ref: "#/components/schemas/Person"
+            - $ref: "#/components/schemas/Ministry"
+        timestamp:
+          $ref: "#/components/schemas/Date"
+        hasRead:
+          type: boolean
+          description: If the message has been read or not.
+        message:
+          type: string
+    Person:
+      type: object
+      properties:
+        name:
+          type: string
+        id:
+          type: string
+    Ministry:
+      type: object
+      properties:
+        name:
+          type: string
+        id:
+          type: string
+    Date:
+      type: object
+      properties:
+        year:
+          type: integer
+        month:
+          type: integer
+        day:
+          type: integer
+        hour:
+          type: integer
+        minute:
+          type: integer
+    Progress:
+      type: object
+      properties:
+        ministry-name:
+          type: string
+        progress:
+          type: string
+        personChanged:
+          type: string
+          description: The person who changed the status.
+        reason:
+          type: string
+          description: The reason field is only added if the application is cancelled.
+        timestamp:
+          $ref: "#/components/schemas/Date"
