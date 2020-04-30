@@ -162,6 +162,202 @@ paths:
                 properties:
                   reason:
                     type: string
+    put:
+      description: Update the information in the draft or in the application.
+      parameters:
+        - name: application-id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TreeRemovalForm"
+      responses:
+        "200":
+          description: Successful response(Success).
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+        "401":
+          description: Authorization failure(Unauthorized).
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+        "404":
+          description: Requested draft not found(Not Found).
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+        "500":
+          description: Server error(Internal Server Error).
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+    delete:
+      description: Delete an application draft.
+      parameters:
+        - name: application-id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful response(Success).
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+        "401":
+          description: Authorization failure(Unauthorized).
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+        "404":
+          description: Request draft not found(Not Found).
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+        "500":
+          description: Server error(Internal Server Error).
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+    patch:
+      description: Update the existing information of the request, assign a ministry or add a new field.
+      parameters:
+        - name: application-id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              anyOf:
+                - $ref: "#/components/schemas/AssignedMinistry"
+                - $ref: "#/components/schemas/Progress"
+                - $ref: "#/components/schemas/Field"
+      responses:
+        "200":
+          description: Successful response(Success).
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+        "401":
+          description: Authorization failure(Unauthorized).
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+        "404":
+          description: Request not found(Not Found).
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+        "500":
+          description: Server error(Internal Server Error).
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+  /application/{application-id}/versions/{version-id}:
+    get:
+      description: This will return a specific version of the application.
+      parameters:
+        - name: application-id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: version-id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful response(Success).
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TreeRemovalForm"
+        "401":
+          description: Authorization failure(Unauthorized).
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+        "404":
+          description: Request not found(Not Found).
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+        "500":
+          description: Server error(Internal Server Error).
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
 
 components:
   schemas:
@@ -262,6 +458,17 @@ components:
             description: Reason to remove the tree.
           applicationCreatedDate:
             $ref: "#/components/schemas/Date"
+    AssignedMinistry:
+      type: object
+      properties:
+        ministry:
+          $ref: "#/components/schemas/Ministry"
+        assignedBy:
+          $ref: "#/components/schemas/Person"
+        assignedTime:
+          $ref: "#/components/schemas/Date"
+        prerequisite:
+          $ref: "#/components/schemas/Ministry"
     TreeRemovalForm:
       type: object
       properties:
@@ -390,8 +597,7 @@ components:
         progress:
           type: string
         personChanged:
-          type: string
-          description: The person who changed the status.
+          $ref: "#/components/schemas/Person"
         reason:
           type: string
           description: The reason field is only added if the application is cancelled.
@@ -406,8 +612,7 @@ components:
           type: string
           description: This is the data regarding the document and this may be a document.
         personAdded:
-          type: string
-          description: Ministry id
+          $ref: "#/components/schemas/Ministry"
         dateAdded:
           $ref: "#/components/schemas/Date"
         edited:
