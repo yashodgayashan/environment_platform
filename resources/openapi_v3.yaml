@@ -531,7 +531,7 @@ paths:
                   reason:
                     type: string
         "406":
-          description: Failure in validating the map(Not accepteble).
+          description: Failure in validating the map (Not Acceptable).
           content:
             application/json:
               schema:
