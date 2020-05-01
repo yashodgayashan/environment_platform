@@ -965,7 +965,7 @@ components:
         data:
           type: string
           description: This is the data regarding the document and this may be a document.
-        personAdded:
+        addedBy:
           $ref: "#/components/schemas/Ministry"
         dateAdded:
           $ref: "#/components/schemas/Date"
