@@ -405,7 +405,7 @@ paths:
                     type: string
   /application/{application-id}/fields/{field-id}/versions:
     get:
-      description: Get all the versions of a field
+      description: Get all the versions of a field.
       parameters:
         - name: application-id
           in: path
@@ -455,7 +455,7 @@ paths:
                     type: string
   /application/{application-id}/Progress/{progress-id}/versions:
     get:
-      description: Get all the versions of a progress
+      description: Get all the versions of a progress.
       parameters:
         - name: application-id
           in: path
