@@ -585,7 +585,7 @@ paths:
                   reason:
                     type: string
     post:
-      description: Amend a new message on the conversation.
+      description: Post a new comment.
       parameters:
         - name: application-id
           in: path
