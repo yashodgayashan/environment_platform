@@ -967,7 +967,7 @@ components:
           description: This is the data regarding the document and this may be a document.
         addedBy:
           $ref: "#/components/schemas/Ministry"
-        dateAdded:
+        addedOn:
           $ref: "#/components/schemas/Date"
         edited:
           type: boolean
