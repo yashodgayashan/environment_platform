@@ -848,7 +848,7 @@ components:
         landOwner:
           type: string
           description: Name of the landowner.
-        treeRemovalAutrhority:
+        treeRemovalAuthority:
           type: string
         city:
           type: string
@@ -950,7 +950,7 @@ components:
           type: string
         progress:
           type: string
-        personChanged:
+        changedBy:
           $ref: "#/components/schemas/Person"
         reason:
           type: string
@@ -965,9 +965,9 @@ components:
         data:
           type: string
           description: This is the data regarding the document and this may be a document.
-        personAdded:
+        addedBy:
           $ref: "#/components/schemas/Ministry"
-        dateAdded:
+        addedOn:
           $ref: "#/components/schemas/Date"
         edited:
           type: boolean
