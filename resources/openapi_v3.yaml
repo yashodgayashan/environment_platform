@@ -505,7 +505,7 @@ paths:
                     type: string
   /validate-map:
     post:
-      description: Validates the map and its coordinates.
+      description: Validates the map and its co-ordinates.
       requestBody:
         content:
           application/json:
