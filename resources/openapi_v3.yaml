@@ -636,7 +636,7 @@ paths:
                     type: string
   /applications/{application-id}/comments/{comment-id}:
     get:
-      description: get information about a comment.
+      description: Get information about a comment.
       parameters:
         - name: application-id
           in: path
