@@ -950,7 +950,7 @@ components:
           type: string
         progress:
           type: string
-        personChanged:
+        changedBy:
           $ref: "#/components/schemas/Person"
         reason:
           type: string
