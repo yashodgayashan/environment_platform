@@ -46,7 +46,7 @@ paths:
                   reason:
                     type: string
         "404":
-          description: Request not found(Not Found).
+          description: Application not found(Not Found).
           content:
             application/json:
               schema:
@@ -91,7 +91,7 @@ paths:
                   reason:
                     type: string
         "404":
-          description: Request not found(Not Found).
+          description: Application not found(Not Found).
           content:
             application/json:
               schema:
@@ -145,7 +145,7 @@ paths:
                   reason:
                     type: string
         "404":
-          description: Request not found(Not Found).
+          description: Application not found(Not Found).
           content:
             application/json:
               schema:
@@ -240,7 +240,7 @@ paths:
                   reason:
                     type: string
         "404":
-          description: Request draft not found(Not Found).
+          description: Application draft not found(Not Found).
           content:
             application/json:
               schema:
@@ -258,7 +258,7 @@ paths:
                   reason:
                     type: string
     patch:
-      description: Update the existing information of the request, assign a ministry or add a new field.
+      description: Update the existing information of the application, assign a ministry or add a new field.
       parameters:
         - name: application-id
           in: path
@@ -293,7 +293,7 @@ paths:
                   reason:
                     type: string
         "404":
-          description: Request not found(Not Found).
+          description: Application not found(Not Found).
           content:
             application/json:
               schema:
@@ -338,7 +338,7 @@ paths:
                   reason:
                     type: string
         "404":
-          description: Request not found(Not Found).
+          description: Application not found(Not Found).
           content:
             application/json:
               schema:
@@ -386,7 +386,7 @@ paths:
                   reason:
                     type: string
         "404":
-          description: Request not found(Not Found).
+          description: Application not found(Not Found).
           content:
             application/json:
               schema:
@@ -436,7 +436,7 @@ paths:
                   reason:
                     type: string
         "404":
-          description: Request not found(Not Found).
+          description: Application not found(Not Found).
           content:
             application/json:
               schema:
@@ -486,7 +486,7 @@ paths:
                   reason:
                     type: string
         "404":
-          description: Request not found(Not Found).
+          description: Application not found(Not Found).
           content:
             application/json:
               schema:
@@ -724,7 +724,7 @@ components:
             type: string
           title:
             type: string
-            description: The title of the request.
+            description: The title of the application.
           reason:
             type: string
             description: Reason to remove the tree.
@@ -806,7 +806,7 @@ components:
             type: string
           title:
             type: string
-            description: The title of the request.
+            description: The title of the application.
           reason:
             type: string
             description: Reason to remove the tree.
@@ -831,7 +831,7 @@ components:
           enum: ["save", "submit"]
         title:
           type: string
-          description: The title of the request.
+          description: The title of the application.
         applicationCreatedDate:
           $ref: "#/components/schemas/Date"
         removalDate:
