@@ -736,7 +736,7 @@ components:
               $ref: "#/components/schemas/Progress"
           isFlagged:
             type: boolean
-            description: The application is flagged by the user. (The user might be admin, ministry or user).
+            description: The application is flagged by the user(The user might be an admin, the ministry or the user).
           message:
             $ref: "#/components/schemas/Message"
     TreeRemovalApplication:
