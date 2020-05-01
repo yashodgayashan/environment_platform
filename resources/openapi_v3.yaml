@@ -503,7 +503,7 @@ paths:
                 properties:
                   reason:
                     type: string
-  /validate:
+  /validate-map:
     post:
       description: Validates the map and its coordinates.
       requestBody:
