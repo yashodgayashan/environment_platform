@@ -453,7 +453,7 @@ paths:
                 properties:
                   reason:
                     type: string
-  /application/{application-id}/Progress/{progress-id}/versions:
+  /application/{application-id}/progress/{progress-id}/versions:
     get:
       description: Get all the versions of a progress.
       parameters:
