@@ -466,7 +466,7 @@ paths:
           required: true
           schema:
             type: string
-        - name: progress-id
+        - name: status-id
           in: path
           required: true
           schema:
