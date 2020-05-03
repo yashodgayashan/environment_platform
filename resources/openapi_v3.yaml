@@ -310,7 +310,7 @@ paths:
                     type: string
   /applications/{application-id}/update-status:
     post:
-      description: Update the progress of an application.
+      description: Update the status of an application.
       parameters:
         - name: application-id
           in: path
