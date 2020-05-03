@@ -459,7 +459,7 @@ paths:
                     type: string
   /application/{application-id}/status/{status-id}:
     get:
-      description: Get all the versions of a progress.
+      description: Get the details of a status update to an application
       parameters:
         - name: application-id
           in: path
