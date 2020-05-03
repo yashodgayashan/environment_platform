@@ -132,9 +132,7 @@ paths:
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: "#/components/schemas/TreeRemovalApplication"
-                  - $ref: "#/components/schemas/TreeRemovalForm"
+                $ref: "#/components/schemas/TreeRemovalApplication"
         "401":
           description: Authorization failure(Unauthorized).
           content:
@@ -321,7 +319,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Progress"
+              $ref: "#/components/schemas/Status"
       responses:
         "200":
           description: Successful response(Success).
@@ -457,7 +455,7 @@ paths:
                 properties:
                   reason:
                     type: string
-  /application/{application-id}/status/{status-id}:
+  /application/{application-id}/status:
     get:
       description: Get the details of a status update to an application
       parameters:
@@ -479,7 +477,57 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Progress"
+                  $ref: "#/components/schemas/Status"
+        "401":
+          description: Authorization failure(Unauthorized).
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+        "404":
+          description: Application not found(Not Found).
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+        "500":
+          description: Server error(Internal Server Error).
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+  /application/{application-id}/status/{status-id}/versions:
+    get:
+      description: Get the history of a status for a given application
+      parameters:
+        - name: application-id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: status-id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful response(Success).
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Status"
         "401":
           description: Authorization failure(Unauthorized).
           content:
@@ -776,7 +824,7 @@ components:
           status:
             type: array
             items:
-              $ref: "#/components/schemas/Progress"
+              $ref: "#/components/schemas/Status"
           isFlagged:
             type: boolean
             description: The application is flagged by the user(The user might be an admin, the ministry or the user).
@@ -828,10 +876,10 @@ components:
           description: Information of the trees to be cut off.
           items:
             $ref: "#/components/schemas/TreeInformation"
-        progress:
+        status:
           type: array
           items:
-            $ref: "#/components/schemas/Progress"
+            $ref: "#/components/schemas/Status"
         addedFields:
           type: array
           items:
@@ -978,7 +1026,7 @@ components:
           type: integer
         minute:
           type: integer
-    Progress:
+    Status:
       type: object
       properties:
         ministry-name:
