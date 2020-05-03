@@ -308,7 +308,7 @@ paths:
                 properties:
                   reason:
                     type: string
-  /applications/{application-id}/update-progress:
+  /applications/{application-id}/update-status:
     post:
       description: Update the progress of an application.
       parameters:
