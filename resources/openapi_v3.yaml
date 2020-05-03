@@ -33,9 +33,7 @@ paths:
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: "#/components/schemas/TreeRemovalApplicationCollection"
-                  - $ref: "#/components/schemas/TreeRemovalDraftCollection"
+                $ref: "#/components/schemas/TreeRemovalApplicationCollection"
         "401":
           description: Authorization failure(Unauthorized).
           content:
@@ -80,6 +78,8 @@ paths:
                 type: object
                 properties:
                   reason:
+                    type: string
+                  application-id:
                     type: string
         "401":
           description: Authorization failure(Unauthorized).
@@ -257,8 +257,9 @@ paths:
                 properties:
                   reason:
                     type: string
-    patch:
-      description: Update the existing information of the application, assign a ministry or add a new field.
+  /applications/{application-id}/assign-ministry:
+    post:
+      description: Assign a ministry for an application.
       parameters:
         - name: application-id
           in: path
@@ -269,10 +270,58 @@ paths:
         content:
           application/json:
             schema:
-              anyOf:
-                - $ref: "#/components/schemas/AssignedMinistry"
-                - $ref: "#/components/schemas/Progress"
-                - $ref: "#/components/schemas/Field"
+              $ref: "#/components/schemas/AssignedMinistry"
+      responses:
+        "200":
+          description: Successful response(Success).
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+        "401":
+          description: Authorization failure(Unauthorized).
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+        "404":
+          description: Application not found(Not Found).
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+        "500":
+          description: Server error(Internal Server Error).
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+  /applications/{application-id}/update-progress:
+    post:
+      description: Update the progress of an application.
+      parameters:
+        - name: application-id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Progress"
       responses:
         "200":
           description: Successful response(Success).
@@ -327,7 +376,12 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/TreeRemovalForm"
+                  type: object
+                  properties:
+                    version-id:
+                      type: integer
+                    createdAt:
+                      $ref: "#/components/schemas/Date"
         "401":
           description: Authorization failure(Unauthorized).
           content:
@@ -403,57 +457,7 @@ paths:
                 properties:
                   reason:
                     type: string
-  /application/{application-id}/fields/{field-id}/versions:
-    get:
-      description: Get all the versions of a field.
-      parameters:
-        - name: application-id
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: field-id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: Successful response(Success).
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Field"
-        "401":
-          description: Authorization failure(Unauthorized).
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  reason:
-                    type: string
-        "404":
-          description: Application not found(Not Found).
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  reason:
-                    type: string
-        "500":
-          description: Server error(Internal Server Error).
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  reason:
-                    type: string
-  /application/{application-id}/progress/{progress-id}/versions:
+  /application/{application-id}/progress/{progress-id}:
     get:
       description: Get all the versions of a progress.
       parameters:
@@ -503,9 +507,48 @@ paths:
                 properties:
                   reason:
                     type: string
-  /validate:
+  /maps/reservation:
+    get:
+      description: Get all the reservations' co-ordinates.
+      responses:
+        "200":
+          description: Successful response(Success).
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Reservation"
+        "401":
+          description: Authorization failure(Unauthorized).
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+        "404":
+          description: Application not found(Not Found).
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+        "500":
+          description: Server error(Internal Server Error).
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+  /maps/validate-map:
     post:
-      description: Validates the map and its coordinates.
+      description: Validates the map and its co-ordinates.
       requestBody:
         content:
           application/json:
@@ -531,7 +574,7 @@ paths:
                   reason:
                     type: string
         "406":
-          description: Failure in validating the map(Not accepteble).
+          description: Failure in validating the map (Not Acceptable).
           content:
             application/json:
               schema:
@@ -585,7 +628,7 @@ paths:
                   reason:
                     type: string
     post:
-      description: Amend a new message on the conversation.
+      description: Post a new comment.
       parameters:
         - name: application-id
           in: path
@@ -797,21 +840,6 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/Message"
-    TreeRemovalDraftCollection:
-      type: array
-      items:
-        type: object
-        properties:
-          application-id:
-            type: string
-          title:
-            type: string
-            description: The title of the application.
-          reason:
-            type: string
-            description: Reason to remove the tree.
-          applicationCreatedDate:
-            $ref: "#/components/schemas/Date"
     AssignedMinistry:
       type: object
       properties:
@@ -865,6 +893,13 @@ components:
           description: This includes all the inforemation about the trees which are to be cut.
           items:
             $ref: "#/components/schemas/TreeInformation"
+    Reservation:
+      type: object
+      properties:
+        name:
+          type: string
+        location:
+          $ref: "#/components/schemas/Location"
     Location:
       type: array
       description: This includes all the points of the land in the form of a polygon.
