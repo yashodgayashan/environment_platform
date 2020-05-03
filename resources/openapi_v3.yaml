@@ -457,7 +457,7 @@ paths:
                 properties:
                   reason:
                     type: string
-  /application/{application-id}/progress/{progress-id}:
+  /application/{application-id}/status/{status-id}:
     get:
       description: Get all the versions of a progress.
       parameters:
