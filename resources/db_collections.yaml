@@ -107,6 +107,15 @@ Applications:
                       height:
                         type: number
                         description: Length of the log.
+    assignees:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: string
+          name:
+            type: string
     status:
       type: array
       items:
