@@ -1,0 +1,211 @@
+Applications:
+  type: object
+  properties:
+    applicationId:
+      type: string
+    numberOfVersions:
+      type: integer
+      description: This indicates number of versions having for particular application.
+    versions:
+      type: array
+      items:
+        type: object
+        properties:
+          applicationId:
+            type: string
+          title:
+            type: string
+            description: The title of the title.
+          applicationCreatedDate:
+            type: object
+            properties:
+              year:
+                type: integer
+              month:
+                type: integer
+              day:
+                type: integer
+              hour:
+                type: integer
+              minute:
+                type: integer
+          removalDate:
+            type: object
+            properties:
+              year:
+                type: integer
+              month:
+                type: integer
+              day:
+                type: integer
+              hour:
+                type: integer
+              minute:
+                type: integer
+          reason:
+            type: string
+          type:
+            type: string
+          requestedBy:
+            type: string
+            description: Name of Requester.
+          permitRequired:
+            type: boolean
+          landOwner:
+            type: string
+            description: Name of the landowner.
+          treeRemovalAutrhority:
+            type: string
+          city:
+            type: string
+          district:
+            type: string
+          nameOfTheLand:
+            type: string
+          planNumber:
+            type: string
+          location:
+            type: array
+            description: This includes all the points of the land in the form of a polygon.
+            items:
+              type: object
+              properties:
+                latitude:
+                  type: number
+                longitude:
+                  type: number
+          treeInformation:
+            type: array
+            description: Information of the trees to be cut off.
+            items:
+              type: object
+              properties:
+                species:
+                  type: string
+                treeNumber:
+                  type: string
+                heightType:
+                  type: string
+                  enum: ["Merchantable", "Top"]
+                height:
+                  type: number
+                  description: Height (in m)
+                girth:
+                  type: number
+                  description: The girth at the breast height and this should be in centimeters.
+                logDetails:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      minGirth:
+                        type: number
+                        description: Minimum girth of the log.
+                      maxGirth:
+                        type: number
+                        description: Maximum girth of the log.
+                      height:
+                        type: number
+                        description: Length of the log.
+    status:
+      type: array
+      items:
+        type: object
+        properties:
+          status-id:
+            type: string
+          ministry-name:
+            type: string
+          versions:
+            type: array
+            items:
+              type: object
+              properties:
+                progress:
+                  type: string
+                changedBy:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    id:
+                      type: string
+                reason:
+                  type: string
+                  description: The reason field is only added if the application is cancelled.
+                timestamp:
+                  type: object
+                  properties:
+                    year:
+                      type: integer
+                    month:
+                      type: integer
+                    day:
+                      type: integer
+                    hour:
+                      type: integer
+                    minute:
+                      type: integer
+    comments:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: string
+          content:
+            type: string
+          sender:
+            type: object
+            properties:
+              name:
+                type: string
+              id:
+                type: string
+          reciever:
+            type: object
+            properties:
+              name:
+                type: string
+              id:
+                type: string
+          timestamp:
+            type: object
+            properties:
+              year:
+                type: integer
+              month:
+                type: integer
+              day:
+                type: integer
+              hour:
+                type: integer
+              minute:
+                type: integer
+          seenBy:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: string
+                name:
+                  type: string
+Users:
+  type: array
+  items:
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      applications:
+        type: array
+        items:
+          type: object
+          properties:
+            id:
+              type: string
+            name:
+              type: string
