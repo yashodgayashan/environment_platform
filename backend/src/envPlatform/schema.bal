@@ -79,7 +79,7 @@ type Date record {
      int minute;
 };
 type Status record { 
-     string 'ministry\-name;
+     string ministryName;
      string progress;
      Person changedBy;
      string reason;
