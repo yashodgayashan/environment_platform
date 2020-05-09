@@ -7,7 +7,7 @@ type TreeRemovalApplication record {
      Date applicationCreatedDate;
      Date removalDate;
      string reason;
-     string 'type;
+     string type;
      string requestedBy;
      boolean permitRequired;
      string landOwner;
@@ -79,7 +79,7 @@ type Date record {
      int minute;
 };
 type Status record { 
-     string 'ministry\-name;
+     string ministryName;
      string progress;
      Person changedBy;
      string reason;
