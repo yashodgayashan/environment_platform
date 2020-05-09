@@ -7,6 +7,7 @@ info:
 paths:
   /applications:
     get:
+      operationId: getApplications
       description: Return all the applications related to a user, admin or the appointed ministry.
       parameters:
         - in: query
@@ -62,6 +63,7 @@ paths:
                   reason:
                     type: string
     post:
+      operationId: createApplication
       description: A user can submit an application or save a draft.
       requestBody:
         required: true
@@ -119,6 +121,7 @@ paths:
                     type: string
   /applications/{application-id}:
     get:
+      operationId: getApplication
       description: Returns the information of the latest version of a specific application or a draft.
       parameters:
         - name: application-id
@@ -161,6 +164,7 @@ paths:
                   reason:
                     type: string
     put:
+      operationId: updateApplication
       description: Update the information in the draft or in the application.
       parameters:
         - name: application-id
@@ -211,6 +215,7 @@ paths:
                   reason:
                     type: string
     delete:
+      operationId: deleteApplication
       description: Delete an application draft.
       parameters:
         - name: application-id
@@ -257,6 +262,7 @@ paths:
                     type: string
   /applications/{application-id}/assign-ministry:
     post:
+      operationId: assignMinistry
       description: Assign a ministry for an application.
       parameters:
         - name: application-id
@@ -308,6 +314,7 @@ paths:
                     type: string
   /applications/{application-id}/update-status:
     post:
+      operationId: updateApplicationStatus
       description: Update the status of an application.
       parameters:
         - name: application-id
@@ -359,6 +366,7 @@ paths:
                     type: string
   /applications/{application-id}/versions:
     get:
+      operationId: getApplicationVersions
       description: This will return all the version information of a particular application.
       parameters:
         - name: application-id
@@ -409,6 +417,7 @@ paths:
                     type: string
   /application/{application-id}/versions/{version-id}:
     get:
+      operationId: getApplicationVersion
       description: This will return a specific version of the application.
       parameters:
         - name: application-id
@@ -457,6 +466,7 @@ paths:
                     type: string
   /application/{application-id}/status:
     get:
+      operationId: getApplicationStatus
       description: Get the details of a status update to an application
       parameters:
         - name: application-id
@@ -507,6 +517,7 @@ paths:
                     type: string
   /application/{application-id}/status/{status-id}/versions:
     get:
+      operationId: getApplicationStatusVersions
       description: Get the history of a status for a given application
       parameters:
         - name: application-id
@@ -555,8 +566,10 @@ paths:
                 properties:
                   reason:
                     type: string
-  /maps/reservation:
+  /maps/reservations:
     get:
+      operationId: getReservations
+      tags: ["maps"]
       description: Get all the reservations' co-ordinates.
       responses:
         "200":
@@ -596,6 +609,8 @@ paths:
                     type: string
   /maps/validate-map:
     post:
+      operationId: validateMap
+      tags: ["maps"]
       description: Validates the map and its co-ordinates.
       requestBody:
         content:
@@ -641,6 +656,7 @@ paths:
                     type: string
   /applications/{application-id}/comments:
     get:
+      operationId: getApplicationComments
       description: Get all the comments which has taken place in applications.
       parameters:
         - name: application-id
@@ -676,6 +692,7 @@ paths:
                   reason:
                     type: string
     post:
+      operationId: createApplicationComment
       description: Post a new comment.
       parameters:
         - name: application-id
@@ -727,6 +744,7 @@ paths:
                     type: string
   /applications/{application-id}/comments/{comment-id}:
     get:
+      operationId: getApplicationComment
       description: Get information about a comment.
       parameters:
         - name: application-id
@@ -775,6 +793,7 @@ paths:
                     type: string
   /comments:
     get:
+      operationId: getComments
       description: Get all the comments specific to a user.
       responses:
         "200":
