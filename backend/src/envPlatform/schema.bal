@@ -7,7 +7,7 @@ type TreeRemovalApplication record {
      Date applicationCreatedDate;
      Date removalDate;
      string reason;
-     string 'type;
+     string type;
      string requestedBy;
      boolean permitRequired;
      string landOwner;
