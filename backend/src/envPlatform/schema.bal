@@ -7,7 +7,7 @@ type TreeRemovalApplication record {
      Date applicationCreatedDate;
      Date removalDate;
      string reason;
-     string type;
+     string 'type;
      string requestedBy;
      boolean permitRequired;
      string landOwner;
@@ -16,7 +16,7 @@ type TreeRemovalApplication record {
      string district;
      string nameOfTheLand;
      string planNumber;
-     Location location;
+     Area area;
      TreeInformation [] treeInformation;
      Status [] status;
      Field [] addedFields;
@@ -43,12 +43,12 @@ type TreeRemovalForm record {
      string district;
      string nameOfTheLand;
      string planNumber;
-     Location location;
+     Area area;
      TreeInformation [] treeInformation;
 };
 type Reservation record { 
      string name;
-     Location location;
+     Area area;
 };
 type TreeInformation record { 
      string species;
@@ -92,3 +92,5 @@ type Field record {
      Date addedOn;
      boolean edited;
 };
+
+type Area string[];
