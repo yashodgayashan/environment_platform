@@ -1,7 +1,7 @@
 import ballerina/http;
 import ballerina/openapi;
 
-listener http:Listener ep0 = new(9090);
+listener http:Listener ep0 = new (9090);
 
 @openapi:ServiceInfo {
     contract: "resources/openapi_v3.yaml"
@@ -13,144 +13,144 @@ listener http:Listener ep0 = new(9090);
 service envService on ep0 {
 
     @http:ResourceConfig {
-        methods:["GET"],
-        path:"/applications"
+        methods: ["GET"],
+        path: "/applications"
     }
-    resource function resource_get_applications (http:Caller caller, http:Request req) returns error? {
+    resource function getApplications(http:Caller caller, http:Request req) returns error? {
 
     }
 
     @http:ResourceConfig {
-        methods:["POST"],
-        path:"/applications",
-        body:"body"
+        methods: ["POST"],
+        path: "/applications",
+        body: "body"
     }
-    resource function resource_post_applications (http:Caller caller, http:Request req,  TreeRemovalForm  body) returns error? {
+    resource function postApplication(http:Caller caller, http:Request req, TreeRemovalForm body) returns error? {
 
     }
 
     @http:ResourceConfig {
-        methods:["GET"],
-        path:"/applications/{application-id}"
+        methods: ["GET"],
+        path: "/applications/{applicationId}"
     }
-    resource function resource_get_applications_application-id (http:Caller caller, http:Request req,  string &#x27;application\-id) returns error? {
+    resource function getApplicationById(http:Caller caller, http:Request req, string applicationId) returns error? {
 
     }
 
     @http:ResourceConfig {
-        methods:["PUT"],
-        path:"/applications/{application-id}",
-        body:"body"
+        methods: ["PUT"],
+        path: "/applications/{applicationId}",
+        body: "body"
     }
-    resource function resource_put_applications_application-id (http:Caller caller, http:Request req,  string &#x27;application\-id,  TreeRemovalForm  body) returns error? {
+    resource function putApplicationById(http:Caller caller, http:Request req, string applicationId, TreeRemovalForm body) returns error? {
 
     }
 
     @http:ResourceConfig {
-        methods:["DELETE"],
-        path:"/applications/{application-id}"
+        methods: ["DELETE"],
+        path: "/applications/{applicationId}"
     }
-    resource function resource_delete_applications_application-id (http:Caller caller, http:Request req,  string &#x27;application\-id) returns error? {
+    resource function deleteApplicationById(http:Caller caller, http:Request req, string applicationId) returns error? {
 
     }
 
     @http:ResourceConfig {
-        methods:["POST"],
-        path:"/applications/{application-id}/assign-ministry",
-        body:"body"
+        methods: ["POST"],
+        path: "/applications/{applicationId}/assign-ministry",
+        body: "body"
     }
-    resource function resource_post_applications_application-id_assign-ministry (http:Caller caller, http:Request req,  string &#x27;application\-id,  AssignedMinistry  body) returns error? {
+    resource function assignMinistry(http:Caller caller, http:Request req, string applicationId, AssignedMinistry body) returns error? {
 
     }
 
     @http:ResourceConfig {
-        methods:["POST"],
-        path:"/applications/{application-id}/update-status",
-        body:"body"
+        methods: ["POST"],
+        path: "/applications/{applicationId}/update-status",
+        body: "body"
     }
-    resource function resource_post_applications_application-id_update-status (http:Caller caller, http:Request req,  string &#x27;application\-id,  Status  body) returns error? {
+    resource function updateStatus(http:Caller caller, http:Request req, string applicationId, Status body) returns error? {
 
     }
 
     @http:ResourceConfig {
-        methods:["GET"],
-        path:"/applications/{application-id}/versions"
+        methods: ["GET"],
+        path: "/applications/{applicationId}/versions"
     }
-    resource function resource_get_applications_application-id_versions (http:Caller caller, http:Request req,  string &#x27;application\-id) returns error? {
+    resource function getApplicationVersionsByApplicationId(http:Caller caller, http:Request req, string applicationId) returns error? {
 
     }
 
     @http:ResourceConfig {
-        methods:["GET"],
-        path:"/application/{application-id}/versions/{version-id}"
+        methods: ["GET"],
+        path: "/application/{applicationId}/versions/{versionId}"
     }
-    resource function resource_get_application_application-id_versions_version-id (http:Caller caller, http:Request req,  string &#x27;application\-id,  string &#x27;version\-id) returns error? {
+    resource function getApplicationVersionByVersionId(http:Caller caller, http:Request req, string applicationId, string versionId) returns error? {
 
     }
 
     @http:ResourceConfig {
-        methods:["GET"],
-        path:"/application/{application-id}/status"
+        methods: ["GET"],
+        path: "/application/{applicationId}/status"
     }
-    resource function resource_get_application_application-id_status (http:Caller caller, http:Request req,  string &#x27;application\-id,  string &#x27;status\-id) returns error? {
+    resource function getApplicationStatusById(http:Caller caller, http:Request req, string applicationId, string statusId) returns error? {
 
     }
 
     @http:ResourceConfig {
-        methods:["GET"],
-        path:"/application/{application-id}/status/{status-id}/versions"
+        methods: ["GET"],
+        path: "/application/{applicationId}/status/{statusId}/versions"
     }
-    resource function resource_get_application_application-id_status_status-id_versions (http:Caller caller, http:Request req,  string &#x27;application\-id,  string &#x27;status\-id) returns error? {
+    resource function getApplicationStatusVersions(http:Caller caller, http:Request req, string applicationId, string statusId) returns error? {
 
     }
 
     @http:ResourceConfig {
-        methods:["GET"],
-        path:"/maps/reservation"
+        methods: ["GET"],
+        path: "/maps/reservation"
     }
-    resource function resource_get_maps_reservation (http:Caller caller, http:Request req) returns error? {
+    resource function getReseravtions(http:Caller caller, http:Request req) returns error? {
 
     }
 
     @http:ResourceConfig {
-        methods:["POST"],
-        path:"/maps/validate-map",
-        body:"body"
+        methods: ["POST"],
+        path: "/maps/validate-map",
+        body: "body"
     }
-    resource function resource_post_maps_validate-map (http:Caller caller, http:Request req,  Location  body) returns error? {
+    resource function validateTheLocation(http:Caller caller, http:Request req, Location body) returns error? {
 
     }
 
     @http:ResourceConfig {
-        methods:["GET"],
-        path:"/applications/{application-id}/comments"
+        methods: ["GET"],
+        path: "/applications/{applicationId}/comments"
     }
-    resource function resource_get_applications_application-id_comments (http:Caller caller, http:Request req,  string &#x27;application\-id) returns error? {
+    resource function getApplicationComments(http:Caller caller, http:Request req, string applicationId) returns error? {
 
     }
 
     @http:ResourceConfig {
-        methods:["POST"],
-        path:"/applications/{application-id}/comments",
-        body:"body"
+        methods: ["POST"],
+        path: "/applications/{applicationId}/comments",
+        body: "body"
     }
-    resource function resource_post_applications_application-id_comments (http:Caller caller, http:Request req,  string &#x27;application\-id,  Message  body) returns error? {
+    resource function postApplicationComment(http:Caller caller, http:Request req, string applicationId, Message body) returns error? {
 
     }
 
     @http:ResourceConfig {
-        methods:["GET"],
-        path:"/applications/{application-id}/comments/{comment-id}"
+        methods: ["GET"],
+        path: "/applications/{applicationId}/comments/{commentId}"
     }
-    resource function resource_get_applications_application-id_comments_comment-id (http:Caller caller, http:Request req,  string &#x27;application\-id,  string &#x27;comment\-id) returns error? {
+    resource function getApplicationComment(http:Caller caller, http:Request req, string applicationId, string commentId) returns error? {
 
     }
 
     @http:ResourceConfig {
-        methods:["GET"],
-        path:"/comments"
+        methods: ["GET"],
+        path: "/comments"
     }
-    resource function resource_get_comments (http:Caller caller, http:Request req) returns error? {
+    resource function getComments(http:Caller caller, http:Request req) returns error? {
 
     }
 
