@@ -1029,7 +1029,7 @@ components:
     Status:
       type: object
       properties:
-        ministry-name:
+        ministryName:
           type: string
         progress:
           type: string
