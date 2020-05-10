@@ -16,7 +16,7 @@ type TreeRemovalApplication record {
      string district;
      string nameOfTheLand;
      string planNumber;
-     Location location;
+     Location [] location;
      TreeInformation [] treeInformation;
      Status [] status;
      Field [] addedFields;
@@ -43,12 +43,12 @@ type TreeRemovalForm record {
      string district;
      string nameOfTheLand;
      string planNumber;
-     Location location;
+     Location [] location;
      TreeInformation [] treeInformation;
 };
 type Reservation record { 
      string name;
-     Location location;
+     Location [] location;
 };
 type TreeInformation record { 
      string species;
@@ -91,4 +91,8 @@ type Field record {
      Ministry addedBy;
      Date addedOn;
      boolean edited;
+};
+type Location record {
+    float latitude;
+    float longitude;
 };
