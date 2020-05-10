@@ -79,7 +79,7 @@ paths:
                 properties:
                   reason:
                     type: string
-                  application-id:
+                  applicationId:
                     type: string
         "401":
           description: Authorization failure(Unauthorized).
@@ -117,11 +117,11 @@ paths:
                 properties:
                   reason:
                     type: string
-  /applications/{application-id}:
+  /applications/{applicationId}:
     get:
       description: Returns the information of the latest version of a specific application or a draft.
       parameters:
-        - name: application-id
+        - name: applicationId
           in: path
           required: true
           schema:
@@ -163,7 +163,7 @@ paths:
     put:
       description: Update the information in the draft or in the application.
       parameters:
-        - name: application-id
+        - name: applicationId
           in: path
           required: true
           schema:
@@ -213,7 +213,7 @@ paths:
     delete:
       description: Delete an application draft.
       parameters:
-        - name: application-id
+        - name: applicationId
           in: path
           required: true
           schema:
@@ -255,11 +255,11 @@ paths:
                 properties:
                   reason:
                     type: string
-  /applications/{application-id}/assign-ministry:
+  /applications/{applicationId}/assign-ministry:
     post:
       description: Assign a ministry for an application.
       parameters:
-        - name: application-id
+        - name: applicationId
           in: path
           required: true
           schema:
@@ -306,11 +306,11 @@ paths:
                 properties:
                   reason:
                     type: string
-  /applications/{application-id}/update-status:
+  /applications/{applicationId}/update-status:
     post:
       description: Update the status of an application.
       parameters:
-        - name: application-id
+        - name: applicationId
           in: path
           required: true
           schema:
@@ -357,11 +357,11 @@ paths:
                 properties:
                   reason:
                     type: string
-  /applications/{application-id}/versions:
+  /applications/{applicationId}/versions:
     get:
       description: This will return all the version information of a particular application.
       parameters:
-        - name: application-id
+        - name: applicationId
           in: path
           required: true
           schema:
@@ -376,7 +376,7 @@ paths:
                 items:
                   type: object
                   properties:
-                    version-id:
+                    versionId:
                       type: integer
                     createdAt:
                       $ref: "#/components/schemas/Date"
@@ -407,16 +407,16 @@ paths:
                 properties:
                   reason:
                     type: string
-  /application/{application-id}/versions/{version-id}:
+  /application/{applicationId}/versions/{versionId}:
     get:
       description: This will return a specific version of the application.
       parameters:
-        - name: application-id
+        - name: applicationId
           in: path
           required: true
           schema:
             type: string
-        - name: version-id
+        - name: versionId
           in: path
           required: true
           schema:
@@ -455,11 +455,11 @@ paths:
                 properties:
                   reason:
                     type: string
-  /application/{application-id}/status:
+  /application/{applicationId}/status:
     get:
       description: Get the details of a status update to an application
       parameters:
-        - name: application-id
+        - name: applicationId
           in: path
           required: true
           schema:
@@ -505,11 +505,11 @@ paths:
                 properties:
                   reason:
                     type: string
-  /application/{application-id}/status/{status-id}/versions:
+  /application/{applicationId}/status/{status-id}/versions:
     get:
       description: Get the history of a status for a given application
       parameters:
-        - name: application-id
+        - name: applicationId
           in: path
           required: true
           schema:
@@ -639,11 +639,11 @@ paths:
                 properties:
                   reason:
                     type: string
-  /applications/{application-id}/comments:
+  /applications/{applicationId}/comments:
     get:
       description: Get all the comments which has taken place in applications.
       parameters:
-        - name: application-id
+        - name: applicationId
           in: path
           required: true
           schema:
@@ -678,7 +678,7 @@ paths:
     post:
       description: Post a new comment.
       parameters:
-        - name: application-id
+        - name: applicationId
           in: path
           required: true
           schema:
@@ -725,11 +725,11 @@ paths:
                 properties:
                   reason:
                     type: string
-  /applications/{application-id}/comments/{comment-id}:
+  /applications/{applicationId}/comments/{comment-id}:
     get:
       description: Get information about a comment.
       parameters:
-        - name: application-id
+        - name: applicationId
           in: path
           required: true
           schema:
@@ -811,7 +811,7 @@ components:
       items:
         type: object
         properties:
-          application-id:
+          applicationId:
             type: string
           title:
             type: string
