@@ -464,11 +464,6 @@ paths:
           required: true
           schema:
             type: string
-        - name: statusId
-          in: path
-          required: true
-          schema:
-            type: string
       responses:
         "200":
           description: Successful response(Success).
