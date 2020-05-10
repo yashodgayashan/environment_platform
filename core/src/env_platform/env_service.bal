@@ -10,7 +10,7 @@ listener http:Listener ep0 = new (9090);
     basePath: "/"
 }
 
-service envService on ep0 {
+service envservice on ep0 {
 
     @http:ResourceConfig {
         methods: ["GET"],
@@ -92,7 +92,7 @@ service envService on ep0 {
         methods: ["GET"],
         path: "/application/{applicationId}/status"
     }
-    resource function getApplicationStatusById(http:Caller caller, http:Request req, string applicationId, string statusId) returns error? {
+    resource function getApplicationStatusById(http:Caller caller, http:Request req, string applicationId) returns error? {
 
     }
 
@@ -108,7 +108,7 @@ service envService on ep0 {
         methods: ["GET"],
         path: "/maps/reservation"
     }
-    resource function getReseravtions(http:Caller caller, http:Request req) returns error? {
+    resource function getReservations(http:Caller caller, http:Request req) returns error? {
 
     }
 
@@ -117,7 +117,7 @@ service envService on ep0 {
         path: "/maps/validate-map",
         body: "body"
     }
-    resource function validateTheLocation(http:Caller caller, http:Request req, Location [] body) returns error? {
+    resource function validateCoordinates(http:Caller caller, http:Request req, Location body) returns error? {
 
     }
 
