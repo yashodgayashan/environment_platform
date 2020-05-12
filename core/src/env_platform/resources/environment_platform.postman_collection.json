@@ -1,0 +1,41 @@
+{
+	"info": {
+		"_postman_id": "933fd33c-db4e-47cb-8383-3daabe7befba",
+		"name": "environment_platform",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "postApplication",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"status\":\"save\",\n\t\"title\":\"tree removal form\",\n\t\"applicationCreatedDate\":{ \n\t\t\"year\":2020, \n\t\t\"month\":2, \n\t\t\"day\":3,\n\t\t\"hour\": 12,\n\t\t\"minute\": 11\n\t},\n\t\"removalDate\":{\n\t\t\"year\":2020, \n\t\t\"month\":3, \n\t\t\"day\":1,\n\t\t\"hour\": 12,\n\t\t\"minute\": 00\n\t},\n\t\"reason\":\"for wood\",\n\t\"applicationType\":\"tree cutting\",\n\t\"requestedBy\":\"Mr A R P Pieris\",\n\t\"permitRequired\": \"true\",\n\t\"landOwner\" : \"Mr A Wijedasa\",\n\t\"treeRemovalAuthority\": \"Central\",\n\t\"city\":\"Negombo\",\n\t\"district\":\"Gampaha\",\n\t\"nameOfTheLand\": \"Araliya Uyana\",\n\t\"planNumber\": \"s12345\",\n\t\"location\": [\n\t\t{\"latitude\":81.2343, \"longitude\":76.2134},\n\t\t{\"latitude\":81.3243, \"longitude\":76.2334},\n\t\t{\"latitude\":81.3343, \"longitude\":76.2634}\n\t],\n\t\"treeInformation\":[\n\t\t{\n\t\t\t\"species\":\"kos\", \n\t\t\t\"treeNumber\":\"12\",\n\t\t\t\"heightType\":\"merchandise\",\n\t\t\t\"height\": 1230,\n\t\t\t\"girth\":132,\n\t\t\t\"logDetails\":[\n\t\t\t\t{\"minGirth\":120,\"maxGirth\":132,\"height\":\"600\"},\n\t\t\t\t{\"minGirth\":110,\"maxGirth\":120,\"height\":\"590\"}\n\t\t\t]\n\t\t}\n\t]\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://0.0.0.0:9090/applications",
+					"protocol": "http",
+					"host": [
+						"0",
+						"0",
+						"0",
+						"0"
+					],
+					"port": "9090",
+					"path": [
+						"applications"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
