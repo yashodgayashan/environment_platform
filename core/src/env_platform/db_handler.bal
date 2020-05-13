@@ -15,13 +15,16 @@ mongodb:Collection applicationCollection = check mongoDatabase->getCollection("a
 # The `saveApplication` function will post the application to the applications collection in the database.
 # 
 # + form - The TreeRemovalForm Type record is accepted.
-# + return - This function will return null if application is added to the database or else return mongodb:Database error
+# + return - This function will return null if application is added to the database or else return mongodb:Database error.
 function saveApplication(TreeRemovalForm form) returns error? {
 
+    // Make the location json.
     json[] locations = [];
     foreach Location location in form.area {
         locations.push(<json>{"Latitude": location.latitude, "longitude": location.longitude});
     }
+
+    // Make the treeInformation json.
     json[] treeInformation = [];
     foreach TreeInformation treeInfo in form.treeInformation {
         json[] logDetails = [];
@@ -37,8 +40,8 @@ function saveApplication(TreeRemovalForm form) returns error? {
             "logDetails": logDetails
         });
     }
-    
-    # TODO - Add auto-generating applicationId
+
+    // Construct the application.
     map<json> application = {
         "applicationId": "tcf-20200513",
         "status": form.status,
