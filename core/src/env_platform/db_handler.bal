@@ -14,7 +14,7 @@ mongodb:Collection applicationCollection = check mongoDatabase->getCollection("a
 
 # The `postApplicationToDB` function will post the application to the applications collection in the database
 # 
-# + form - The TreeRemocalForm Type record is accepted.
+# + form - The TreeRemovalForm Type record is accepted.
 # 
 # + return - This function will return null if application is added to the database or else return mongodb:Database error
 function postApplicationToDB(TreeRemovalForm form) returns error? {
@@ -76,4 +76,3 @@ function postApplicationToDB(TreeRemovalForm form) returns error? {
     };
     return applicationCollection->insert(application);
 }
-
