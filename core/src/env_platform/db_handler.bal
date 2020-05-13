@@ -80,3 +80,33 @@ function saveApplication(TreeRemovalForm form) returns error? {
     };
     return applicationCollection->insert(application);
 }
+
+# The `deleteApplication` function will delete application drafts only which status is save.
+# 
+# + applicationId - The Id of the application which must be deleted
+# + return - This function will return null if application is deleted from the database or else return mongodb:DatabaseError
+# array index out of bound if there are no application with the specific application Id.
+function deleteApplication(string applicationId) returns error? {
+
+    // Get the application with application Id
+    map<json>[]|mongodb:DatabaseError find = applicationCollection->find({"applicationId": applicationId});
+    if (find is map<json>[]) {
+        map<json>|error application = trap find[0];
+        if (application is map<json>) {
+
+            // Check whether it is a draft
+            if (application.status == "save") {
+                int|mongodb:DatabaseError delete = applicationCollection->delete({"applicationId": applicationId, "status": "save"});
+                if (delete is int) {
+                    return;
+                }
+            } else {
+                return error("Invalid Operation", message = "Cannot remove submitted application");
+            }
+        } else {
+            return application;
+        }
+    } else {
+        return find;
+    }
+}
