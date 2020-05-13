@@ -23,6 +23,7 @@ service envservice on ep0 {
     @http:ResourceConfig {
         methods: ["POST"],
         path: "/applications",
+        consumes: ["application/json"],
         body: "body"
     }
     resource function postApplication(http:Caller caller, http:Request req, TreeRemovalForm body) returns error? {
@@ -117,7 +118,7 @@ service envservice on ep0 {
         path: "/maps/validate-map",
         body: "body"
     }
-    resource function validateCoordinates(http:Caller caller, http:Request req, Location body) returns error? {
+    resource function validateTheArea(http:Caller caller, http:Request req, Location[] body) returns error? {
 
     }
 

@@ -609,7 +609,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Location"
+              $ref: "#/components/schemas/Area"
       responses:
         "200":
           description: Validated the map object.
@@ -881,8 +881,8 @@ components:
           type: string
         planNumber:
           type: string
-        location:
-          $ref: "#/components/schemas/Location"
+        area:
+          $ref: "#/components/schemas/Area"
         treeInformation:
           type: array
           description: Information of the trees to be cut off.
@@ -946,8 +946,8 @@ components:
           type: string
         planNumber:
           type: string
-        location:
-          $ref: "#/components/schemas/Location"
+        area:
+          $ref: "#/components/schemas/Area"
         treeInformation:
           type: array
           description: This includes all the inforemation about the trees which are to be cut.
@@ -958,18 +958,20 @@ components:
       properties:
         name:
           type: string
-        location:
-          $ref: "#/components/schemas/Location"
-    Location:
+        area:
+          $ref: "#/components/schemas/Area"
+    Area:
       type: array
       description: This includes all the points of the land in the form of a polygon.
       items:
-        type: object
-        properties:
-          latitude:
-            type: number
-          longitude:
-            type: number
+        $ref: "#/components/schemas/Location"
+    Location:
+      type: object
+      properties:
+        latitude:
+          type: number
+        longitude:
+          type: number
     TreeInformation:
       type: object
       properties:

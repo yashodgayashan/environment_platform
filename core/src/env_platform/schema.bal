@@ -16,7 +16,7 @@ type TreeRemovalApplication record {
     string district;
     string nameOfTheLand;
     string planNumber;
-    Location[] location;
+    Location[] area;
     TreeInformation[] treeInformation;
     Status[] status;
     Field[] addedFields;
@@ -43,12 +43,12 @@ type TreeRemovalForm record {
     string district;
     string nameOfTheLand;
     string planNumber;
-    Location[] location;
+    Location[] area;
     TreeInformation[] treeInformation;
 };
 type Reservation record {
     string name;
-    Location[] location;
+    Location[] area;
 };
 type TreeInformation record {
     string species;
