@@ -38,6 +38,8 @@ function postApplicationToDB(TreeRemovalForm form) returns error? {
             "logDetails": logDetails
         });
     }
+    
+    # TODO - Add auto-generating applicationId
     map<json> application = {
         "applicationId": "tcf-20200513",
         "status": form.status,
