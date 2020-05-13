@@ -12,7 +12,7 @@ mongodb:Client mongoClient = check new (mongoConfig);
 mongodb:Database mongoDatabase = check mongoClient->getDatabase("EnvironmentPlatform");
 mongodb:Collection applicationCollection = check mongoDatabase->getCollection("applications");
 
-# The `postApplicationToDB` function will post the application to the applications collection in the database
+# The `postApplicationToDB` function will post the application to the applications collection in the database.
 # 
 # + form - The TreeRemovalForm Type record is accepted.
 # 
