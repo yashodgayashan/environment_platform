@@ -964,12 +964,14 @@ components:
       type: array
       description: This includes all the points of the land in the form of a polygon.
       items:
-        type: object
-        properties:
-          latitude:
-            type: number
-          longitude:
-            type: number
+        $ref: "#/components/schemas/Location"
+    Location:
+      type: object
+      properties:
+        latitude:
+          type: number
+        longitude:
+          type: number
     TreeInformation:
       type: object
       properties:

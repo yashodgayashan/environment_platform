@@ -1,11 +1,12 @@
 import ballerina/http;
-import ballerina/openapi;
+// import ballerina/openapi;
+// import ballerina/io;
 
 listener http:Listener ep0 = new (9090);
 
-@openapi:ServiceInfo {
-    contract: "resources/openapi_v3.yaml"
-}
+// @openapi:ServiceInfo {
+//     contract: "resources/openapi_v3.yaml"
+// }
 @http:ServiceConfig {
     basePath: "/"
 }
@@ -23,6 +24,7 @@ service envservice on ep0 {
     @http:ResourceConfig {
         methods: ["POST"],
         path: "/applications",
+        consumes: ["application/json"],
         body: "body"
     }
     resource function postApplication(http:Caller caller, http:Request req, TreeRemovalForm body) returns error? {
@@ -117,7 +119,7 @@ service envservice on ep0 {
         path: "/maps/validate-map",
         body: "body"
     }
-    resource function validateCoordinates(http:Caller caller, http:Request req, Location body) returns error? {
+    resource function validateTheLocation(http:Caller caller, http:Request req, Location[] body) returns error? {
 
     }
 
