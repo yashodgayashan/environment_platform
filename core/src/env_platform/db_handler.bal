@@ -18,29 +18,6 @@ mongodb:Collection applicationCollection = check mongoDatabase->getCollection("a
 # + return - This function will return null if application is added to the database or else return mongodb:Database error.
 function saveApplication(TreeRemovalForm form) returns error? {
 
-    // Make the location json.
-    json[] locations = [];
-    foreach Location location in form.area {
-        locations.push(<json>{"Latitude": location.latitude, "longitude": location.longitude});
-    }
-
-    // Make the treeInformation json.
-    json[] treeInformation = [];
-    foreach TreeInformation treeInfo in form.treeInformation {
-        json[] logDetails = [];
-        foreach var item in treeInfo.logDetails {
-            logDetails.push(<json>{"minGirth": item.minGirth, "maxGirth": item.maxGirth, "height": item.height});
-        }
-        treeInformation.push(<json>{
-            "species": treeInfo.species,
-            "treeNumber": treeInfo.treeNumber,
-            "heightType": treeInfo.heightType,
-            "height": treeInfo.height,
-            "girth": treeInfo.girth,
-            "logDetails": logDetails
-        });
-    }
-
     // Construct the application.
     map<json> application = {
         "applicationId": "tcf-20200513",
@@ -73,8 +50,8 @@ function saveApplication(TreeRemovalForm form) returns error? {
                     "district": form.district,
                     "nameOfTheLand": form.nameOfTheLand,
                     "planNumber": form.planNumber,
-                    "area": locations,
-                    "treeInformation": treeInformation
+                    "area": getAreaJsonArray(form.area),
+                    "treeInformation": getTreeInformationJsonArray(form.treeInformation)
                 }
             ]
     };
