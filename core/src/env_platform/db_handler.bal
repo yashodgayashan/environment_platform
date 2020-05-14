@@ -17,10 +17,9 @@ mongodb:Collection applicationCollection = check mongoDatabase->getCollection("a
 # The `saveApplication` function will save the application to the applications collection in the database.
 # 
 # + form - Form containing the tree removal data.
-# + return - This function will return null if application is added to the database or else return mongodb:Database error.
-function saveApplication(TreeRemovalForm form) returns error? {
+# + return - Returns true if the application is saved, error if there is a mongodb:DatabaseError.
+function saveApplication(TreeRemovalForm form) returns boolean|error {
 
-    // TODO - Return true or false based on application save.
     // Construct the application.
     map<json> application = {
         "applicationId": "tcf-20200513",
@@ -58,7 +57,10 @@ function saveApplication(TreeRemovalForm form) returns error? {
                 }
             ]
     };
-    return applicationCollection->insert(application);
+
+    mongodb:DatabaseError? insertted = applicationCollection->insert(application);
+
+    return insertted is mongodb:DatabaseError ? insertted : true;
 }
 
 # The `deleteApplication` function will delete application drafts with the status "draft".
@@ -68,11 +70,15 @@ function saveApplication(TreeRemovalForm form) returns error? {
 # array index out of bound if there are no applications with the specific application Id.
 function deleteApplication(string applicationId) returns boolean|error {
 
-    // TODO - Return true or false based on deleted.
     string applicationStatus = check getApplicationStatusByApplicationId(applicationId);
     if (applicationStatus == "draft") {
-        int deleted = check applicationCollection->delete({"applicationId": applicationId, "status": "draft"});
-        return true;
+        int|error deleted = applicationCollection->delete({"applicationId": applicationId, "status": "draft"});
+        if (deleted is int) {
+            return deleted == 1 ? true : false;
+        } else {
+            // Returns the error.
+            return deleted;
+        }
     } else {
         return error("Invalid Operation", message = "Cannot delete the application with the appilcation ID: "
             + applicationId + " since it is already submitted.");
