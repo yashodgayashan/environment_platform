@@ -60,7 +60,7 @@ function saveApplication(TreeRemovalForm form) returns boolean|error {
 
     mongodb:DatabaseError? inserted = applicationCollection->insert(application);
 
-    return insertted is mongodb:DatabaseError ? insertted : true;
+    return inserted is mongodb:DatabaseError ? inserted : true;
 }
 
 # The `deleteApplication` function will delete application drafts with the status "draft".
