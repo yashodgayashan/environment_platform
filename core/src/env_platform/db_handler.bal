@@ -65,14 +65,10 @@ function saveApplication(TreeRemovalForm form) returns error? {
 # array index out of bound if there are no application with the specific application Id.
 function deleteApplication(string applicationId) returns boolean|error {
 
-    string|error applicationType = getApplicationTypeByApplicationId(applicationId);
+    string applicationType = check getApplicationTypeByApplicationId(applicationId);
     if (applicationType == "save") {
-        int|mongodb:DatabaseError delete = applicationCollection->delete({"applicationId": applicationId, "status": "save"});
-        if (delete is int) {
-            return true;
-        } else {
-            return delete;
-        }
+        int delete = check applicationCollection->delete({"applicationId": applicationId, "status": "save"});
+        return true;
     } else {
         return error("Invalid Operation", message = "Cannot remove submitted application");
     }
@@ -86,15 +82,12 @@ function deleteApplication(string applicationId) returns boolean|error {
 function getApplicationTypeByApplicationId(string applicationId) returns string|error {
 
     // Get the application with application Id
-    map<json>[]|mongodb:DatabaseError find = applicationCollection->find({"applicationId": applicationId});
-    if (find is map<json>[]) {
-        map<json>|error application = trap find[0];
-        if (application is map<json>) {
-            return trap <string>application.status;
-        } else {
-            return application;
-        }
+    map<json>[] find = check applicationCollection->find({"applicationId": applicationId});
+
+    map<json>|error application = trap find[0];
+    if (application is map<json>) {
+        return trap <string>application.status;
     } else {
-        return find;
+        return application;
     }
 }
