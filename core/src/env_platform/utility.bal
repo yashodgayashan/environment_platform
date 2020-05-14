@@ -1,8 +1,9 @@
-# The `getAreaJsonArray` function will construct the area json array using given Location array.
+# The `getAreaJsonArray` function will construct the area json array using given Location object array.
 # 
 # + locations - Array of location objects.
 # + return - Returns the constructed json array of locations.
 function getAreaJsonArray(Location[] locations) returns json[] {
+
     json[] area = [];
     foreach Location location in locations {
         area.push(<json>{"Latitude": location.latitude, "longitude": location.longitude});
@@ -10,9 +11,14 @@ function getAreaJsonArray(Location[] locations) returns json[] {
     return area;
 }
 
-function getTreeInformationJsonArray(TreeInformation[] treeInfor) returns json[] {
+# The `getTreeInformationJsonArray` function will construct the tree information json array using given TreeInformation  object array.
+# 
+# + treeInfoArray - Array of TreeInformation objects.
+# + return - Returns the constructed json array of TreeInformation.
+function getTreeInformationJsonArray(TreeInformation[] treeInfoArray) returns json[] {
+
     json[] treeInformation = [];
-    foreach TreeInformation treeInfo in treeInfor {
+    foreach TreeInformation treeInfo in treeInfoArray {
         json[] logDetails = [];
         foreach var item in treeInfo.logDetails {
             logDetails.push(<json>{"minGirth": item.minGirth, "maxGirth": item.maxGirth, "height": item.height});
