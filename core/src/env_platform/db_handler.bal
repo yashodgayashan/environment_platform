@@ -58,7 +58,7 @@ function saveApplication(TreeRemovalForm form) returns error? {
     return applicationCollection->insert(application);
 }
 
-# The `deleteApplication` function will delete application drafts only which status is save.
+# The `deleteApplication` function will delete application drafts where status is set to "save".
 # 
 # + applicationId - The Id of the application which must be deleted
 # + return - This function will return null if application is deleted from the database or else return mongodb:DatabaseError
