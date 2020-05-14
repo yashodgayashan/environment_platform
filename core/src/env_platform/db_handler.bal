@@ -60,7 +60,7 @@ function saveApplication(TreeRemovalForm form) returns error? {
 
 # The `deleteApplication` function will delete application drafts where status is set to "save".
 # 
-# + applicationId - The Id of the application which must be deleted
+# + applicationId - The Id of the application to be deleted.
 # + return - This function will return null if application is deleted from the database or else return mongodb:DatabaseError
 # array index out of bound if there are no application with the specific application Id.
 function deleteApplication(string applicationId) returns boolean|error {
