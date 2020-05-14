@@ -1,6 +1,8 @@
 import ballerina/config as conf;
 import ballerina/mongodb;
 
+// TODO - Add debug logs.
+
 // Mongodb configurations.
 mongodb:ClientConfig mongoConfig = {
     host: conf:getAsString("DB_HOST"),
@@ -12,34 +14,11 @@ mongodb:Client mongoClient = check new (mongoConfig);
 mongodb:Database mongoDatabase = check mongoClient->getDatabase("EnvironmentPlatform");
 mongodb:Collection applicationCollection = check mongoDatabase->getCollection("applications");
 
-# The `saveApplication` function will post the application to the applications collection in the database.
+# The `saveApplication` function will save the application to the applications collection in the database.
 # 
-# + form - The TreeRemovalForm Type record is accepted.
-# + return - This function will return null if application is added to the database or else return mongodb:Database error.
-function saveApplication(TreeRemovalForm form) returns error? {
-
-    // Make the location json.
-    json[] locations = [];
-    foreach Location location in form.area {
-        locations.push(<json>{"Latitude": location.latitude, "longitude": location.longitude});
-    }
-
-    // Make the treeInformation json.
-    json[] treeInformation = [];
-    foreach TreeInformation treeInfo in form.treeInformation {
-        json[] logDetails = [];
-        foreach var item in treeInfo.logDetails {
-            logDetails.push(<json>{"minGirth": item.minGirth, "maxGirth": item.maxGirth, "height": item.height});
-        }
-        treeInformation.push(<json>{
-            "species": treeInfo.species,
-            "treeNumber": treeInfo.treeNumber,
-            "heightType": treeInfo.heightType,
-            "height": treeInfo.height,
-            "girth": treeInfo.girth,
-            "logDetails": logDetails
-        });
-    }
+# + form - Form containing the tree removal data.
+# + return - Returns true if the application is saved, error if there is a mongodb:DatabaseError.
+function saveApplication(TreeRemovalForm form) returns boolean|error {
 
     // Construct the application.
     map<json> application = {
@@ -73,10 +52,52 @@ function saveApplication(TreeRemovalForm form) returns error? {
                     "district": form.district,
                     "nameOfTheLand": form.nameOfTheLand,
                     "planNumber": form.planNumber,
-                    "area": locations,
-                    "treeInformation": treeInformation
+                    "area": extractAreaAsJSONArray(form.area),
+                    "treeInformation": extractTreeInformationAsJSONArray(form.treeInformation)
                 }
             ]
     };
-    return applicationCollection->insert(application);
+
+    mongodb:DatabaseError? inserted = applicationCollection->insert(application);
+
+    return inserted is mongodb:DatabaseError ? inserted : true;
+}
+
+# The `deleteApplication` function will delete application drafts with the status "draft".
+# 
+# + applicationId - The Id of the application to be deleted.
+# + return - Returns true if the application is deleted, false if not or else returns mongodb:DatabaseError
+# array index out of bound if there are no applications with the specific application Id.
+function deleteApplication(string applicationId) returns boolean|error {
+
+    string applicationStatus = check getApplicationStatusByApplicationId(applicationId);
+    if (applicationStatus == "draft") {
+        int|error deleted = applicationCollection->delete({"applicationId": applicationId, "status": "draft"});
+        if (deleted is int) {
+            return deleted == 1 ? true : false;
+        } else {
+            // Returns the error.
+            return deleted;
+        }
+    } else {
+        return error("Invalid Operation", message = "Cannot delete the application with the appilcation ID: "
+            + applicationId + " since it is already submitted.");
+    }
+}
+
+# The `getApplicationStatusByApplicationId` function will return the status of the application(draft or submitted).
+# 
+# + applicationId - The Id of the application which the status should be found for.
+# + return - Returns the status of the application(draft, submitted).
+function getApplicationStatusByApplicationId(string applicationId) returns string|error {
+
+    // Get the application with application Id.
+    map<json>[] find = check applicationCollection->find({"applicationId": applicationId});
+
+    map<json>|error application = trap find[0];
+    if (application is map<json>) {
+        return trap <string>application.status;
+    } else {
+        return application;
+    }
 }
