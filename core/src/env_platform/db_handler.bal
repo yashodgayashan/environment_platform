@@ -1,6 +1,8 @@
 import ballerina/config as conf;
 import ballerina/mongodb;
 
+// TODO - Add debug logs.
+
 // Mongodb configurations.
 mongodb:ClientConfig mongoConfig = {
     host: conf:getAsString("DB_HOST"),
@@ -12,12 +14,13 @@ mongodb:Client mongoClient = check new (mongoConfig);
 mongodb:Database mongoDatabase = check mongoClient->getDatabase("EnvironmentPlatform");
 mongodb:Collection applicationCollection = check mongoDatabase->getCollection("applications");
 
-# The `saveApplication` function will post the application to the applications collection in the database.
+# The `saveApplication` function will save the application to the applications collection in the database.
 # 
-# + form - The TreeRemovalForm Type record is accepted.
+# + form - Form containing the tree removal data.
 # + return - This function will return null if application is added to the database or else return mongodb:Database error.
 function saveApplication(TreeRemovalForm form) returns error? {
 
+    // TODO - Return true or false based on application save.
     // Construct the application.
     map<json> application = {
         "applicationId": "tcf-20200513",
@@ -58,30 +61,31 @@ function saveApplication(TreeRemovalForm form) returns error? {
     return applicationCollection->insert(application);
 }
 
-# The `deleteApplication` function will delete application drafts where status is set to "save".
+# The `deleteApplication` function will delete application drafts with the status "draft".
 # 
 # + applicationId - The Id of the application to be deleted.
-# + return - This function will return null if application is deleted from the database or else return mongodb:DatabaseError
-# array index out of bound if there are no application with the specific application Id.
+# + return - Returns true if the application is deleted, false if not or else returns mongodb:DatabaseError
+# array index out of bound if there are no applications with the specific application Id.
 function deleteApplication(string applicationId) returns boolean|error {
 
-    string applicationType = check getApplicationTypeByApplicationId(applicationId);
-    if (applicationType == "save") {
-        int delete = check applicationCollection->delete({"applicationId": applicationId, "status": "save"});
+    // TODO - Return true or false based on deleted.
+    string applicationStatus = check getApplicationStatusByApplicationId(applicationId);
+    if (applicationStatus == "draft") {
+        int deleted = check applicationCollection->delete({"applicationId": applicationId, "status": "draft"});
         return true;
     } else {
-        return error("Invalid Operation", message = "Cannot remove submitted application");
+        return error("Invalid Operation", message = "Cannot delete the application with the appilcation ID: "
+            + applicationId + " since it is already submitted.");
     }
 }
 
-# The `getApplicationTypeByApplicationId` function will output whether the application is save or submit.
+# The `getApplicationStatusByApplicationId` function will return the status of the application(draft or submitted).
 # 
-# + applicationId - The Id of the application which must be deleted
-# + return - This function will return string "save" if the application is a draft or "submit" if the application is 
-# submitted or error if any occured.
-function getApplicationTypeByApplicationId(string applicationId) returns string|error {
+# + applicationId - The Id of the application which the status should be found for.
+# + return - Returns the status of the application(draft, submitted).
+function getApplicationStatusByApplicationId(string applicationId) returns string|error {
 
-    // Get the application with application Id
+    // Get the application with application Id.
     map<json>[] find = check applicationCollection->find({"applicationId": applicationId});
 
     map<json>|error application = trap find[0];
