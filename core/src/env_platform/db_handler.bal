@@ -50,8 +50,8 @@ function saveApplication(TreeRemovalForm form) returns error? {
                     "district": form.district,
                     "nameOfTheLand": form.nameOfTheLand,
                     "planNumber": form.planNumber,
-                    "area": getAreaJsonArray(form.area),
-                    "treeInformation": getTreeInformationJsonArray(form.treeInformation)
+                    "area": extractAreaAsJSONArray(form.area),
+                    "treeInformation": extractTreeInformationAsJSONArray(form.treeInformation)
                 }
             ]
     };
