@@ -139,5 +139,9 @@ function updateApplicationDraft(TreeRemovalForm form, string applicationId) retu
 
     int|mongodb:DatabaseError updated = applicationCollection->update({"versions.0": application}, {"applicationId": applicationId});
 
-    return update is mongodb:DatabaseError ? update : true;
+    if (updated is int) {
+        return updated == 1 ? true:false;
+    } else {
+        return updated;
+    }
 }
