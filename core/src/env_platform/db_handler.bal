@@ -80,7 +80,7 @@ function deleteApplication(string applicationId) returns boolean|error {
     if (applicationStatus == "draft") {
         int|error deleted = applicationCollection->delete({"applicationId": applicationId, "status": "draft"});
         if (deleted is int) {
-            log:printDebug("Deleted application count : " + deleted.toString());
+            log:printDebug("Deleted application count: " + deleted.toString());
             return deleted == 1 ? true : false;
         } else {
             // Returns the error.
