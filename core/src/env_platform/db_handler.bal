@@ -62,7 +62,7 @@ function saveApplication(TreeRemovalForm form) returns boolean|error {
     mongodb:DatabaseError? inserted = applicationCollection->insert(application);
 
     if (inserted is mongodb:DatabaseError) {
-        log:printDebug("Error occured : " + inserted.toString());
+        log:printDebug("An error occurred while saving the application with ID: " + application.applicationId ". " + inserted.reason() + ".");
     } else {
         log:printDebug("Application is inserted to the applications collection.");
     }
