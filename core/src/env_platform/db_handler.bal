@@ -104,7 +104,7 @@ function getApplicationStatusByApplicationId(string applicationId) returns strin
     map<json>[] find = check applicationCollection->find({"applicationId": applicationId});
     map<json>|error application = trap find[0];
     if (application is map<json>) {
-        log:printDebug("Status of the application with application ID " + applicationId + " : " + application.status.toString());
+        log:printDebug("Status of the application with application ID: " + applicationId + " is " + application.status.toString() + ".");
         return trap <string>application.status;
     } else {
         log:printDebug("Error occured while retriving the application : " + application.toString());
