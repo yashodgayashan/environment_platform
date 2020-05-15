@@ -147,7 +147,7 @@ function updateApplicationDraft(TreeRemovalForm form, string applicationId) retu
         "area": extractAreaAsJSONArray(form.area),
         "treeInformation": extractTreeInformationAsJSONArray(form.treeInformation)
     };
-    log:printDebug("Constructed application : " + application.toString());
+    log:printDebug("Constructed application: " + application.toString());
 
     int|mongodb:DatabaseError updated = applicationCollection->update({"versions.0": application}, {"applicationId": applicationId});
 
