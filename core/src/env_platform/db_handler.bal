@@ -88,7 +88,7 @@ function deleteApplication(string applicationId) returns boolean|error {
             return deleted;
         }
     } else {
-        log:printDebug("Cannot delete the application with application ID " + applicationId + " as it is already submitted");
+        log:printDebug("Cannot delete the application with application ID: " + applicationId + " as it is already submitted.");
         return error("Invalid Operation", message = "Cannot delete the application with the appilcation ID: "
             + applicationId + " since it is already submitted.");
     }
