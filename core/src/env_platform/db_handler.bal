@@ -93,11 +93,55 @@ function getApplicationStatusByApplicationId(string applicationId) returns strin
 
     // Get the application with application Id.
     map<json>[] find = check applicationCollection->find({"applicationId": applicationId});
-
     map<json>|error application = trap find[0];
     if (application is map<json>) {
         return trap <string>application.status;
     } else {
         return application;
+    }
+}
+
+# The `updateApplicationDraft` function will alter the exsisting application draft with the incoming form details.
+# 
+# + form - Form containing the tree removal data.
+# + return - This function will return true if draft is updated in the database, false if not or else it returns a mongodb:Database error.
+function updateApplicationDraft(TreeRemovalForm form, string applicationId) returns boolean|error {
+
+    map<json> application = {
+        "title": form.title,
+        "applicationCreatedDate": {
+            "year": form.applicationCreatedDate.year,
+            "month": form.applicationCreatedDate.month,
+            "day": form.applicationCreatedDate.day,
+            "hour": form.applicationCreatedDate.hour,
+            "minute": form.applicationCreatedDate.minute
+        },
+        "removalDate": {
+            "year": form.removalDate.year,
+            "month": form.removalDate.month,
+            "day": form.removalDate.day,
+            "hour": form.removalDate.hour,
+            "minute": form.removalDate.minute
+        },
+        "reason": form.reason,
+        "applicationType": form.applicationType,
+        "requestedBy": form.requestedBy,
+        "permitRequired": form.permitRequired,
+        "landOwner": form.landOwner,
+        "treeRemovalAuthority": form.treeRemovalAuthority,
+        "city": form.city,
+        "district": form.district,
+        "nameOfTheLand": form.nameOfTheLand,
+        "planNumber": form.planNumber,
+        "area": extractAreaAsJSONArray(form.area),
+        "treeInformation": extractTreeInformationAsJSONArray(form.treeInformation)
+    };
+
+    int|mongodb:DatabaseError updated = applicationCollection->update({"versions.0": application}, {"applicationId": applicationId});
+
+    if (updated is int) {
+        return updated == 1 ? true:false;
+    } else {
+        return updated;
     }
 }
