@@ -2,7 +2,6 @@ import ballerina/config as conf;
 import ballerina/log;
 import ballerina/mongodb;
 
-// TODO - Add debug logs.
 
 // Mongodb configurations.
 mongodb:ClientConfig mongoConfig = {
