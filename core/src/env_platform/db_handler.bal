@@ -105,7 +105,7 @@ function getApplicationStatusByApplicationId(string applicationId) returns strin
 # 
 # + form - Form containing the tree removal data.
 # + return - This function will return true if draft is updated in the database, false if not or else it returns a mongodb:Database error.
-function putDraftApplication(TreeRemovalForm form, string applicationId) returns boolean|error {
+function updateApplicationDraft(TreeRemovalForm form, string applicationId) returns boolean|error {
 
     map<json> application = {
         "title": form.title,
