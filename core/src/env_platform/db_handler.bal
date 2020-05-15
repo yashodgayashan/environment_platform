@@ -104,7 +104,7 @@ function getApplicationStatusByApplicationId(string applicationId) returns strin
 # The `updateApplicationDraft` function will alter the exsisting application draft with the incoming form details.
 # 
 # + form - The TreeRemovalForm Type record is accepted.
-# + return - This function will return true if draft is added to the database or else return mongodb:Database error.
+# + return - This function will return true if draft is updated in the database, false if not or else it returns a mongodb:Database error.
 function putDraftApplication(TreeRemovalForm form, string applicationId) returns boolean|error {
 
     map<json> application = {
