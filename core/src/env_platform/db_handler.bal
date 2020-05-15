@@ -57,7 +57,7 @@ function saveApplication(TreeRemovalForm form) returns boolean|error {
                 }
             ]
     };
-    log:printDebug("Constructed application : " + application.toString());
+    log:printDebug("Constructed application: " + application.toString());
 
     mongodb:DatabaseError? inserted = applicationCollection->insert(application);
 
