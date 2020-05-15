@@ -101,7 +101,7 @@ function getApplicationStatusByApplicationId(string applicationId) returns strin
     }
 }
 
-# The `putDraftApplication` function will alter the exsisting application and add the incoming form.
+# The `updateApplicationDraft` function will alter the exsisting application draft with the incoming form details.
 # 
 # + form - The TreeRemovalForm Type record is accepted.
 # + return - This function will return true if draft is added to the database or else return mongodb:Database error.
