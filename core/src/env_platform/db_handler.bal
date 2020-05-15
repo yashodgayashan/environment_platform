@@ -155,7 +155,7 @@ function updateApplicationDraft(TreeRemovalForm form, string applicationId) retu
         log:printDebug("Updated status for application with application ID: " + applicationId + " is " + updated.toString() + ".");
         return updated == 1 ? true : false;
     } else {
-        log:printDebug("Error occured : " + updated.toString());
+        log:printDebug("An error occurred while updating the draft application with the application ID: " + applicationId + ". " + updated.reason() + ".");
         return updated;
     }
 }
