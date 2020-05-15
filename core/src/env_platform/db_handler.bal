@@ -137,7 +137,7 @@ function updateApplicationDraft(TreeRemovalForm form, string applicationId) retu
         "treeInformation": extractTreeInformationAsJSONArray(form.treeInformation)
     };
 
-    int|mongodb:DatabaseError update = applicationCollection->update({"versions.0": application}, {"applicationId": applicationId});
+    int|mongodb:DatabaseError updated = applicationCollection->update({"versions.0": application}, {"applicationId": applicationId});
 
     return update is mongodb:DatabaseError ? update : true;
 }
