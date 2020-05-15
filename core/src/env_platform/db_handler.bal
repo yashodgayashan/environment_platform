@@ -152,7 +152,7 @@ function updateApplicationDraft(TreeRemovalForm form, string applicationId) retu
     int|mongodb:DatabaseError updated = applicationCollection->update({"versions.0": application}, {"applicationId": applicationId});
 
     if (updated is int) {
-        log:printDebug("Updated count for application with application ID " + applicationId + " : " + updated.toString());
+        log:printDebug("Updated status for application with application ID: " + applicationId + " is " + updated.toString() + ".");
         return updated == 1 ? true : false;
     } else {
         log:printDebug("Error occured : " + updated.toString());
