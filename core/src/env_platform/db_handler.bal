@@ -1,4 +1,5 @@
 import ballerina/config as conf;
+import ballerina/log;
 import ballerina/mongodb;
 
 // TODO - Add debug logs.
@@ -57,9 +58,15 @@ function saveApplication(TreeRemovalForm form) returns boolean|error {
                 }
             ]
     };
+    log:printDebug("Constructed application : " + application.toString());
 
     mongodb:DatabaseError? inserted = applicationCollection->insert(application);
 
+    if (inserted is mongodb:DatabaseError) {
+        log:printDebug("Error occured : " + inserted.toString());
+    } else {
+        log:printDebug("Application is inserted to the applications collection.");
+    }
     return inserted is mongodb:DatabaseError ? inserted : true;
 }
 
@@ -74,12 +81,15 @@ function deleteApplication(string applicationId) returns boolean|error {
     if (applicationStatus == "draft") {
         int|error deleted = applicationCollection->delete({"applicationId": applicationId, "status": "draft"});
         if (deleted is int) {
+            log:printDebug("Deleted application count : " + deleted.toString());
             return deleted == 1 ? true : false;
         } else {
             // Returns the error.
+            log:printDebug("Error occured while deleting the draft : " + deleted.toString());
             return deleted;
         }
     } else {
+        log:printDebug("Cannot delete the application with application ID " + applicationId + " as it is already submitted");
         return error("Invalid Operation", message = "Cannot delete the application with the appilcation ID: "
             + applicationId + " since it is already submitted.");
     }
@@ -95,8 +105,10 @@ function getApplicationStatusByApplicationId(string applicationId) returns strin
     map<json>[] find = check applicationCollection->find({"applicationId": applicationId});
     map<json>|error application = trap find[0];
     if (application is map<json>) {
+        log:printDebug("Status of the application with application ID " + applicationId + " : " + application.status.toString());
         return trap <string>application.status;
     } else {
+        log:printDebug("Error occured while retriving the application : " + application.toString());
         return application;
     }
 }
@@ -136,12 +148,15 @@ function updateApplicationDraft(TreeRemovalForm form, string applicationId) retu
         "area": extractAreaAsJSONArray(form.area),
         "treeInformation": extractTreeInformationAsJSONArray(form.treeInformation)
     };
+    log:printDebug("Constructed application : " + application.toString());
 
     int|mongodb:DatabaseError updated = applicationCollection->update({"versions.0": application}, {"applicationId": applicationId});
 
     if (updated is int) {
-        return updated == 1 ? true:false;
+        log:printDebug("Updated count for application with application ID " + applicationId + " : " + updated.toString());
+        return updated == 1 ? true : false;
     } else {
+        log:printDebug("Error occured : " + updated.toString());
         return updated;
     }
 }
