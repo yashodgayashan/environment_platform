@@ -1,0 +1,15 @@
+version: "3"
+services:
+  core:
+    image: env_platform_core
+    build: ./core
+    ports:
+      - "9090:9090"
+    depends_on:
+      - "mongo"
+  mongo:
+    image: "mongo"
+    ports:
+      - "9080:27017"
+    volumes:
+      - monogb_data:/data/db
