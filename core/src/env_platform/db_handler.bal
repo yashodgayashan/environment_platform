@@ -57,14 +57,14 @@ function saveApplication(TreeRemovalForm form) returns boolean|error {
                 }
             ]
     };
-    log:printDebug("Constructed application: " + application.toString());
+    log:printDebug("Constructed application : " + application.toString());
 
     mongodb:DatabaseError? inserted = applicationCollection->insert(application);
 
     if (inserted is mongodb:DatabaseError) {
-        log:printDebug("An error occurred while saving the application with ID: " + application.applicationId + ". " + inserted.reason() + ".") ;
+        log:printDebug("An error occurred while saving the application with ID: " + application.applicationId.toString() + ". " + inserted.reason().toString() + ".");
     } else {
-        log:printDebug("Application with application ID: " + application.applicationId + " was saved successfully.");
+        log:printDebug("Application with application ID: " + application.applicationId.toString() + " was saved successfully.");
     }
     return inserted is mongodb:DatabaseError ? inserted : true;
 }
@@ -115,6 +115,7 @@ function getApplicationStatusByApplicationId(string applicationId) returns strin
 # The `updateApplicationDraft` function will alter the exsisting application draft with the incoming form details.
 # 
 # + form - Form containing the tree removal data.
+# + applicationId - The Id of the application which should be altered.
 # + return - This function will return true if draft is updated in the database, false if not or else it returns a mongodb:Database error.
 function updateApplicationDraft(TreeRemovalForm form, string applicationId) returns boolean|error {
 
@@ -155,7 +156,7 @@ function updateApplicationDraft(TreeRemovalForm form, string applicationId) retu
         log:printDebug("Updated status for application with application ID: " + applicationId + " is " + updated.toString() + ".");
         return updated == 1 ? true : false;
     } else {
-        log:printDebug("An error occurred while updating the draft application with the application ID: " + applicationId + ". " + updated.reason() + ".");
+        log:printDebug("An error occurred while updating the draft application with the application ID: " + applicationId + ". " + updated.reason().toString() + ".");
         return updated;
     }
 }
