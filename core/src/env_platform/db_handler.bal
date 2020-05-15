@@ -62,9 +62,9 @@ function saveApplication(TreeRemovalForm form) returns boolean|error {
     mongodb:DatabaseError? inserted = applicationCollection->insert(application);
 
     if (inserted is mongodb:DatabaseError) {
-        log:printDebug("An error occurred while saving the application with ID: " + application.applicationId ". " + inserted.reason() + ".");
+    log:printDebug("An error occurred while saving the application with ID: " + application.applicationId ". " + inserted.reason() + ".") ;
     } else {
-        log:printDebug("Application with application ID: " + application.applicationId + " was saved successfully." );
+        log:printDebug("Application with application ID: " + application.applicationId + " was saved successfully.");
     }
     return inserted is mongodb:DatabaseError ? inserted : true;
 }
@@ -107,7 +107,7 @@ function getApplicationStatusByApplicationId(string applicationId) returns strin
         log:printDebug("Status of the application with application ID: " + applicationId + " is " + application.status.toString() + ".");
         return trap <string>application.status;
     } else {
-        log:printDebug("Error occured while retriving the application : " + application.toString());
+        log:printDebug("An error occurred while retrieving the application:  " + application.toString() + ".");
         return application;
     }
 }
