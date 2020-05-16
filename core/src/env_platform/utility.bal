@@ -51,7 +51,7 @@ function extractTreeInformationAsJSONArray(TreeInformation[] treeInfoArray) retu
 
 # The `constructApplicationVersion` function will construct the application version which will be suitable for the database.
 # 
-# + form - TreeRemovalForm type record.
+# + form - Form containing the tree removal data.
 # + return - Returns a map<json> containing the application structure which suites the database.
 function constructApplicationVersion(TreeRemovalForm form) returns map<json> {
     return {
