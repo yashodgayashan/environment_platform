@@ -26,9 +26,9 @@ function saveApplication(TreeRemovalForm form) returns boolean|error {
         "applicationId": "tcf-20200513",
         "status": form.status,
         "numberOfVersions": 1,
+        "title": form.title,
         "versions": [
                 {
-                    "title": form.title,
                     "applicationCreatedDate": {
                         "year": form.applicationCreatedDate.year,
                         "month": form.applicationCreatedDate.month,
