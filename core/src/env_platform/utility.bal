@@ -49,7 +49,7 @@ function extractTreeInformationAsJSONArray(TreeInformation[] treeInfoArray) retu
     return treeInformation;
 }
 
-# The `constructApplicationVersion` function will construct the application version which will be suitable for the database.
+# The `constructApplication` function will construct the application which will be suitable for the database.
 # 
 # + form - Form containing the tree removal data.
 # + return - Returns a map<json> containing the application structure which suites the database.
