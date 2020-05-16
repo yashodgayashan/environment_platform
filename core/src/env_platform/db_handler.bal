@@ -112,8 +112,8 @@ function getApplicationStatusByApplicationId(string applicationId) returns strin
     }
 }
 
-# The `updateApplication` function will either alter the exsisting application draft with the incoming form details or 
-# add a new version of an application with the incoming form details.
+# The `updateApplication` function will either alter the existing application draft or add a new version for an application 
+# with the incoming form details.
 # 
 # + form - Form containing the tree removal data.
 # + applicationId - The Id of the application which should be altered.
