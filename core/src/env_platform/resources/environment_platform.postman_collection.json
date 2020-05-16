@@ -6,7 +6,7 @@
   },
   "item": [
     {
-      "name": "postApplication",
+      "name": "saveApplication",
       "request": {
         "method": "POST",
         "header": [],
