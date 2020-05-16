@@ -121,7 +121,7 @@ function getApplicationStatusByApplicationId(string applicationId) returns strin
 # false if not or else it returns a mongodb:Database error.
 function updateApplication(TreeRemovalForm form, string applicationId) returns boolean|error {
 
-    map<json> application = constructApplicationVersion(form);
+    map<json> application = constructApplication(form);
     log:printDebug("Constructed application: " + application.toString());
 
     int|mongodb:DatabaseError updated;
