@@ -53,7 +53,7 @@ function extractTreeInformationAsJSONArray(TreeInformation[] treeInfoArray) retu
 # 
 # + form - Form containing the tree removal data.
 # + return - Returns a map<json> containing the application structure which suites the database.
-function constructApplicationVersion(TreeRemovalForm form) returns map<json> {
+function constructApplication(TreeRemovalForm form) returns map<json> {
     return {
         "title": form.title,
         "applicationCreatedDate": {
