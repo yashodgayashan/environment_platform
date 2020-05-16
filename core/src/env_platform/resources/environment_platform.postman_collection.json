@@ -60,7 +60,7 @@
 			"response": []
 		},
 		{
-			"name": "putApplicationById",
+			"name": "updateApplicationById",
 			"request": {
 				"method": "PUT",
 				"header": [],
