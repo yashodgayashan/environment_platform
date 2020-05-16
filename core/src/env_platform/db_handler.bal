@@ -62,9 +62,9 @@ function saveApplication(TreeRemovalForm form) returns boolean|error {
     mongodb:DatabaseError? inserted = applicationCollection->insert(application);
 
     if (inserted is mongodb:DatabaseError) {
-        log:printDebug("An error occurred while saving the application with ID: " + application.applicationId + ". " + inserted.reason() + ".") ;
+        log:printDebug("An error occurred while saving the application with ID: " + application.applicationId.toString() + ". " + inserted.reason().toString() + ".");
     } else {
-        log:printDebug("Application with application ID: " + application.applicationId + " was saved successfully.");
+        log:printDebug("Application with application ID: " + application.applicationId.toString() + " was saved successfully.");
     }
     return inserted is mongodb:DatabaseError ? inserted : true;
 }
@@ -112,50 +112,51 @@ function getApplicationStatusByApplicationId(string applicationId) returns strin
     }
 }
 
-# The `updateApplicationDraft` function will alter the exsisting application draft with the incoming form details.
+# The `updateApplication` function will either alter the existing application draft or add a new version for an application 
+# with the incoming form details.
 # 
 # + form - Form containing the tree removal data.
-# + return - This function will return true if draft is updated in the database, false if not or else it returns a mongodb:Database error.
-function updateApplicationDraft(TreeRemovalForm form, string applicationId) returns boolean|error {
+# + applicationId - The Id of the application which should be altered or versioned.
+# + return - This function will return true if draft is updated or the application is versioned in the database, 
+# false if not or else it returns a mongodb:Database error.
+function updateApplication(TreeRemovalForm form, string applicationId) returns boolean|error {
 
-    map<json> application = {
-        "title": form.title,
-        "applicationCreatedDate": {
-            "year": form.applicationCreatedDate.year,
-            "month": form.applicationCreatedDate.month,
-            "day": form.applicationCreatedDate.day,
-            "hour": form.applicationCreatedDate.hour,
-            "minute": form.applicationCreatedDate.minute
-        },
-        "removalDate": {
-            "year": form.removalDate.year,
-            "month": form.removalDate.month,
-            "day": form.removalDate.day,
-            "hour": form.removalDate.hour,
-            "minute": form.removalDate.minute
-        },
-        "reason": form.reason,
-        "applicationType": form.applicationType,
-        "requestedBy": form.requestedBy,
-        "permitRequired": form.permitRequired,
-        "landOwner": form.landOwner,
-        "treeRemovalAuthority": form.treeRemovalAuthority,
-        "city": form.city,
-        "district": form.district,
-        "nameOfTheLand": form.nameOfTheLand,
-        "planNumber": form.planNumber,
-        "area": extractAreaAsJSONArray(form.area),
-        "treeInformation": extractTreeInformationAsJSONArray(form.treeInformation)
-    };
+    map<json> application = constructApplicationVersion(form);
     log:printDebug("Constructed application: " + application.toString());
 
-    int|mongodb:DatabaseError updated = applicationCollection->update({"versions.0": application}, {"applicationId": applicationId});
+    int|mongodb:DatabaseError updated;
+    string applicationStatus = check getApplicationStatusByApplicationId(applicationId);
+
+    // If the exsiting application is a draft.
+    if (applicationStatus == "draft") {
+        if (form.applicationType == "draft") {
+            updated = applicationCollection->update({"versions.0": application}, {"applicationId": applicationId});
+        } else if (form.applicationType == "submit") {
+            updated = applicationCollection->update({"versions.0": application, "status": "submit"}, {"applicationId": applicationId});
+        } else {
+            return error("Invalid Operation", message = "Cannot resolve the application status with the appilcation ID: "
+                + applicationId + ".");
+        }
+    } else if (applicationStatus == "submit" && form.applicationType == "submit") {
+        map<json>[] found = check applicationCollection->find({"applicationId": applicationId});
+        log:printDebug("The application of application id: " + applicationId.toString() + " is " + found.toString());
+
+        // Get the versions array.
+        json[] versions = <json[]>found[0].versions;
+        versions.push(application);
+
+        // Added new versions array to the application
+        updated = applicationCollection->update({"versions": versions}, {"applicationId": applicationId});
+    } else {
+        return error("Invalid Operation", message = "Cannot resolve the application status with the appilcation ID: "
+            + applicationId + ".");
+    }
 
     if (updated is int) {
         log:printDebug("Updated status for application with application ID: " + applicationId + " is " + updated.toString() + ".");
         return updated == 1 ? true : false;
     } else {
-        log:printDebug("An error occurred while updating the draft application with the application ID: " + applicationId + ". " + updated.reason() + ".");
+        log:printDebug("An error occurred while updating the draft application with the application ID: " + applicationId + ". " + updated.reason().toString() + ".");
         return updated;
     }
 }

@@ -48,3 +48,39 @@ function extractTreeInformationAsJSONArray(TreeInformation[] treeInfoArray) retu
     }
     return treeInformation;
 }
+
+# The `constructApplication` function will construct the application which will be suitable for the database.
+# 
+# + form - Form containing the tree removal data.
+# + return - Returns a map<json> containing the application structure which suites the database.
+function constructApplication(TreeRemovalForm form) returns map<json> {
+    return {
+        "title": form.title,
+        "applicationCreatedDate": {
+            "year": form.applicationCreatedDate.year,
+            "month": form.applicationCreatedDate.month,
+            "day": form.applicationCreatedDate.day,
+            "hour": form.applicationCreatedDate.hour,
+            "minute": form.applicationCreatedDate.minute
+        },
+        "removalDate": {
+            "year": form.removalDate.year,
+            "month": form.removalDate.month,
+            "day": form.removalDate.day,
+            "hour": form.removalDate.hour,
+            "minute": form.removalDate.minute
+        },
+        "reason": form.reason,
+        "applicationType": form.applicationType,
+        "requestedBy": form.requestedBy,
+        "permitRequired": form.permitRequired,
+        "landOwner": form.landOwner,
+        "treeRemovalAuthority": form.treeRemovalAuthority,
+        "city": form.city,
+        "district": form.district,
+        "nameOfTheLand": form.nameOfTheLand,
+        "planNumber": form.planNumber,
+        "area": extractAreaAsJSONArray(form.area),
+        "treeInformation": extractTreeInformationAsJSONArray(form.treeInformation)
+    };
+}
