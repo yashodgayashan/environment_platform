@@ -117,7 +117,8 @@ function getApplicationStatusByApplicationId(string applicationId) returns strin
 # 
 # + form - Form containing the tree removal data.
 # + applicationId - The Id of the application which should be altered or versioned.
-# + return - This function will return true if draft is updated in the database, false if not or else it returns a mongodb:Database error.
+# + return - This function will return true if draft is updated or the application is versioned in the database, 
+# false if not or else it returns a mongodb:Database error.
 function updateApplication(TreeRemovalForm form, string applicationId) returns boolean|error {
 
     map<json> application = constructApplicationVersion(form);
