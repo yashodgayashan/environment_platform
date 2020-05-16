@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "933fd33c-db4e-47cb-8383-3daabe7befba",
+		"_postman_id": "1645c04d-e462-4ea9-b5cf-77c92c6c6546",
 		"name": "environment_platform",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -12,7 +12,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"status\":\"save\",\n\t\"title\":\"tree removal form\",\n\t\"applicationCreatedDate\":{ \n\t\t\"year\":2020, \n\t\t\"month\":2, \n\t\t\"day\":3,\n\t\t\"hour\": 12,\n\t\t\"minute\": 11\n\t},\n\t\"removalDate\":{\n\t\t\"year\":2020, \n\t\t\"month\":3, \n\t\t\"day\":1,\n\t\t\"hour\": 12,\n\t\t\"minute\": 00\n\t},\n\t\"reason\":\"for wood\",\n\t\"applicationType\":\"tree cutting\",\n\t\"requestedBy\":\"Mr A R P Pieris\",\n\t\"permitRequired\": \"true\",\n\t\"landOwner\" : \"Mr A Wijedasa\",\n\t\"treeRemovalAuthority\": \"Central\",\n\t\"city\":\"Negombo\",\n\t\"district\":\"Gampaha\",\n\t\"nameOfTheLand\": \"Araliya Uyana\",\n\t\"planNumber\": \"s12345\",\n\t\"location\": [\n\t\t{\"latitude\":81.2343, \"longitude\":76.2134},\n\t\t{\"latitude\":81.3243, \"longitude\":76.2334},\n\t\t{\"latitude\":81.3343, \"longitude\":76.2634}\n\t],\n\t\"treeInformation\":[\n\t\t{\n\t\t\t\"species\":\"kos\", \n\t\t\t\"treeNumber\":\"12\",\n\t\t\t\"heightType\":\"merchandise\",\n\t\t\t\"height\": 1230,\n\t\t\t\"girth\":132,\n\t\t\t\"logDetails\":[\n\t\t\t\t{\"minGirth\":120,\"maxGirth\":132,\"height\":\"600\"},\n\t\t\t\t{\"minGirth\":110,\"maxGirth\":120,\"height\":\"590\"}\n\t\t\t]\n\t\t}\n\t]\n}\n",
+					"raw": "{\n        \"status\": \"draft\",\n        \"title\": \"tree removal form\",\n        \"applicationCreatedDate\": {\n            \"year\": 2021,\n            \"month\": 2,\n            \"day\": 3,\n            \"hour\": 12,\n            \"minute\": 11\n        },\n        \"removalDate\": {\n            \"year\": 2020,\n            \"month\": 3,\n            \"day\": 1,\n            \"hour\": 12,\n            \"minute\": 0\n        },\n        \"reason\": \"for wood\",\n        \"applicationType\": \"tree cutting\",\n        \"requestedBy\": \"Mr A R P Pieris\",\n        \"permitRequired\": true,\n        \"landOwner\": \"Mr A Wijedasa\",\n        \"treeRemovalAuthority\": \"Central\",\n        \"city\": \"Negombo\",\n        \"district\": \"Gampaha\",\n        \"nameOfTheLand\": \"Araliya Uyana\",\n        \"planNumber\": \"s12345\",\n        \"area\": [\n                {\"latitude\": 81.2343, \"longitude\": 76.2134},\n                {\"latitude\": 81.3243, \"longitude\": 76.2334},\n                {\"latitude\": 81.3343, \"longitude\": 76.2634}\n            ],\n        \"treeInformation\": [\n                {\n                    \"species\": \"kos\",\n                    \"treeNumber\": \"12\",\n                    \"heightType\": \"merchandise\",\n                    \"height\": 1230,\n                    \"girth\": 132,\n                    \"logDetails\": [\n                            {\"minGirth\": 120, \"maxGirth\": 132, \"height\": 600},\n                            {\"minGirth\": 110, \"maxGirth\": 120, \"height\": 590}\n                        ]\n                },\n                {\n                    \"species\": \"Jack\",\n                    \"treeNumber\": \"11\",\n                    \"heightType\": \"merchandise\",\n                    \"height\": 1230,\n                    \"girth\": 132,\n                    \"logDetails\": [\n                            {\"minGirth\": 222, \"maxGirth\": 532, \"height\": 340},\n                            {\"minGirth\": 110, \"maxGirth\": 230, \"height\": 670}\n                        ]\n                }\n            ]\n    }",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -31,6 +31,61 @@
 					"port": "9090",
 					"path": [
 						"applications"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deleteDraft",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://0.0.0.0:9090/applications/tcf-20200513",
+					"protocol": "http",
+					"host": [
+						"0",
+						"0",
+						"0",
+						"0"
+					],
+					"port": "9090",
+					"path": [
+						"applications",
+						"tcf-20200513"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "putApplicationById",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n        \"status\": \"draft\",\n        \"title\": \"tree removal form\",\n        \"applicationCreatedDate\": {\n            \"year\": 4021,\n            \"month\": 2,\n            \"day\": 3,\n            \"hour\": 12,\n            \"minute\": 11\n        },\n        \"removalDate\": {\n            \"year\": 2020,\n            \"month\": 3,\n            \"day\": 1,\n            \"hour\": 12,\n            \"minute\": 0\n        },\n        \"reason\": \"for whatsss\",\n        \"applicationType\": \"Test\",\n        \"requestedBy\": \"Mr A R P Pieris\",\n        \"permitRequired\": true,\n        \"landOwner\": \"Mr A Wijedasa\",\n        \"treeRemovalAuthority\": \"Central\",\n        \"city\": \"Negombo\",\n        \"district\": \"Gampaha\",\n        \"nameOfTheLand\": \"Araliya Uyana\",\n        \"planNumber\": \"s12345\",\n        \"area\": [\n                {\"latitude\": 81.2343, \"longitude\": 76.2134},\n                {\"latitude\": 81.3243, \"longitude\": 76.2334},\n                {\"latitude\": 81.3343, \"longitude\": 76.2634}\n            ],\n        \"treeInformation\": [\n                {\n                    \"species\": \"kos\",\n                    \"treeNumber\": \"12\",\n                    \"heightType\": \"merchandise\",\n                    \"height\": 1230,\n                    \"girth\": 132,\n                    \"logDetails\": [\n                            {\"minGirth\": 120, \"maxGirth\": 132, \"height\": 600},\n                            {\"minGirth\": 110, \"maxGirth\": 120, \"height\": 590}\n                        ]\n                },\n                {\n                    \"species\": \"Jack\",\n                    \"treeNumber\": \"11\",\n                    \"heightType\": \"merchandise\",\n                    \"height\": 1230,\n                    \"girth\": 132,\n                    \"logDetails\": [\n                            {\"minGirth\": 222, \"maxGirth\": 532, \"height\": 340},\n                            {\"minGirth\": 110, \"maxGirth\": 230, \"height\": 670}\n                        ]\n                }\n            ]\n    }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://0.0.0.0:9090/applications/tcf-20200513",
+					"protocol": "http",
+					"host": [
+						"0",
+						"0",
+						"0",
+						"0"
+					],
+					"port": "9090",
+					"path": [
+						"applications",
+						"tcf-20200513"
 					]
 				}
 			},
