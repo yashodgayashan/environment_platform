@@ -13,6 +13,7 @@ mongodb:ClientConfig mongoConfig = {
 mongodb:Client mongoClient = check new (mongoConfig);
 mongodb:Database mongoDatabase = check mongoClient->getDatabase("EnvironmentPlatform");
 mongodb:Collection applicationCollection = check mongoDatabase->getCollection("applications");
+mongodb:Collection usersCollection = check mongoDatabase->getCollection("users");
 
 # The `saveApplication` function will save the application to the applications collection in the database.
 # 
