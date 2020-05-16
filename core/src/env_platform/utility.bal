@@ -1,3 +1,4 @@
+import ballerina/time;
 # The `extractAreaAsJSONArray` function will extract a JSON array 
 # indicating the area using given locations array.
 # 
@@ -82,4 +83,37 @@ function constructApplication(TreeRemovalForm form) returns map<json> {
         "area": extractAreaAsJSONArray(form.area),
         "treeInformation": extractTreeInformationAsJSONArray(form.treeInformation)
     };
+}
+
+# The `generateApplicationId` function will return a unique Id for a given application type. 
+# The format is <applicationCode>-<createdDate>-<applicationNumber>.
+# 
+# + createdDate - Created date of the application.
+# + applicationType -  Application type of the application.
+# + return - Returns a unique application Id or Corresponding error.
+function generateApplicationId(Date createdDate, string applicationType) returns string|error {
+
+    // Get the application code
+    string applicationCode = check getApplicationCode(applicationType);
+
+    // Construct the date to a string
+    time:Time timeCreated = check time:createTime(createdDate.year, createdDate.month, createdDate.day, 0, 0, 0, 0, "Asia/Colombo");
+    string customTimeString = check time:format(timeCreated, "yyyyMMdd");
+
+    // Get application count
+    int applicationCount = (check getApplicationCountByTitle(applicationType) + 1);
+    return applicationCode + "-" + customTimeString + "-" + applicationCount.toString();
+}
+
+
+# The `getApplicationCode` function will return the corresponding application code for the given application type.
+# 
+# + applicationType - Application type of the application.
+# + return - Returns the application code or an error if the application type is mot identified.
+function getApplicationCode(string applicationType) returns string|error {
+    if (applicationType == "tree removal form") {
+        return "trf";
+    } else {
+        return error("Unknown application type", message = "Unknown application type: " + applicationType + ".");
+    }
 }
