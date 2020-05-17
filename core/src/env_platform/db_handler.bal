@@ -185,7 +185,7 @@ function isValidUser(string userId) returns boolean|error {
     } else if (numOfDocuments == 0) {
         return false;
     } else {
-        return error("Issue having duplicate user Ids", message = "There are two or more similar user Ids in the system");
+        return error("Cannot have duplicate User IDs", message = "There are two or more similar users in the system");
     }
 }
 
