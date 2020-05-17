@@ -171,3 +171,20 @@ function updateApplication(TreeRemovalForm form, string applicationId) returns b
 function getApplicationCountByTitle(string applicationType) returns int|error {
     return applicationCollection->countDocuments({"title": applicationType});
 }
+
+# The `isValidUser` function will return whether the user is valid or not.
+# 
+# + userId - Id of the user.
+# + return - This function will return either user is valid or 
+# error if there is a mongodb:DatabaseError.
+function isValidUser(string userId) returns boolean|error {
+
+    int countDocuments = check usersCollection->countDocuments({id: userId});
+    if (countDocuments == 1) {
+        return true;
+    } else if (countDocuments == 0) {
+        return false;
+    } else {
+        return error("Issue having duplicate user Ids", message = "There are two or more similar user Ids in the system");
+    }
+}
