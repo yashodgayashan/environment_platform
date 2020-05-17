@@ -224,7 +224,7 @@ function saveApplicationInUser(string userId, string applicationId, string appli
             return false;
         }
     } else {
-        return error("Invalid user", message = "Couldn't find the user with given userId");
+        return error("Invalid User", message = "Couldn't find the user with given User ID");
     }
 }
 
