@@ -166,7 +166,8 @@ function updateApplication(TreeRemovalForm form, string applicationId) returns b
 # The `getApplicationCountByTitle` function will return the number of application for a given application type.
 # 
 # + applicationType - Type of the application.
-# + return - This function will return either number of application with the given application type or mongodb:DatabaseError.
+# + return - This function will return either number of application with the given application type or 
+# error if there is a mongodb:DatabaseError.
 function getApplicationCountByTitle(string applicationType) returns int|error {
     return applicationCollection->countDocuments({"title": applicationType});
 }
