@@ -179,13 +179,13 @@ function getApplicationCountByTitle(string applicationType) returns int|error {
 # error if there is a mongodb:DatabaseError.
 function isValidUser(string userId) returns boolean|error {
 
-    int numOfDocuments = check usersCollection->numOfDocuments({id: userId});
+    int numOfDocuments = check usersCollection->countDocuments({id: userId});
     if (numOfDocuments == 1) {
         return true;
     } else {
-        return numberOfDocuments == 0 ? false : 
-        error("Cannot have duplicate User IDs", message = "There are two or more similar users in the system");
-    } 
+        return numOfDocuments == 0 ? false :
+            error("Cannot have duplicate User IDs", message = "There are two or more similar users in the system");
+    }
 }
 
 # The `saveApplicationInUser` function will save the application reference in the corresponding user.
@@ -203,7 +203,6 @@ function saveApplicationInUser(string userId, string applicationId, string appli
         // Get the user information.
         map<json>[] find = check usersCollection->find({id: userId});
         json|error applications = find[0].applications;
-        log:printDebug("User applications are " + applications.toString());
 
         // Construct the applicationList.
         json[] applicationList;
@@ -211,13 +210,19 @@ function saveApplicationInUser(string userId, string applicationId, string appli
             applicationList = [{id: applicationId, name: applicationType}];
         } else {
             applicationList = <json[]>applications;
+            log:printDebug("The user's applications are: ");
+            applicationList.forEach(function (json value) {
+                log:printDebug(value.toString());
+            });
             applicationList.push(<json>{id: applicationId, name: applicationType});
         }
 
         // Update the user applications array with incoming value.
         int updated = check usersCollection->update({"applications": applicationList}, {id: userId});
-        log:printDebug("Updated application list is: " + applicationList.toString());
-
+        log:printDebug("Updated application list is: ");
+        applicationList.forEach(function (json value) {
+            log:printDebug(value.toString());
+        });
         return updated > 0 ? true : false;
     } else {
         return error("Invalid User", message = "Couldn't find the user with given User ID");
@@ -237,21 +242,32 @@ function removeApplicationInUser(string userId, string applicationId) returns bo
         // Get the user information.
         map<json>[] find = check usersCollection->find({id: userId});
         json|error applications = find[0].applications;
-        log:printDebug("User applications are " + applications.toString());
 
         if (applications is error) {
+            log:printDebug("The error occured is: " + applications.toString());
             return error("No applications", message = "There are no applications for the user: " + userId + ".");
         } else {
+            // Convert json to json array.
             json[] applicationArray = <json[]>applications;
+            log:printDebug("The user's applications are : ");
+            applicationArray.forEach(function (json value) {
+                log:printDebug(value.toString());
+            });
+
+            // Remove the application metadata.
             json[] alteredApplicationList = [];
             applicationArray.forEach(function (json value) {
                 if (value.id != applicationId) {
                     alteredApplicationList.push(value);
                 }
             });
+
+            // Update the user collection.
             int updated = check usersCollection->update({"applications": alteredApplicationList}, {id: userId});
-            log:printDebug("Updated application list is: " + alteredApplicationList.toString());
-            
+            log:printDebug("Updated application list for user " + userId + " :");
+            alteredApplicationList.forEach(function (json value) {
+                log:printDebug(value.toString());
+            });
             return updated > 0 ? true : false;
         }
     } else {
