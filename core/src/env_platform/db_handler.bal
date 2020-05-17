@@ -182,11 +182,10 @@ function isValidUser(string userId) returns boolean|error {
     int numOfDocuments = check usersCollection->numOfDocuments({id: userId});
     if (numOfDocuments == 1) {
         return true;
-    } else if (numOfDocuments == 0) {
-        return false;
     } else {
-        return error("Cannot have duplicate User IDs", message = "There are two or more similar users in the system");
-    }
+        return numberOfDocuments == 0 ? false : 
+        error("Cannot have duplicate User IDs", message = "There are two or more similar users in the system");
+    } 
 }
 
 # The `saveApplicationInUser` function will save the application reference in the corresponding user.
