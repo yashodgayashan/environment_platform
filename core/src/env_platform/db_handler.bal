@@ -188,3 +188,40 @@ function isValidUser(string userId) returns boolean|error {
         return error("Issue having duplicate user Ids", message = "There are two or more similar user Ids in the system");
     }
 }
+
+# The `saveApplicationInUser` function will save the application reference in the corresponding user.
+# 
+# + userId - Id of the user.
+# + applicationId - Id of the application saved.
+# + applicationType - Type of the application.
+# + return - This function will return either application is saved in the given user document or 
+# error if there is a mongodb:DatabaseError.
+function saveApplicationInUser(string userId, string applicationId, string applicationType) returns boolean|error {
+
+    boolean isValid = check isValidUser(userId);
+    if (isValid) {
+
+        // Get the user information.
+        map<json>[] find = check usersCollection->find({id: userId});
+        json|error applications = find[0].applications;
+
+        // Construct the applicationList.
+        json[] applicationList;
+        if (applications is error) {
+            applicationList = [{id: applicationId, name: applicationType}];
+        } else {
+            applicationList = <json[]>applications;
+            applicationList.push(<json>{id: applicationId, name: applicationType});
+        }
+
+        // Update the user applications array with incoming value.
+        int updated = check usersCollection->update({"applications": applicationList}, {id: userId});
+        if (updated > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    } else {
+        return error("Invalid user", message = "Couldn't find the user with given userId");
+    }
+}
