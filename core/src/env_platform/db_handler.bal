@@ -18,8 +18,8 @@ mongodb:Collection usersCollection = check mongoDatabase->getCollection("users")
 # The `saveApplication` function will save the application to the applications collection in the database.
 # 
 # + form - Form containing the tree removal data.
-# + return - Returns true if the application is saved, error if there is a mongodb:DatabaseError or error 
-# generated when the applicationId is generated.
+# + return - Returns true if the application is saved, error if there is a mongodb:DatabaseError or  
+# there's an error while generating the applicationId.
 function saveApplication(TreeRemovalForm form) returns boolean|error {
 
     // Construct the application.
