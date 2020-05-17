@@ -225,3 +225,39 @@ function saveApplicationInUser(string userId, string applicationId, string appli
         return error("Invalid user", message = "Couldn't find the user with given userId");
     }
 }
+
+# The `removeApplicationInUser` function will remove the application reference in the corresponding user.
+# 
+# + userId - Id of the user.
+# + applicationId - Id of the application which should be removed.
+# + return - This function will return either application is removed in the given user document or 
+# error if there is a mongodb:DatabaseError.
+function removeApplicationInUser(string userId, string applicationId) returns boolean|error {
+    boolean isValid = check isValidUser(userId);
+    if (isValid) {
+
+        // Get the user information.
+        map<json>[] find = check usersCollection->find({id: userId});
+        json|error applications = find[0].applications;
+
+        if (applications is error) {
+            return error("No applications", message = "There are no applications for the user: " + userId + ".");
+        } else {
+            json[] applicationArray = <json[]>applications;
+            json[] alteredApplicationList = [];
+            applicationArray.forEach(function (json value) {
+                if (value.id != applicationId) {
+                    alteredApplicationList.push(value);
+                }
+            });
+            int updated = check usersCollection->update({"applications": alteredApplicationList}, {id: userId});
+            if (updated > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    } else {
+        return error("Invalid user", message = "Couldn't find the user with given userId");
+    }
+}
