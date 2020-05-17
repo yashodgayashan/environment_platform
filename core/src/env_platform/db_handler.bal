@@ -210,19 +210,14 @@ function saveApplicationInUser(string userId, string applicationId, string appli
             applicationList = [{id: applicationId, name: applicationType}];
         } else {
             applicationList = <json[]>applications;
-            log:printDebug("The user's applications are: ");
-            applicationList.forEach(function (json value) {
-                log:printDebug(value.toString());
-            });
+            log:printDebug("The user with the user ID: " + userId + " has " + applicationList.length().toString() + " applications stored in the database.");
             applicationList.push(<json>{id: applicationId, name: applicationType});
         }
 
         // Update the user applications array with incoming value.
         int updated = check usersCollection->update({"applications": applicationList}, {id: userId});
-        log:printDebug("Updated application list is: ");
-        applicationList.forEach(function (json value) {
-            log:printDebug(value.toString());
-        });
+        log:printDebug("Updated application list for user " + userId + ": " + applicationList.toString());
+
         return updated > 0 ? true : false;
     } else {
         return error("Invalid User", message = "Couldn't find the user with given User ID");
@@ -249,10 +244,7 @@ function removeApplicationInUser(string userId, string applicationId) returns bo
         } else {
             // Convert json to json array.
             json[] applicationArray = <json[]>applications;
-            log:printDebug("The user's applications are : ");
-            applicationArray.forEach(function (json value) {
-                log:printDebug(value.toString());
-            });
+            log:printDebug("The user with the user ID: " + userId + " has " + applicationArray.length().toString() + " applications stored in the database.");
 
             // Remove the application metadata.
             json[] alteredApplicationList = [];
@@ -264,10 +256,7 @@ function removeApplicationInUser(string userId, string applicationId) returns bo
 
             // Update the user collection.
             int updated = check usersCollection->update({"applications": alteredApplicationList}, {id: userId});
-            log:printDebug("Updated application list for user " + userId + " :");
-            alteredApplicationList.forEach(function (json value) {
-                log:printDebug(value.toString());
-            });
+            log:printDebug("Updated application list for user " + userId + ": " + alteredApplicationList.toString());
             return updated > 0 ? true : false;
         }
     } else {
