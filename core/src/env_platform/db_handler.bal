@@ -171,3 +171,95 @@ function updateApplication(TreeRemovalForm form, string applicationId) returns b
 function getApplicationCountByTitle(string applicationType) returns int|error {
     return applicationCollection->countDocuments({"title": applicationType});
 }
+
+# The `isValidUser` function will return whether the user is valid or not.
+# 
+# + userId - Id of the user.
+# + return - This function will return either user is valid or 
+# error if there is a mongodb:DatabaseError.
+function isValidUser(string userId) returns boolean|error {
+
+    int numOfDocuments = check usersCollection->countDocuments({id: userId});
+    if (numOfDocuments == 1) {
+        return true;
+    } else {
+        return numOfDocuments == 0 ? false :
+            error("Cannot have duplicate User IDs", message = "There are two or more similar users in the system");
+    }
+}
+
+# The `saveApplicationInUser` function will save the application reference in the corresponding user.
+# 
+# + userId - Id of the user.
+# + applicationId - Id of the application saved.
+# + applicationType - Type of the application.
+# + return - This function will return either application is saved in the given user document or 
+# error if there is a mongodb:DatabaseError.
+function saveApplicationInUser(string userId, string applicationId, string applicationType) returns boolean|error {
+
+    boolean isValid = check isValidUser(userId);
+    if (isValid) {
+
+        // Get the user information.
+        map<json>[] find = check usersCollection->find({id: userId});
+        json|error applications = find[0].applications;
+
+        // Construct the applicationList.
+        json[] applicationList;
+        if (applications is error) {
+            applicationList = [{id: applicationId, name: applicationType}];
+        } else {
+            applicationList = <json[]>applications;
+            log:printDebug("The user with the user ID: " + userId + " has " + applicationList.length().toString() + " applications stored in the database.");
+            applicationList.push(<json>{id: applicationId, name: applicationType});
+        }
+
+        // Update the user applications array with incoming value.
+        int updated = check usersCollection->update({"applications": applicationList}, {id: userId});
+        log:printDebug("Updated application list for user " + userId + ": " + applicationList.toString());
+
+        return updated > 0 ? true : false;
+    } else {
+        return error("Invalid User", message = "Couldn't find the user with given User ID");
+    }
+}
+
+# The `removeApplicationInUser` function will remove the application reference in the corresponding user.
+# 
+# + userId - Id of the user.
+# + applicationId - Id of the application which should be removed.
+# + return - This function will return either application is removed in the given user document or 
+# error if there is a mongodb:DatabaseError.
+function removeApplicationInUser(string userId, string applicationId) returns boolean|error {
+    boolean isValid = check isValidUser(userId);
+    if (isValid) {
+
+        // Get the user information.
+        map<json>[] find = check usersCollection->find({id: userId});
+        json|error applications = find[0].applications;
+
+        if (applications is error) {
+            log:printDebug("The error occured is: " + applications.toString());
+            return error("No applications", message = "There are no applications for the user: " + userId + ".");
+        } else {
+            // Convert json to json array.
+            json[] applicationArray = <json[]>applications;
+            log:printDebug("The user with the user ID: " + userId + " has " + applicationArray.length().toString() + " applications stored in the database.");
+
+            // Remove the application metadata.
+            json[] alteredApplicationList = [];
+            applicationArray.forEach(function (json value) {
+                if (value.id != applicationId) {
+                    alteredApplicationList.push(value);
+                }
+            });
+
+            // Update the user collection.
+            int updated = check usersCollection->update({"applications": alteredApplicationList}, {id: userId});
+            log:printDebug("Updated application list for user " + userId + ": " + alteredApplicationList.toString());
+            return updated > 0 ? true : false;
+        }
+    } else {
+        return error("Invalid User", message = "Couldn't find the user with given User ID");
+    }
+}
