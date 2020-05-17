@@ -204,6 +204,7 @@ function saveApplicationInUser(string userId, string applicationId, string appli
         // Get the user information.
         map<json>[] find = check usersCollection->find({id: userId});
         json|error applications = find[0].applications;
+        log:printDebug("User applications are " + applications.toString());
 
         // Construct the applicationList.
         json[] applicationList;
@@ -216,6 +217,7 @@ function saveApplicationInUser(string userId, string applicationId, string appli
 
         // Update the user applications array with incoming value.
         int updated = check usersCollection->update({"applications": applicationList}, {id: userId});
+        log:printDebug("Updated application list is: " + applicationList.toString());
         if (updated > 0) {
             return true;
         } else {
@@ -239,6 +241,7 @@ function removeApplicationInUser(string userId, string applicationId) returns bo
         // Get the user information.
         map<json>[] find = check usersCollection->find({id: userId});
         json|error applications = find[0].applications;
+        log:printDebug("User applications are " + applications.toString());
 
         if (applications is error) {
             return error("No applications", message = "There are no applications for the user: " + userId + ".");
@@ -251,6 +254,7 @@ function removeApplicationInUser(string userId, string applicationId) returns bo
                 }
             });
             int updated = check usersCollection->update({"applications": alteredApplicationList}, {id: userId});
+            log:printDebug("Updated application list is: " + alteredApplicationList.toString());
             if (updated > 0) {
                 return true;
             } else {
