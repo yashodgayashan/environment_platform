@@ -262,6 +262,6 @@ function removeApplicationInUser(string userId, string applicationId) returns bo
             }
         }
     } else {
-        return error("Invalid user", message = "Couldn't find the user with given userId");
+        return error("Invalid User", message = "Couldn't find the user with given User ID");
     }
 }
