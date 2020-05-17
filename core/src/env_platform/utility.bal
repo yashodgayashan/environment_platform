@@ -106,7 +106,7 @@ function generateApplicationId(Date createdDate, string applicationType) returns
 }
 
 
-# The `getApplicationCode` function will return the corresponding application code for the given application type.
+# The `getApplicationCode` function will return the corresponding application code for a given application type.
 # 
 # + applicationType - Application type of the application.
 # + return - Returns the application code or an error if the application type is mot identified.
