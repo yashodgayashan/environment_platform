@@ -179,13 +179,13 @@ function getApplicationCountByTitle(string applicationType) returns int|error {
 # error if there is a mongodb:DatabaseError.
 function isValidUser(string userId) returns boolean|error {
 
-    int numOfDocuments = check usersCollection->numOfDocuments({id: userId});
+    int numOfDocuments = check usersCollection->countDocuments({id: userId});
     if (numOfDocuments == 1) {
         return true;
     } else {
-        return numberOfDocuments == 0 ? false : 
-        error("Cannot have duplicate User IDs", message = "There are two or more similar users in the system");
-    } 
+        return numOfDocuments == 0 ? false :
+            error("Cannot have duplicate User IDs", message = "There are two or more similar users in the system");
+    }
 }
 
 # The `saveApplicationInUser` function will save the application reference in the corresponding user.
@@ -216,8 +216,10 @@ function saveApplicationInUser(string userId, string applicationId, string appli
 
         // Update the user applications array with incoming value.
         int updated = check usersCollection->update({"applications": applicationList}, {id: userId});
-        log:printDebug("Updated application list is: " + applicationList.toString());
-
+        log:printDebug("Updated application list is: ");
+        applicationList.forEach(function (json value) {
+            log:printDebug(value.toString());
+        });
         return updated > 0 ? true : false;
     } else {
         return error("Invalid User", message = "Couldn't find the user with given User ID");
@@ -250,8 +252,10 @@ function removeApplicationInUser(string userId, string applicationId) returns bo
                 }
             });
             int updated = check usersCollection->update({"applications": alteredApplicationList}, {id: userId});
-            log:printDebug("Updated application list is: " + alteredApplicationList.toString());
-            
+            log:printDebug("Updated application list is: ");
+            alteredApplicationList.forEach(function (json value) {
+                log:printDebug(value.toString());
+            });
             return updated > 0 ? true : false;
         }
     } else {
