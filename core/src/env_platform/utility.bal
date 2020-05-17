@@ -96,7 +96,7 @@ function generateApplicationId(Date createdDate, string applicationType) returns
     // Get the application code
     string applicationCode = check getApplicationCode(applicationType);
 
-    // Construct the date to a string
+    // Convert the createdDate to a formatted string
     time:Time timeCreated = check time:createTime(createdDate.year, createdDate.month, createdDate.day, 0, 0, 0, 0, "Asia/Colombo");
     string customTimeString = check time:format(timeCreated, "yyyyMMdd");
 
