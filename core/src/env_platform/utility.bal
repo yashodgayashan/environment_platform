@@ -90,7 +90,7 @@ function constructApplication(TreeRemovalForm form) returns map<json> {
 # 
 # + createdDate - Created date of the application.
 # + applicationType -  Application type of the application.
-# + return - Returns a unique application Id or Corresponding error.
+# + return - Returns a unique application Id or corresponding error.
 function generateApplicationId(Date createdDate, string applicationType) returns string|error {
 
     // Get the application code
