@@ -180,7 +180,7 @@ function getApplicationCountByTitle(string applicationType) returns int|error {
 function isValidUser(string userId) returns boolean|error {
 
     int numOfDocuments = check usersCollection->numOfDocuments({id: userId});
-    if (countDocuments == 1) {
+    if (numOfDocuments == 1) {
         return true;
     } else if (countDocuments == 0) {
         return false;
