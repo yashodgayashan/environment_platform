@@ -179,7 +179,7 @@ function getApplicationCountByTitle(string applicationType) returns int|error {
 # error if there is a mongodb:DatabaseError.
 function isValidUser(string userId) returns boolean|error {
 
-    int countDocuments = check usersCollection->countDocuments({id: userId});
+    int numOfDocuments = check usersCollection->numOfDocuments({id: userId});
     if (countDocuments == 1) {
         return true;
     } else if (countDocuments == 0) {
