@@ -251,11 +251,8 @@ function removeApplicationInUser(string userId, string applicationId) returns bo
             });
             int updated = check usersCollection->update({"applications": alteredApplicationList}, {id: userId});
             log:printDebug("Updated application list is: " + alteredApplicationList.toString());
-            if (updated > 0) {
-                return true;
-            } else {
-                return false;
-            }
+            
+            return updated > 0 ? true : false;
         }
     } else {
         return error("Invalid User", message = "Couldn't find the user with given User ID");
