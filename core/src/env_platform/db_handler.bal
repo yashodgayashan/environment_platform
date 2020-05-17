@@ -182,7 +182,7 @@ function isValidUser(string userId) returns boolean|error {
     int numOfDocuments = check usersCollection->numOfDocuments({id: userId});
     if (numOfDocuments == 1) {
         return true;
-    } else if (countDocuments == 0) {
+    } else if (numOfDocuments == 0) {
         return false;
     } else {
         return error("Issue having duplicate user Ids", message = "There are two or more similar user Ids in the system");
