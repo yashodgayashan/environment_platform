@@ -13,21 +13,23 @@ mongodb:ClientConfig mongoConfig = {
 mongodb:Client mongoClient = check new (mongoConfig);
 mongodb:Database mongoDatabase = check mongoClient->getDatabase("EnvironmentPlatform");
 mongodb:Collection applicationCollection = check mongoDatabase->getCollection("applications");
+mongodb:Collection usersCollection = check mongoDatabase->getCollection("users");
 
 # The `saveApplication` function will save the application to the applications collection in the database.
 # 
 # + form - Form containing the tree removal data.
-# + return - Returns true if the application is saved, error if there is a mongodb:DatabaseError.
+# + return - Returns true if the application is saved, error if there is a mongodb:DatabaseError or  
+# there's an error while generating the applicationId.
 function saveApplication(TreeRemovalForm form) returns boolean|error {
 
     // Construct the application.
     map<json> application = {
-        "applicationId": "tcf-20200513",
+        "applicationId": check generateApplicationId(form.applicationCreatedDate, form.title),
         "status": form.status,
         "numberOfVersions": 1,
+        "title": form.title,
         "versions": [
                 {
-                    "title": form.title,
                     "applicationCreatedDate": {
                         "year": form.applicationCreatedDate.year,
                         "month": form.applicationCreatedDate.month,
@@ -159,4 +161,13 @@ function updateApplication(TreeRemovalForm form, string applicationId) returns b
         log:printDebug("An error occurred while updating the draft application with the application ID: " + applicationId + ". " + updated.reason().toString() + ".");
         return updated;
     }
+}
+
+# The `getApplicationCountByTitle` function will return the number of application for a given application type.
+# 
+# + applicationType - Type of the application.
+# + return - This function will return either number of application with the given application type or 
+# error if there is a mongodb:DatabaseError.
+function getApplicationCountByTitle(string applicationType) returns int|error {
+    return applicationCollection->countDocuments({"title": applicationType});
 }
