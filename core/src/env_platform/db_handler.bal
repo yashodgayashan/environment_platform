@@ -1,5 +1,4 @@
 import ballerina/config as conf;
-import ballerina/io;
 import ballerina/log;
 import ballerina/mongodb;
 
@@ -24,7 +23,8 @@ mongodb:Collection applicationMetaDataCollection = check mongoDatabase->getColle
 # there's an error while generating the applicationId.
 function saveApplication(TreeRemovalForm form) returns boolean|error {
 
-    boolean|error saveApplicationMetadataResult = saveApplicationMetadata(form.title);
+    boolean result = check saveApplicationMetadata(form.title);
+    log:printDebug("Save information in application metadata: " + result.toString());
     // Construct the application.
     map<json> application = {
         "applicationId": check generateApplicationId(form.applicationCreatedDate, form.title),
@@ -172,7 +172,10 @@ function updateApplication(TreeRemovalForm form, string applicationId) returns b
 # + return - This function will return either number of application with the given application type or 
 # error if there is a mongodb:DatabaseError.
 function getApplicationCountByTitle(string applicationType) returns int|error {
-    return applicationCollection->countDocuments({"title": applicationType});
+
+    map<json>[] find = check applicationMetaDataCollection->find({"applicationType": applicationType});
+    map<json> applicationMetaData = check trap find[0];
+    return <int>applicationMetaData.count;
 }
 
 # The `isValidUser` function will return whether the user is valid or not.
@@ -270,17 +273,20 @@ function removeApplicationInUser(string userId, string applicationId) returns bo
 # The `saveApplicationMetadata` function will the number of applications of the given type by one.
 # 
 # + applicationType - Type of the application.
-# + return -
+# + return - This function will return either application meta data is added or 
+# error if there is a mongodb:DatabaseError.
 function saveApplicationMetadata(string applicationType) returns boolean|error {
     map<json>[] find = check applicationMetaDataCollection->find({"applicationType": applicationType});
 
+    // If a new entry
     if (find.length() == 0) {
         () insert = check applicationMetaDataCollection->insert({"applicationType": applicationType, "count": 1});
-        io:println("inserted");
         return true;
     } else {
         map<json> applicationMetaData = find[0];
         int applicationCount = check trap <int>applicationMetaData.count + 1;
+
+        // Update the count by one
         int update = check applicationMetaDataCollection->update({"count": applicationCount}, {"applicationType": applicationType});
         return update > 0 ? true : false;
     }
