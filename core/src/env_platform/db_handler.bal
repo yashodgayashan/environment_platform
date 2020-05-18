@@ -24,7 +24,7 @@ mongodb:Collection applicationMetaDataCollection = check mongoDatabase->getColle
 function saveApplication(TreeRemovalForm form) returns boolean|error {
 
     boolean result = check saveApplicationMetadata(form.title);
-    log:printDebug("Save information in application metadata: " + result.toString());
+    log:printDebug("Saved information in application metadata: " + result.toString());
     // Construct the application.
     map<json> application = {
         "applicationId": check generateApplicationId(form.applicationCreatedDate, form.title),
