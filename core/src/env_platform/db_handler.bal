@@ -273,7 +273,7 @@ function removeApplicationInUser(string userId, string applicationId) returns bo
 # The `saveApplicationMetadata` function will save application metadata to the database.
 # 
 # + applicationType - Type of the application.
-# + return - This function will return either application meta data is added or 
+# + return - This function will return either whether the application meta data is added or 
 # error if there is a mongodb:DatabaseError.
 function saveApplicationMetadata(string applicationType) returns boolean|error {
     map<json>[] find = check applicationMetaDataCollection->find({"applicationType": applicationType});
