@@ -1,4 +1,5 @@
 import ballerina/config as conf;
+import ballerina/io;
 import ballerina/log;
 import ballerina/mongodb;
 
@@ -14,6 +15,7 @@ mongodb:Client mongoClient = check new (mongoConfig);
 mongodb:Database mongoDatabase = check mongoClient->getDatabase("EnvironmentPlatform");
 mongodb:Collection applicationCollection = check mongoDatabase->getCollection("applications");
 mongodb:Collection usersCollection = check mongoDatabase->getCollection("users");
+mongodb:Collection applicationMetaDataCollection = check mongoDatabase->getCollection("applicationMetaData");
 
 # The `saveApplication` function will save the application to the applications collection in the database.
 # 
@@ -22,6 +24,7 @@ mongodb:Collection usersCollection = check mongoDatabase->getCollection("users")
 # there's an error while generating the applicationId.
 function saveApplication(TreeRemovalForm form) returns boolean|error {
 
+    boolean|error saveApplicationMetadataResult = saveApplicationMetadata(form.title);
     // Construct the application.
     map<json> application = {
         "applicationId": check generateApplicationId(form.applicationCreatedDate, form.title),
@@ -261,5 +264,24 @@ function removeApplicationInUser(string userId, string applicationId) returns bo
         }
     } else {
         return error("Invalid User", message = "Couldn't find the user with given User ID");
+    }
+}
+
+# The `saveApplicationMetadata` function will the number of applications of the given type by one.
+# 
+# + applicationType - Type of the application.
+# + return -
+function saveApplicationMetadata(string applicationType) returns boolean|error {
+    map<json>[] find = check applicationMetaDataCollection->find({"applicationType": applicationType});
+
+    if (find.length() == 0) {
+        () insert = check applicationMetaDataCollection->insert({"applicationType": applicationType, "count": 1});
+        io:println("inserted");
+        return true;
+    } else {
+        map<json> applicationMetaData = find[0];
+        int applicationCount = check trap <int>applicationMetaData.count + 1;
+        int update = check applicationMetaDataCollection->update({"count": applicationCount}, {"applicationType": applicationType});
+        return update > 0 ? true : false;
     }
 }
