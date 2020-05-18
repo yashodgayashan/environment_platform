@@ -131,15 +131,15 @@ function updateApplication(TreeRemovalForm form, string applicationId) returns b
 
     // If the exsiting application is a draft.
     if (applicationStatus == "draft") {
-        if (form.applicationType == "draft") {
+        if (form.status == "draft") {
             updated = applicationCollection->update({"versions.0": application}, {"applicationId": applicationId});
-        } else if (form.applicationType == "submit") {
+        } else if (form.status == "submit") {
             updated = applicationCollection->update({"versions.0": application, "status": "submit"}, {"applicationId": applicationId});
         } else {
             return error("Invalid Operation", message = "Cannot resolve the application status with the appilcation ID: "
                 + applicationId + ".");
         }
-    } else if (applicationStatus == "submit" && form.applicationType == "submit") {
+    } else if (applicationStatus == "submit" && form.status == "submit") {
         map<json>[] found = check applicationCollection->find({"applicationId": applicationId});
         log:printDebug("The application of application id: " + applicationId.toString() + " is " + found.toString());
 
