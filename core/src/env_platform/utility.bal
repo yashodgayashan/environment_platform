@@ -101,7 +101,7 @@ function generateApplicationId(Date createdDate, string applicationType) returns
     string customTimeString = check time:format(timeCreated, "yyyyMMdd");
 
     // Get application count
-    int applicationCount = (check getApplicationCountByTitle(applicationType) + 1);
+    int applicationCount = check getApplicationCountByTitle(applicationType);
     return applicationCode + "-" + customTimeString + "-" + applicationCount.toString();
 }
 

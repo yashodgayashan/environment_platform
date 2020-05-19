@@ -14,6 +14,7 @@ mongodb:Client mongoClient = check new (mongoConfig);
 mongodb:Database mongoDatabase = check mongoClient->getDatabase("EnvironmentPlatform");
 mongodb:Collection applicationCollection = check mongoDatabase->getCollection("applications");
 mongodb:Collection usersCollection = check mongoDatabase->getCollection("users");
+mongodb:Collection applicationMetaDataCollection = check mongoDatabase->getCollection("applicationMetaData");
 
 # The `saveApplication` function will save the application to the applications collection in the database.
 # 
@@ -22,6 +23,8 @@ mongodb:Collection usersCollection = check mongoDatabase->getCollection("users")
 # there's an error while generating the applicationId.
 function saveApplication(TreeRemovalForm form) returns boolean|error {
 
+    boolean result = check saveApplicationMetadata(form.title);
+    log:printDebug("Saved information in application metadata: " + result.toString());
     // Construct the application.
     map<json> application = {
         "applicationId": check generateApplicationId(form.applicationCreatedDate, form.title),
@@ -131,15 +134,15 @@ function updateApplication(TreeRemovalForm form, string applicationId) returns b
 
     // If the exsiting application is a draft.
     if (applicationStatus == "draft") {
-        if (form.applicationType == "draft") {
+        if (form.status == "draft") {
             updated = applicationCollection->update({"versions.0": application}, {"applicationId": applicationId});
-        } else if (form.applicationType == "submit") {
+        } else if (form.status == "submit") {
             updated = applicationCollection->update({"versions.0": application, "status": "submit"}, {"applicationId": applicationId});
         } else {
             return error("Invalid Operation", message = "Cannot resolve the application status with the appilcation ID: "
                 + applicationId + ".");
         }
-    } else if (applicationStatus == "submit" && form.applicationType == "submit") {
+    } else if (applicationStatus == "submit" && form.status == "submit") {
         map<json>[] found = check applicationCollection->find({"applicationId": applicationId});
         log:printDebug("The application of application id: " + applicationId.toString() + " is " + found.toString());
 
@@ -169,7 +172,10 @@ function updateApplication(TreeRemovalForm form, string applicationId) returns b
 # + return - This function will return either number of application with the given application type or 
 # error if there is a mongodb:DatabaseError.
 function getApplicationCountByTitle(string applicationType) returns int|error {
-    return applicationCollection->countDocuments({"title": applicationType});
+
+    map<json>[] find = check applicationMetaDataCollection->find({"applicationType": applicationType});
+    map<json> applicationMetaData = check trap find[0];
+    return <int>applicationMetaData.count;
 }
 
 # The `isValidUser` function will return whether the user is valid or not.
@@ -261,5 +267,27 @@ function removeApplicationInUser(string userId, string applicationId) returns bo
         }
     } else {
         return error("Invalid User", message = "Couldn't find the user with given User ID");
+    }
+}
+
+# The `saveApplicationMetadata` function will save application metadata to the database.
+# 
+# + applicationType - Type of the application.
+# + return - This function will return either whether the application meta data is added or 
+# error if there is a mongodb:DatabaseError.
+function saveApplicationMetadata(string applicationType) returns boolean|error {
+    map<json>[] find = check applicationMetaDataCollection->find({"applicationType": applicationType});
+
+    // If a new entry
+    if (find.length() == 0) {
+        () insert = check applicationMetaDataCollection->insert({"applicationType": applicationType, "count": 1});
+        return true;
+    } else {
+        map<json> applicationMetaData = find[0];
+        int applicationCount = check trap <int>applicationMetaData.count + 1;
+
+        // Update the count by one
+        int update = check applicationMetaDataCollection->update({"count": applicationCount}, {"applicationType": applicationType});
+        return update > 0 ? true : false;
     }
 }
