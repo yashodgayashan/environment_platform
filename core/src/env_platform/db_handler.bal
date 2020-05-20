@@ -315,7 +315,7 @@ function assignMinistry(AssignedMinistry assignedMinistry, string applicationId)
         boolean isMinist = check isMinistry(ministryId);
         if (isMinist) {
             map<json> application = find[0];
-            // Get the assignments
+            // Get the assignments.
             json[]|error assignments = trap <json[]>application.assignments;
             int updated;
             if (assignments is error) {
