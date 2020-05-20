@@ -2,7 +2,6 @@ import ballerina/config as conf;
 import ballerina/log;
 import ballerina/mongodb;
 
-
 // Mongodb configurations.
 mongodb:ClientConfig mongoConfig = {
     host: conf:getAsString("DB_HOST"),
@@ -14,6 +13,8 @@ mongodb:Client mongoClient = check new (mongoConfig);
 mongodb:Database mongoDatabase = check mongoClient->getDatabase("EnvironmentPlatform");
 mongodb:Collection applicationCollection = check mongoDatabase->getCollection("applications");
 mongodb:Collection usersCollection = check mongoDatabase->getCollection("users");
+mongodb:Collection ministryCollection = check mongoDatabase->getCollection("ministries");
+mongodb:Collection adminCollection = check mongoDatabase->getCollection("admins");
 mongodb:Collection applicationMetaDataCollection = check mongoDatabase->getCollection("applicationMetaData");
 
 # The `saveApplication` function will save the application to the applications collection in the database.
@@ -147,11 +148,12 @@ function updateApplication(TreeRemovalForm form, string applicationId) returns b
         log:printDebug("The application of application id: " + applicationId.toString() + " is " + found.toString());
 
         // Get the versions array.
-        json[] versions = <json[]>found[0].versions;
+        int numberOfVersions = check trap <int>found[0].numberOfVersions;
+        json[] versions = check trap <json[]>found[0].versions;
         versions.push(application);
 
         // Added new versions array to the application
-        updated = applicationCollection->update({"versions": versions}, {"applicationId": applicationId});
+        updated = applicationCollection->update({"versions": versions, numberOfVersions: numberOfVersions + 1}, {"applicationId": applicationId});
     } else {
         return error("Invalid Operation", message = "Cannot resolve the application status with the appilcation ID: "
             + applicationId + ".");
