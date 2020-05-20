@@ -303,7 +303,7 @@ function assignMinistry(AssignedMinistry assignedMinistry, string applicationId)
 
     map<json>[] find = check applicationCollection->find({"applicationId": applicationId});
 
-    // If no application found
+    // If no application is found.
     if (find.length() == 0) {
         return error("Invalid application", message = "There is no application with application ID: " + applicationId + ".");
     } else if (find.length() > 1) {
