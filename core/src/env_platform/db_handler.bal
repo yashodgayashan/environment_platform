@@ -294,6 +294,52 @@ function saveApplicationMetadata(string applicationType) returns boolean|error {
     }
 }
 
+# The `assignMinistry` function will assign a ministry to an application.
+# 
+# + assignedMinistry - AssignedMinistry record which should be assigned.
+# + applicationId - Application ID of the application.
+# + return - This function will return whether the ministry is assigned or error if any occured.
+function assignMinistry(AssignedMinistry assignedMinistry, string applicationId) returns boolean|error {
+
+    map<json>[] find = check applicationCollection->find({"applicationId": applicationId});
+
+    // If no application found
+    if (find.length() == 0) {
+        return error("Invalid application", message = "There is no application with application ID: " + applicationId + ".");
+    } else if (find.length() > 1) {
+        return error("Invalid applicationID", message = "There is more applications with application ID: " + applicationId + ".");
+    } else {
+        string ministryId = assignedMinistry.ministry.id;
+
+        // Check the validity of the ministry
+        boolean isMinist = check isMinistry(ministryId);
+        if (isMinist) {
+            map<json> application = find[0];
+            // Get the assignments
+            json[]|error assignments = trap <json[]>application.assignments;
+            int updated;
+            if (assignments is error) {
+
+                // Construct the assignment and update
+                json data = check constructAssignment(assignedMinistry);
+                updated = check applicationCollection->update({assignments: [data]}, {"applicationId": applicationId});
+            } else {
+
+                // Append the new assignment to the array and updated
+                json constructAssignmentArrayResult = check constructAssignmentArray(assignedMinistry, assignments);
+                updated = check applicationCollection->update({assignments: assignments}, {"applicationId": applicationId});
+            }
+            if (updated == 1) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return error("Invalid Operation", message = "There is no ministry found with the ID: " + ministryId + ".");
+        }
+    }
+}
+
 # The `isMinistry` function check whether the given ministry is available.
 # 
 # + ministryId - ID of the ministry.
