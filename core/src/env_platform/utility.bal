@@ -1,3 +1,4 @@
+import ballerina/io;
 import ballerina/time;
 # The `extractAreaAsJSONArray` function will extract a JSON array 
 # indicating the area using given locations array.
@@ -175,4 +176,30 @@ function constructAssignment(AssignedMinistry assignedMinistry) returns json|err
         };
     }
     return data;
+}
+
+# The `constructAssignmentArray` function will construct the assignments array by pushing the new assigned ministry.
+# 
+# + assignedMinistry - AssignedMinistry record which must be add to the assignments.
+# + assignments - All the assignments of an application.
+# + return - This function will return either constructed assigned ministry array or an error.
+function constructAssignmentArray(AssignedMinistry assignedMinistry, json[] assignments) returns json|error {
+
+    error duplicateError = error("Ministry Already Assigned", message = "The ministry is with ministry ID: " + assignedMinistry.ministry.id);
+    boolean isError = false;
+
+    // Check if the ministry is already assigned
+    assignments.forEach(function (json assignment) {
+        map<json> assignmentMap = <map<json>>assignment;
+        if (assignmentMap.id == assignedMinistry.ministry.id) {
+            isError = true;
+        }
+    });
+
+    if (isError) {
+        return duplicateError;
+    } else {
+        assignments.push(check constructAssignment(assignedMinistry));
+        return assignments;
+    }
 }
