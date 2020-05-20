@@ -311,7 +311,7 @@ function assignMinistry(AssignedMinistry assignedMinistry, string applicationId)
     } else {
         string ministryId = assignedMinistry.ministry.id;
 
-        // Check the validity of the ministry
+        // Check the validity of the ministry.
         boolean isMinist = check isMinistry(ministryId);
         if (isMinist) {
             map<json> application = find[0];
