@@ -26,7 +26,7 @@ type AssignedMinistry record {
     Ministry ministry;
     Person assignedBy;
     Date assignedTime;
-    Ministry prerequisite;
+    Ministry prerequisite?;
 };
 type TreeRemovalForm record {
     string status;
