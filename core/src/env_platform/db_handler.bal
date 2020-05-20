@@ -345,8 +345,8 @@ function assignMinistry(AssignedMinistry assignedMinistry, string applicationId)
 function isMinistry(string ministryId) returns boolean|error {
     map<json>[] found = check ministryCollection->find({"id": ministryId});
     if (found.length() > 1) {
-        return error("Duplicate Ids", message = "There are multiple ministries for the ID: " + ministryId + ".");;
+        return error("Duplicate Ids", message = "There are multiple ministries for the ID: " + ministryId + ".");
     } else {
         return found.length() == 1 ? true : false;
-    } 
+    }
 }
