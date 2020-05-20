@@ -298,7 +298,7 @@ function saveApplicationMetadata(string applicationType) returns boolean|error {
 # 
 # + assignedMinistry - AssignedMinistry record which should be assigned.
 # + applicationId - Application ID of the application.
-# + return - This function will return whether the ministry is assigned or error if any occured.
+# + return - This function will return whether the ministry is assigned or error if any occurs.
 function assignMinistry(AssignedMinistry assignedMinistry, string applicationId) returns boolean|error {
 
     map<json>[] find = check applicationCollection->find({"applicationId": applicationId});
