@@ -307,7 +307,7 @@ function assignMinistry(AssignedMinistry assignedMinistry, string applicationId)
     if (find.length() == 0) {
         return error("Invalid application", message = "There is no application with application ID: " + applicationId + ".");
     } else if (find.length() > 1) {
-        return error("Invalid applicationID", message = "There is more applications with application ID: " + applicationId + ".");
+        return error("Invalid application", message = "There are one or more applications with the application ID: " + applicationId + ".");
     } else {
         string ministryId = assignedMinistry.ministry.id;
 
