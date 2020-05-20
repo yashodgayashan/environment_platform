@@ -117,3 +117,17 @@ function getApplicationCode(string applicationType) returns string|error {
         return error("Unknown application type", message = "Unknown application type: " + applicationType + ".");
     }
 }
+
+# The `getCurrentDateObject` function will return a current time as a date object.
+# 
+# + return - This function will return a Date object.
+function getCurrentDateObject() returns Date {
+    time:Time time = time:currentTime();
+    return {
+        "year": time:getYear(time),
+        "month": time:getMonth(time),
+        "day": time:getDay(time),
+        "hour": time:getHour(time),
+        "minute": time:getMinute(time)
+    };
+}
