@@ -184,7 +184,7 @@ function constructAssignment(AssignedMinistry assignedMinistry) returns json|err
 # + return - This function will return either constructed assigned ministry array or an error.
 function constructAssignmentArray(AssignedMinistry assignedMinistry, json[] assignments) returns json|error {
 
-    error duplicateError = error("Ministry Already Assigned", message = "The ministry is with ministry ID: " + assignedMinistry.ministry.id + " is already assigned");
+    error duplicateError = error("Ministry already assigned", message = "Ministry with the ID: " + assignedMinistry.ministry.id + " is already assigned");
     boolean isError = false;
 
     // Check if the ministry is already assigned.
