@@ -293,3 +293,19 @@ function saveApplicationMetadata(string applicationType) returns boolean|error {
         return update > 0 ? true : false;
     }
 }
+
+# The `isMinistry` function check whether the given ministry is available.
+# 
+# + ministryId - ID of the ministry.
+# + return - This function either return ministry is availbale or error if there is 
+# a mongodb:DatabaseError. 
+function isMinistry(string ministryId) returns boolean|error {
+    map<json>[] found = check ministryCollection->find({"id": ministryId});
+    if (found.length() == 0) {
+        return false;
+    } else if (found.length() == 1) {
+        return true;
+    } else {
+        return error("Duplicate Ids", message = "There are multiple ministries for the ID: " + ministryId + ".");
+    }
+}
