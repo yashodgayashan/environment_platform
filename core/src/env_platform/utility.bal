@@ -120,7 +120,7 @@ function getApplicationCode(string applicationType) returns string|error {
 
 # The `getCurrentDateObject` function will return a current time as a date object.
 # 
-# + return - This function will return a Date object.
+# + return - This function returns a Date object.
 function getCurrentDateObject() returns Date {
     time:Time time = time:currentTime();
     return {
