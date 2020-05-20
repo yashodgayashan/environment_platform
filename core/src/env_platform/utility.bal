@@ -1,4 +1,3 @@
-import ballerina/io;
 import ballerina/time;
 # The `extractAreaAsJSONArray` function will extract a JSON array 
 # indicating the area using given locations array.
