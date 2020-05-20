@@ -187,7 +187,7 @@ function constructAssignmentArray(AssignedMinistry assignedMinistry, json[] assi
     error duplicateError = error("Ministry Already Assigned", message = "The ministry is with ministry ID: " + assignedMinistry.ministry.id);
     boolean isError = false;
 
-    // Check if the ministry is already assigned
+    // Check if the ministry is already assigned.
     assignments.forEach(function (json assignment) {
         map<json> assignmentMap = <map<json>>assignment;
         if (assignmentMap.id == assignedMinistry.ministry.id) {
