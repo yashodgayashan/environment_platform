@@ -325,7 +325,7 @@ function assignMinistry(AssignedMinistry assignedMinistry, string applicationId)
                 updated = check applicationCollection->update({assignments: [data]}, {"applicationId": applicationId});
             } else {
 
-                // Append the new assignment to the array and updated
+                // Append the new assignment to the array and update.
                 json constructAssignmentArrayResult = check constructAssignmentArray(assignedMinistry, assignments);
                 updated = check applicationCollection->update({assignments: assignments}, {"applicationId": applicationId});
             }
