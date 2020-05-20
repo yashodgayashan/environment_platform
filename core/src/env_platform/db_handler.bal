@@ -344,11 +344,9 @@ function assignMinistry(AssignedMinistry assignedMinistry, string applicationId)
 # a mongodb:DatabaseError. 
 function isMinistry(string ministryId) returns boolean|error {
     map<json>[] found = check ministryCollection->find({"id": ministryId});
-    if (found.length() == 0) {
-        return false;
-    } else if (found.length() == 1) {
-        return true;
+    if (found.length() > 1) {
+        return error("Duplicate Ids", message = "There are multiple ministries for the ID: " + ministryId + ".");;
     } else {
-        return error("Duplicate Ids", message = "There are multiple ministries for the ID: " + ministryId + ".");
-    }
+        return found.length() == 1 ? true : false;
+    } 
 }
