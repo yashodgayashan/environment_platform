@@ -320,7 +320,7 @@ function assignMinistry(AssignedMinistry assignedMinistry, string applicationId)
             int updated;
             if (assignments is error) {
 
-                // Construct the assignment and update
+                // Construct the assignment and update.
                 json data = check constructAssignment(assignedMinistry);
                 updated = check applicationCollection->update({assignments: [data]}, {"applicationId": applicationId});
             } else {
