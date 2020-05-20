@@ -25,7 +25,7 @@ mongodb:Collection applicationMetaDataCollection = check mongoDatabase->getColle
 function saveApplication(TreeRemovalForm form) returns boolean|error {
 
     boolean result = check saveApplicationMetadata(form.title);
-    log:printDebug("Save information in application metadata: " + result.toString());
+    log:printDebug("Saved information in application metadata: " + result.toString());
     // Construct the application.
     map<json> application = {
         "applicationId": check generateApplicationId(form.applicationCreatedDate, form.title),
@@ -272,10 +272,10 @@ function removeApplicationInUser(string userId, string applicationId) returns bo
     }
 }
 
-# The `saveApplicationMetadata` function will the number of applications of the given type by one.
+# The `saveApplicationMetadata` function will save application metadata to the database.
 # 
 # + applicationType - Type of the application.
-# + return - This function will return either application meta data is added or 
+# + return - This function will return either whether the application meta data is added or 
 # error if there is a mongodb:DatabaseError.
 function saveApplicationMetadata(string applicationType) returns boolean|error {
     map<json>[] find = check applicationMetaDataCollection->find({"applicationType": applicationType});
