@@ -131,3 +131,48 @@ function getCurrentDateObject() returns Date {
         "minute": time:getMinute(time)
     };
 }
+
+# The `constructAssignment` function will construct the assignment from the given AssignedMinistry record.
+# 
+# + assignedMinistry - AssignedMinistry record.
+# + return - This function will return a assignment json or an error if the Data record is not converted to the json, 
+# Mongodb:DatabaseError or prerequisite ministry is not found.
+function constructAssignment(AssignedMinistry assignedMinistry) returns json|error {
+
+    json data;
+    Ministry? prerequisite = assignedMinistry?.prerequisite;
+
+    // If prerequisite is available.
+    if (prerequisite is Ministry) {
+
+        // Check the prerequisite ministry availablity.
+        if (check isMinistry(prerequisite.id)) {
+            data = {
+                id: assignedMinistry.ministry.id,
+                name: assignedMinistry.ministry.name,
+                prerequisiteId: prerequisite.id,
+                prerequisiteName: prerequisite.name,
+                status: [
+                        {
+                            progress: "New",
+                            timestamp: check json.constructFrom(getCurrentDateObject())
+                        }
+                    ]
+            };
+        } else {
+            return error("Invalid Operation", message = "There is no prerequisite ministry found with the ID: " + prerequisite.id + ".");
+        }
+    } else {
+        data = {
+            id: assignedMinistry.ministry.id,
+            name: assignedMinistry.ministry.name,
+            status: [
+                    {
+                        progress: "New",
+                        timestamp: check json.constructFrom(getCurrentDateObject())
+                    }
+                ]
+        };
+    }
+    return data;
+}
