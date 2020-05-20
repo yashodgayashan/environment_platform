@@ -329,11 +329,8 @@ function assignMinistry(AssignedMinistry assignedMinistry, string applicationId)
                 json constructAssignmentArrayResult = check constructAssignmentArray(assignedMinistry, assignments);
                 updated = check applicationCollection->update({assignments: assignments}, {"applicationId": applicationId});
             }
-            if (updated == 1) {
-                return true;
-            } else {
-                return false;
-            }
+
+            return updated == 1 ? true : false;
         } else {
             return error("Invalid Operation", message = "There is no ministry found with the ID: " + ministryId + ".");
         }
