@@ -2,7 +2,6 @@ import ballerina/config as conf;
 import ballerina/log;
 import ballerina/mongodb;
 
-
 // Mongodb configurations.
 mongodb:ClientConfig mongoConfig = {
     host: conf:getAsString("DB_HOST"),
@@ -14,6 +13,8 @@ mongodb:Client mongoClient = check new (mongoConfig);
 mongodb:Database mongoDatabase = check mongoClient->getDatabase("EnvironmentPlatform");
 mongodb:Collection applicationCollection = check mongoDatabase->getCollection("applications");
 mongodb:Collection usersCollection = check mongoDatabase->getCollection("users");
+mongodb:Collection ministryCollection = check mongoDatabase->getCollection("ministries");
+mongodb:Collection adminCollection = check mongoDatabase->getCollection("admins");
 mongodb:Collection applicationMetaDataCollection = check mongoDatabase->getCollection("applicationMetaData");
 
 # The `saveApplication` function will save the application to the applications collection in the database.
@@ -147,11 +148,12 @@ function updateApplication(TreeRemovalForm form, string applicationId) returns b
         log:printDebug("The application of application id: " + applicationId.toString() + " is " + found.toString());
 
         // Get the versions array.
-        json[] versions = <json[]>found[0].versions;
+        int numberOfVersions = check trap <int>found[0].numberOfVersions;
+        json[] versions = check trap <json[]>found[0].versions;
         versions.push(application);
 
         // Added new versions array to the application
-        updated = applicationCollection->update({"versions": versions}, {"applicationId": applicationId});
+        updated = applicationCollection->update({"versions": versions, numberOfVersions: numberOfVersions + 1}, {"applicationId": applicationId});
     } else {
         return error("Invalid Operation", message = "Cannot resolve the application status with the appilcation ID: "
             + applicationId + ".");
@@ -289,5 +291,62 @@ function saveApplicationMetadata(string applicationType) returns boolean|error {
         // Update the count by one
         int update = check applicationMetaDataCollection->update({"count": applicationCount}, {"applicationType": applicationType});
         return update > 0 ? true : false;
+    }
+}
+
+# The `assignMinistry` function will assign a ministry to an application.
+# 
+# + assignedMinistry - AssignedMinistry record which should be assigned.
+# + applicationId - Application ID of the application.
+# + return - This function will return whether the ministry is assigned or error if any occurs.
+function assignMinistry(AssignedMinistry assignedMinistry, string applicationId) returns boolean|error {
+
+    map<json>[] find = check applicationCollection->find({"applicationId": applicationId});
+
+    // If no application is found.
+    if (find.length() == 0) {
+        return error("Invalid application", message = "There is no application with application ID: " + applicationId + ".");
+    } else if (find.length() > 1) {
+        return error("Invalid application", message = "There are one or more applications with the application ID: " + applicationId + ".");
+    } else {
+        string ministryId = assignedMinistry.ministry.id;
+
+        // Check the validity of the ministry.
+        boolean isMinist = check isMinistry(ministryId);
+        if (isMinist) {
+            map<json> application = find[0];
+            // Get the assignments.
+            json[]|error assignments = trap <json[]>application.assignments;
+            int updated;
+            if (assignments is error) {
+
+                // Construct the assignment and update.
+                json data = check constructAssignment(assignedMinistry);
+                updated = check applicationCollection->update({assignments: [data]}, {"applicationId": applicationId});
+            } else {
+
+                // Append the new assignment to the array and update.
+                json constructAssignmentArrayResult = check constructAssignmentArray(assignedMinistry, assignments);
+                updated = check applicationCollection->update({assignments: assignments}, {"applicationId": applicationId});
+            }
+
+            return updated == 1 ? true : false;
+        } else {
+            return error("Invalid Operation", message = "There is no ministry found with the ID: " + ministryId + ".");
+        }
+    }
+}
+
+# The `isMinistry` function check whether the given ministry is available.
+# 
+# + ministryId - ID of the ministry.
+# + return - This function either return ministry is availbale or error if there is 
+# a mongodb:DatabaseError. 
+function isMinistry(string ministryId) returns boolean|error {
+    map<json>[] found = check ministryCollection->find({"id": ministryId});
+    if (found.length() > 1) {
+        return error("Duplicate ID", message = "There are multiple ministries for the ID: " + ministryId + ".");
+    } else {
+        return found.length() == 1 ? true : false;
     }
 }

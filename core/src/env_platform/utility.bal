@@ -117,3 +117,89 @@ function getApplicationCode(string applicationType) returns string|error {
         return error("Unknown application type", message = "Unknown application type: " + applicationType + ".");
     }
 }
+
+# The `getCurrentDateObject` function will return a current time as a date object.
+# 
+# + return - This function returns a Date object.
+function getCurrentDateObject() returns Date {
+    time:Time time = time:currentTime();
+    return {
+        "year": time:getYear(time),
+        "month": time:getMonth(time),
+        "day": time:getDay(time),
+        "hour": time:getHour(time),
+        "minute": time:getMinute(time)
+    };
+}
+
+# The `constructAssignment` function will construct the assignment from the given AssignedMinistry record.
+# 
+# + assignedMinistry - AssignedMinistry record.
+# + return - This function will return a assignment json or an error if the Data record is not converted to the json, 
+# Mongodb:DatabaseError or prerequisite ministry is not found.
+function constructAssignment(AssignedMinistry assignedMinistry) returns json|error {
+
+    json data;
+    Ministry? prerequisite = assignedMinistry?.prerequisite;
+
+    // If prerequisite is available.
+    if (prerequisite is Ministry) {
+
+        // Check the prerequisite ministry availablity.
+        if (check isMinistry(prerequisite.id)) {
+            data = {
+                id: assignedMinistry.ministry.id,
+                name: assignedMinistry.ministry.name,
+                prerequisiteId: prerequisite.id,
+                prerequisiteName: prerequisite.name,
+                status: [
+                        {
+                            progress: "New",
+                            timestamp: check json.constructFrom(getCurrentDateObject())
+                        }
+                    ]
+            };
+        } else {
+            return error("Invalid Operation", message = "There is no prerequisite ministry found with the ID: " + prerequisite.id + ".");
+        }
+    } else {
+        data = {
+            id: assignedMinistry.ministry.id,
+            name: assignedMinistry.ministry.name,
+            status: [
+                    {
+                        progress: "New",
+                        timestamp: check json.constructFrom(getCurrentDateObject())
+                    }
+                ]
+        };
+    }
+    return data;
+}
+
+# The `constructAssignmentArray` function will construct the assignments array by pushing the new assigned ministry.
+# 
+# + assignedMinistry - AssignedMinistry record which must be add to the assignments.
+# + assignments - All the assignments of an application.
+# + return - This function will return either constructed assigned ministry array or an error.
+function constructAssignmentArray(AssignedMinistry assignedMinistry, json[] assignments) returns json|error {
+
+    error duplicateError = error("Ministry already assigned", message = "Ministry with the ID: " + assignedMinistry.ministry.id + " is already assigned");
+    boolean isError = false;
+
+    // Check if the ministry is already assigned.
+    foreach json assignment in assignments {
+        map<json> assignmentMap = <map<json>>assignment;
+        if (assignmentMap.id == assignedMinistry.ministry.id) {
+            isError = true;
+            break;
+        }
+    }
+
+    if (isError) {
+        return duplicateError;
+    } else {
+        assignments.push(check constructAssignment(assignedMinistry));
+        return assignments;
+    }
+}
