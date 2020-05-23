@@ -11,3 +11,11 @@ function getHashedPassword(string password) returns string {
     return hashedPassword.toBase16();
 }
 
+# The `constructUserInformation` will construct user information into a json.
+# 
+# + id - Id of the user.
+# + userType - UserType of the user.
+# + return - This function will return the id and the usertype as a json.
+function constructUserInformation(string id, string userType) returns json {
+    return {id: id, userType: userType};
+}
