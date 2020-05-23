@@ -42,3 +42,15 @@ function authenticateUser(string email, string password) returns json|error {
     }
     return error("No user found", message = "Couldn't find the user with given credentials");
 }
+
+# The `extractCredentials` function will extract the user information from json 
+# asd return seperated email and password.
+# 
+# + credentials - User credentials including email and password
+# + return - This function will return either email and password or data converstion error 
+# if any of field is empty.
+function extractCredentials(json credentials) returns [string, string]|error {
+    string email = check trap <string>credentials.email;
+    string password = check trap <string>credentials.password;
+    return [email, password];
+}
