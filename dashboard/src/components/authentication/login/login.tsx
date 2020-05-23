@@ -72,7 +72,7 @@ const Login = () => {
     // TODO - Handle login validation
     if (username === 'john@smith.com' && password === 'password') {
       setError(false);
-      setHelperText('Login Successful');
+      setHelperText('Login Successful.');
     } else {
       setError(true);
       setHelperText('Incorrect username or password')
