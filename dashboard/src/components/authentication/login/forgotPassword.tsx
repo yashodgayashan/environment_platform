@@ -64,7 +64,7 @@ const ForgotPassword = () => {
     // TODO - Handle validation
     if (email === 'john@smith.com') {
       setError(false);
-      setHelperText('An email will be sent to you');
+      setHelperText('An email will be sent to your email address.');
     } else {
       setError(true);
       setHelperText('Please enter a valid email');
