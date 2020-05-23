@@ -75,7 +75,7 @@ const Login = () => {
       setHelperText('Login Successful.');
     } else {
       setError(true);
-      setHelperText('Incorrect username or password')
+      setHelperText('Incorrect username or password.')
     }
   };
 
