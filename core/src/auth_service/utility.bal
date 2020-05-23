@@ -1,4 +1,53 @@
+import ballerina/config as conf;
 import ballerina/crypto;
+import ballerina/jwt;
+import ballerina/time;
+
+# The `generateJWT` will generate the JWT token for the given user credentials.
+# 
+# + credentials - User credentials.
+# + return - This function will return either JWT or an appropriate error
+function generateJWT(json credentials) returns string|error {
+
+    [string, string] [email, password] = check extractCredentials(credentials);
+    json|error authenticateUserResult = authenticateUser(email, password);
+    if (authenticateUserResult is json) {
+
+        // Get id and userType.
+        string id = check trap <string>authenticateUserResult.id;
+        string scope = check trap <string>authenticateUserResult.userType;
+
+        // keyStore setup.
+        crypto:KeyStore keyStore = {
+            path: "resources/ballerinaKeystore.p12",
+            password: conf:getAsString("KEY_STORE_PASSWORD")
+        };
+
+        jwt:JwtKeyStoreConfig keyStoreConfig = {
+            keyStore: keyStore,
+            keyAlias: "ballerina",
+            keyPassword: "ballerina"
+        };
+
+        // Set JWT header.
+        jwt:JwtHeader header = {};
+        header.alg = jwt:RS256;
+        header.typ = "JWT";
+
+        // Set JWT payload.
+        jwt:JwtPayload payload = {};
+        payload.sub = "Auth token";
+        payload.iss = "environment platform";
+        payload.jti = "100078234ba23";
+        payload.customClaims = {name: id, scope: scope};
+        payload.exp = time:currentTime().time / 1000 + conf:getAsInt("JWT_EXPIRE", 3600);
+        payload.iat = time:currentTime().time / 1000;
+        string jwt = check jwt:issueJwt(header, payload, keyStoreConfig);
+        return jwt;
+    } else {
+        return authenticateUserResult;
+    }
+}
 
 # The `getHashedPassword` will convert the given password to SHA265 encoded string.
 # 
