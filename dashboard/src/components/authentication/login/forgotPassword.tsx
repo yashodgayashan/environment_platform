@@ -67,7 +67,7 @@ const ForgotPassword = () => {
       setHelperText('An email will be sent to your email address.');
     } else {
       setError(true);
-      setHelperText('Please enter a valid email');
+      setHelperText('Please enter a valid email address.');
     }
   };
 
