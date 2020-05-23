@@ -1,0 +1,17 @@
+.footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    height: 4%;
+    width: 100%;
+    padding-left: 0.5%;
+    padding-bottom: 0.5%;
+    background-color: #24292e;
+    color: white;
+    text-align: center;
+  }
+  
+  .footerText {
+    line-height: 20%;
+  }
+  
