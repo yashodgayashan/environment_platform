@@ -56,12 +56,12 @@ const Signup = () => {
   };
 
   useEffect(() => {
-    if (email.trim() && password.trim()) {
+    if (displayName.trim() && email.trim() && password.trim() && confirmPassword.trim()) {
       setIsButtonDisabled(false);
     } else {
       setIsButtonDisabled(true);
     }
-  }, [email, password]);
+  }, [displayName, email, password, confirmPassword]);
 
   const handleSignup = () => {
     // TODO - Handle Signup validation
