@@ -19,3 +19,26 @@ function getHashedPassword(string password) returns string {
 function constructUserInformation(string id, string userType) returns json {
     return {id: id, userType: userType};
 }
+
+# The `authenticateUser` function will get the Id and the userType of the user if valid email and password given.
+# 
+# + email - Email of the user.
+# + password - Password of the user.
+# + return - This function will either return the authenticated user Id and the user type or appropriate error.
+function authenticateUser(string email, string password) returns json|error {
+
+    string hashedPassword = getHashedPassword(password);
+    json|error user = getUser(email, hashedPassword);
+    if (user is json || user.reason() == "Incorrect password" || user.reason() == "Multiple users") {
+        return <@taint>user;
+    }
+    json|error admin = getAdmin(email, hashedPassword);
+    if (admin is json || admin.reason() == "Incorrect password" || admin.reason() == "Multiple users") {
+        return <@taint>admin;
+    }
+    json|error ministry = getMinistryEmployee(email, hashedPassword);
+    if (ministry is json || ministry.reason() == "Incorrect password") {
+        return <@taint>ministry;
+    }
+    return error("No user found", message = "Couldn't find the user with given credentials");
+}
