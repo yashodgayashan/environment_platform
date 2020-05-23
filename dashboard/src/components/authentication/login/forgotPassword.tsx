@@ -91,7 +91,7 @@ const ForgotPassword = () => {
                 <FormattedMessage
                             id='Forgot.Password.Email.Label'
                             defaultMessage='Please enter your email. If your account exists, 
-                            we will send you a mail with instructions to recover your password'
+                            we will send you a mail with instructions to recover your password.'
                 />
                 <TextField
                   error={error}
