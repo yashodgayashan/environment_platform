@@ -70,7 +70,7 @@ const Signup = () => {
       setHelperText('Signup Successful... Welcome ' + displayName + '!');
     } else {
       setError(true);
-      setHelperText('The passwords do not match')
+      setHelperText('The passwords do not match.')
     }
   };
 
