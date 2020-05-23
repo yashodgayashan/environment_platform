@@ -17,7 +17,7 @@ mongodb:Collection adminCollection = check mongoDatabase->getCollection("admins"
 # The `getUser` function will authenticate user with given email and hashed password.
 # 
 # + email - Email of the user.
-# + password - Password of the User.
+# + password - Password of the user.
 # + return - This function will return either user information as json or an appropriate error.
 function getUser(string email, string password) returns json|error {
     map<json>[] users = check usersCollection->find({email: email, password: password});
@@ -59,4 +59,27 @@ function getMinistryEmployee(string email, string password) returns json|error {
         }
     }
     return error("No user found", message = "Couldn't find the user with given credentials");
+}
+
+# The `getAdmin` function will authenticate admin with given email and hashed password.
+# 
+# + email - Email of the admin.
+# + password - Password of the admin.
+# + return - This function will return either admin's information as json or an appropriate error.
+function getAdmin(string email, string password) returns json|error {
+    map<json>[] users = check adminCollection->find({email: email, password: password});
+    map<json>[] find = check adminCollection->find({email: email});
+    if (find.length() > 1) {
+        return error("Multiple users", message = "There are multiple users with same email:" + email + ".");
+    } else if (find.length() == 0) {
+        return error("No user found", message = "Couldn't find the user with given credentials");
+    } else {
+        if (find.length() == users.length()) {
+            string id = check trap <string>find[0].id;
+            return constructUserInformation(id, "Admin");
+        } else {
+            return error("Incorrect password", message = "Incorrect password entered");
+        }
+
+    }
 }
