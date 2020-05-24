@@ -22,9 +22,7 @@ mongodb:Collection adminCollection = check mongoDatabase->getCollection("admins"
 function getUser(string email, string password) returns json|error {
     map<json>[] users = check usersCollection->find({email: email, password: password});
     map<json>[] find = check usersCollection->find({email: email});
-    if (find.length() > 1) {
-        return error("Multiple users", message = "There are multiple users with same email:" + email + ".");
-    } else if (find.length() == 0) {
+    if (find.length() == 0) {
         return error("No user found", message = "Couldn't find the user with given credentials");
     } else {
         if (find.length() == users.length()) {
@@ -69,9 +67,7 @@ function getMinistryEmployee(string email, string password) returns json|error {
 function getAdmin(string email, string password) returns json|error {
     map<json>[] users = check adminCollection->find({email: email, password: password});
     map<json>[] find = check adminCollection->find({email: email});
-    if (find.length() > 1) {
-        return error("Multiple users", message = "There are multiple users with same email:" + email + ".");
-    } else if (find.length() == 0) {
+    if (find.length() == 0) {
         return error("No user found", message = "Couldn't find the user with given credentials.");
     } else {
         if (find.length() == users.length()) {

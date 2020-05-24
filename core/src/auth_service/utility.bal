@@ -78,11 +78,11 @@ function authenticateUser(string email, string password) returns json|error {
 
     string hashedPassword = getHashedPassword(password);
     json|error user = getUser(email, hashedPassword);
-    if (user is json || user.reason() == "Incorrect password" || user.reason() == "Multiple users") {
+    if (user is json || user.reason() == "Incorrect password") {
         return <@taint>user;
     }
     json|error admin = getAdmin(email, hashedPassword);
-    if (admin is json || admin.reason() == "Incorrect password" || admin.reason() == "Multiple users") {
+    if (admin is json || admin.reason() == "Incorrect password") {
         return <@taint>admin;
     }
     json|error ministry = getMinistryEmployee(email, hashedPassword);
