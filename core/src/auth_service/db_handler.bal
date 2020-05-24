@@ -23,13 +23,13 @@ function getUser(string email, string password) returns json|error {
     map<json>[] users = check usersCollection->find({email: email, password: password});
     map<json>[] find = check usersCollection->find({email: email});
     if (find.length() == 0) {
-        return error("No user found", message = "Couldn't find the user with given credentials");
+        return error("No user found", message = "Couldn't find the user with given credentials.");
     } else {
         if (find.length() == users.length()) {
             string id = check trap <string>users[0].id;
             return constructUserInformation(id, "User");
         } else {
-            return error("Incorrect password", message = "Incorrect password entered");
+            return error("Incorrect password", message = "Incorrect password entered.");
         }
     }
 }
