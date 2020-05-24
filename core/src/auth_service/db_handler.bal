@@ -31,7 +31,7 @@ function getUser(string email, string password) returns json|error {
             string id = check trap <string>users[0].id;
             return constructUserInformation(id, "User");
         } else {
-            return error("Incorrect password", message = "Incorrect password entered");
+            return error("Incorrect password", message = "Incorrect password entered.");
         }
     }
 }
