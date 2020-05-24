@@ -58,7 +58,7 @@ function getMinistryEmployee(string email, string password) returns json|error {
             }
         }
     }
-    return error("No user found", message = "Couldn't find the user with given credentials");
+    return error("No user found", message = "Couldn't find the user with given credentials.");
 }
 
 # The `getAdmin` function will authenticate admin with given email and hashed password.
