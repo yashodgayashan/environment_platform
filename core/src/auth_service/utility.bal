@@ -73,7 +73,7 @@ function constructUserInformation(string id, string userType) returns json {
 # 
 # + email - Email of the user.
 # + password - Password of the user.
-# + return - This function will either return the authenticated user Id and the user type or appropriate error.
+# + return - This function will either return the authenticated user Id and the user type or an appropriate error.
 function authenticateUser(string email, string password) returns json|error {
 
     string hashedPassword = getHashedPassword(password);
