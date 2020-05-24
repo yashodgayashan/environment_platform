@@ -40,7 +40,7 @@ function getUser(string email, string password) returns json|error {
 # 
 # + email - Email of the Ministry user.
 # + password - Password of the Ministry user.
-# + return - This function will return either minitry user's information as json or an appropriate error.
+# + return - This function will return either the ministry user's information as json or an appropriate error.
 function getMinistryEmployee(string email, string password) returns json|error {
     map<json>[] ministries = check ministryCollection->find();
     foreach json ministry in ministries {
