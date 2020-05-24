@@ -53,7 +53,7 @@ function getMinistryEmployee(string email, string password) returns json|error {
                     string userId = check trap <string>user.id;
                     return constructUserInformation(userId, "Ministry");
                 } else {
-                    return error("Incorrect password", message = "Incorrect password entered");
+                    return error("Incorrect password", message = "Incorrect password entered.");
                 }
             }
         }
