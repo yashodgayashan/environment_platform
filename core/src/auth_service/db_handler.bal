@@ -14,7 +14,7 @@ mongodb:Collection usersCollection = check mongoDatabase->getCollection("users")
 mongodb:Collection ministryCollection = check mongoDatabase->getCollection("ministries");
 mongodb:Collection adminCollection = check mongoDatabase->getCollection("admins");
 
-# The `getUser` function will authenticate user with given email and hashed password.
+# The `getUser` function will authenticate the user with the given email and the hashed password.
 # 
 # + email - Email of the user.
 # + password - Password of the user.
