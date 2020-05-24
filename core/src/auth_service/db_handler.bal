@@ -18,7 +18,7 @@ mongodb:Collection adminCollection = check mongoDatabase->getCollection("admins"
 # 
 # + email - Email of the user.
 # + password - Password of the user.
-# + return - This function will return either user information as json or an appropriate error.
+# + return - This function will return either the user information as json or an appropriate error.
 function getUser(string email, string password) returns json|error {
     map<json>[] users = check usersCollection->find({email: email, password: password});
     map<json>[] find = check usersCollection->find({email: email});
