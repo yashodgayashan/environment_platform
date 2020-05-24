@@ -1,2 +1,6 @@
 target
 Ballerina.lock
+
+resources/ballerina.conf
+resources/ballerinaKeystore.p12
+resources/ballerinaTruststore.p12
