@@ -25,7 +25,7 @@ function getUser(string email, string password) returns json|error {
     if (find.length() > 1) {
         return error("Multiple users", message = "There are multiple users with same email:" + email + ".");
     } else if (find.length() == 0) {
-        return error("No user found", message = "Couldn't find the user with given credentials");
+        return error("No user found", message = "Couldn't find the user with given credentials.");
     } else {
         if (find.length() == users.length()) {
             string id = check trap <string>users[0].id;
