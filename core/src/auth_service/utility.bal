@@ -89,7 +89,7 @@ function authenticateUser(string email, string password) returns json|error {
     if (ministry is json || ministry.reason() == "Incorrect password") {
         return <@taint>ministry;
     }
-    return error("No user found", message = "Couldn't find the user with given credentials");
+    return error("No user found", message = "Couldn't find the user with the given credentials.");
 }
 
 # The `extractCredentials` function will extract the user information from a json 
