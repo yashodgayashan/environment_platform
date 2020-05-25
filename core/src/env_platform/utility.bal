@@ -262,3 +262,25 @@ function updateAssignment(json assignment, Status status) returns json|error {
     statusArray.push(check constructStatus(status));
     return assignmentInfo;
 }
+
+# The `custructStatus` function will construct the given status to a appropriate format.
+# 
+# + status - Status which should be formatted.
+# + return - This function will return either formatted json or approprate error.
+function constructStatus(Status status) returns json|error {
+
+    if (status?.reason is ()) {
+        return {
+            progress: status.progress,
+            changedBy: check json.constructFrom(status.changedBy),
+            timestamp: check json.constructFrom(status.timestamp)
+        };
+    } else {
+        return {
+            progress: status.progress,
+            changedBy: check json.constructFrom(status.changedBy),
+            timestamp: check json.constructFrom(status.timestamp),
+            reason: status?.reason
+        };
+    }
+}
