@@ -236,7 +236,7 @@ function getAssignedMinistryInfo(json[] assignments, string ministryId) returns 
 # 
 # + assignments - All the assignments of the application.
 # + ministryId - Id of the ministry which needed to be check.
-# + return - This will return either ministry is complete processing or data type conversion errors.
+# + return - This will return whether ministry has completed processing or data type conversion errors.
 function isMinistryCompleted(json[] assignments, string ministryId) returns boolean|error {
     foreach json assignment in assignments {
         if (check trap <string>assignment.id == ministryId) {
