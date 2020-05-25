@@ -368,7 +368,7 @@ function updateStatus(Status status, string applicationId) returns boolean|error
             [boolean, json?, boolean, boolean] [isMinistryAssigned, assignment, hasPrerequisite, isPrerequisiteCompeted] = check getAssignedMinistryInfo(assignments, status.ministry.id);
             if (isMinistryAssigned) {
                 if (!hasPrerequisite || (hasPrerequisite && isPrerequisiteCompeted)){
-                    // Update the assignment with new status
+                    // Update the assignment with new status.
                     json updatedAssignment = check updateAssignment(assignment, status);
                     // Update the assignments array
                     check updateAssignments(assignments,updatedAssignment, status.ministry.id);
