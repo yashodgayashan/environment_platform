@@ -255,7 +255,7 @@ function isMinistryCompleted(json[] assignments, string ministryId) returns bool
 # 
 # + assignment - Single ministry assignment.
 # + status - Incomming status.
-# + return - This function will return updated assignment or an error if occured.
+# + return - This function will return updated assignment or an error if occurred.
 function updateAssignment(json assignment, Status status) returns json|error {
     map<json> assignmentInfo = check trap <map<json>>assignment;
     json[] statusArray = check trap <json[]>assignmentInfo.status;
