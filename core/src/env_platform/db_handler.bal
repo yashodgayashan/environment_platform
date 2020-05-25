@@ -352,7 +352,7 @@ function isMinistry(string ministryId) returns boolean|error {
 }
 
 # The `updateStatus` function will create a new version of the status and push it to the status array of the appropriate assignment 
-# in the assignments array and  array.
+# in the assignments array.
 # 
 # + status - Incoming status for the application.
 # + applicationId - Application Id of the application.
