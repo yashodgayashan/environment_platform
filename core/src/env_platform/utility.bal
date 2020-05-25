@@ -203,3 +203,31 @@ function constructAssignmentArray(AssignedMinistry assignedMinistry, json[] assi
         return assignments;
     }
 }
+
+# The `getAssignedMinistryInfo` function will output the given ministry information.
+# 
+# + assignments - Assignment information of an application;
+# + ministryId - ministryId of the ministry which information is needed to retrival. 
+# + return - This function will return whether ministry is assigned to the application, assignment if ministry is assigned,
+# whether ministry has prerequisite, whether prerequisite is completed or an appropriate error.
+function getAssignedMinistryInfo(json[] assignments, string ministryId) returns [boolean, json?, boolean, boolean]|error {
+
+    boolean isMinistryAssigned = false;
+    json? assignmentInfo = ();
+    boolean hasPrerequisite = false;
+    boolean isPrerequisiteCompeted = false;
+
+    foreach json assignment in assignments {
+        if (check trap <string>assignment.id == ministryId) {
+            isMinistryAssigned = true;
+            assignmentInfo = assignment;
+            string|error prerequisiteId = trap <string>assignment.prerequisiteId;
+            if (prerequisiteId is string) {
+                hasPrerequisite = true;
+                isPrerequisiteCompeted = check isMinistryCompleted(assignments, prerequisiteId);
+            }
+            break;
+        }
+    }
+    return [isMinistryAssigned, assignmentInfo, hasPrerequisite, isPrerequisiteCompeted];
+}
