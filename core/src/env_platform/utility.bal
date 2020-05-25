@@ -292,7 +292,6 @@ function constructStatus(Status status) returns json|error {
 # + ministryId - Id of the ministry which assignment should be altered.
 # + return - This function will return null or not exist error.
 function updateAssignments(json[] assignments, json updatedAssignment, string ministryId) returns error?{
-
     int id = 0;
     foreach json assignment in assignments{
         if(check trap assignment.id==ministryId){
