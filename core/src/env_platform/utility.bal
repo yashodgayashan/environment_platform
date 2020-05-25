@@ -268,7 +268,6 @@ function updateAssignment(json assignment, Status status) returns json|error {
 # + status - Status which should be formatted.
 # + return - This function will return either formatted json or an appropriate error.
 function constructStatus(Status status) returns json|error {
-
     if (status?.reason is ()) {
         return {
             progress: status.progress,
