@@ -373,7 +373,7 @@ function updateStatus(Status status, string applicationId) returns boolean|error
                     // Update the assignments array.
                     check updateAssignments(assignments,updatedAssignment, status.ministry.id);
                     int updated = check applicationCollection->update({assignments: assignments}, {"applicationId": applicationId});
-                    return updated==1? true: false; 
+                    return updated == 1 ? true : false; 
                 }else{
                     return error("Prerequisite Ministry approval pending", message="Prerequisite ministry has not completed processing the application");
                 }
