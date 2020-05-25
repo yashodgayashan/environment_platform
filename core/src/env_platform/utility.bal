@@ -231,3 +231,22 @@ function getAssignedMinistryInfo(json[] assignments, string ministryId) returns 
     }
     return [isMinistryAssigned, assignmentInfo, hasPrerequisite, isPrerequisiteCompeted];
 }
+
+# The `isMinistryCompleted` function will return whether particular ministry is complete processing application.
+# 
+# + assignments - All the assignments of the application.
+# + ministryId - Id of the ministry which needed to be check.
+# + return - This will return either ministry is complete processing or data type conversion errors.
+function isMinistryCompleted(json[] assignments, string ministryId) returns boolean|error {
+    foreach json assignment in assignments {
+        if (check trap <string>assignment.id == ministryId) {
+            json[] status = check trap <json[]>assignment.status;
+            string progress = check trap <string>status[status.length() - 1].progress;
+            if (progress == "Completed") {
+                return true;
+            }
+            break;
+        }
+    }
+    return false;
+}
