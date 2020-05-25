@@ -232,7 +232,7 @@ function getAssignedMinistryInfo(json[] assignments, string ministryId) returns 
     return [isMinistryAssigned, assignmentInfo, hasPrerequisite, isPrerequisiteCompeted];
 }
 
-# The `isMinistryCompleted` function will return whether particular ministry is complete processing application.
+# The `isMinistryCompleted` function will return whether a particular ministry has completed processing the application.
 # 
 # + assignments - All the assignments of the application.
 # + ministryId - Id of the ministry.
