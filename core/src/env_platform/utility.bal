@@ -251,7 +251,7 @@ function isMinistryCompleted(json[] assignments, string ministryId) returns bool
     return false;
 }
 
-# The `updateAssignment` function will push the incomming status to the status array of the assignment.
+# The `updateAssignment` function will push the incoming status to the status array of the assignment.
 # 
 # + assignment - Single ministry assignment.
 # + status - Incomming status.
