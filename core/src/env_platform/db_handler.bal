@@ -356,7 +356,7 @@ function isMinistry(string ministryId) returns boolean|error {
 # 
 # + status - Incoming status for the application.
 # + applicationId - Application Id of the application.
-# + return - This function will return either status is updated or appropriate error.
+# + return - This function will return either the updated status or appropriate error.
 function updateStatus(Status status, string applicationId) returns boolean|error {
     map<json>[] applications = check applicationCollection->find({"applicationId": applicationId, status: "submit"});
     if (applications.length() == 0) {
