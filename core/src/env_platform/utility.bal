@@ -293,7 +293,7 @@ function constructStatus(Status status) returns json|error {
 function updateAssignments(json[] assignments, json updatedAssignment, string ministryId) returns error?{
     int id = 0;
     foreach json assignment in assignments {
-        if(check trap assignment.id==ministryId){
+        if (check trap assignment.id==ministryId) {
             assignments[id] = updatedAssignment;
             break;
         }
