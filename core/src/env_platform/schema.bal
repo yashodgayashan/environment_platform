@@ -79,10 +79,10 @@ type Date record {
     int minute;
 };
 type Status record {
-    string ministryName;
+    Ministry ministry;
     string progress;
     Person changedBy;
-    string reason;
+    string reason?;
     Date timestamp;
 };
 type Field record {

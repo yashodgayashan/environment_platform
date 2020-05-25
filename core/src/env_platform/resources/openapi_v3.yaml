@@ -1043,8 +1043,8 @@ components:
     Status:
       type: object
       properties:
-        ministryName:
-          type: string
+        ministry:
+          $ref: "#/components/schemas/Ministry"
         progress:
           type: string
         changedBy:

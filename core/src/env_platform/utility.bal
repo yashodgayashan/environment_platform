@@ -203,3 +203,100 @@ function constructAssignmentArray(AssignedMinistry assignedMinistry, json[] assi
         return assignments;
     }
 }
+
+# The `getAssignedMinistryInfo` function will output the given ministry information.
+# 
+# + assignments - Assignment information of an application;
+# + ministryId - Id of the assigned ministry. 
+# + return - This function will return whether ministry is assigned to the application, assignment if ministry is assigned,
+# whether ministry has prerequisite, whether prerequisite is completed or an appropriate error.
+function getAssignedMinistryInfo(json[] assignments, string ministryId) returns [boolean, json?, boolean, boolean]|error {
+
+    boolean isMinistryAssigned = false;
+    json? assignmentInfo = ();
+    boolean hasPrerequisite = false;
+    boolean isPrerequisiteCompeted = false;
+
+    foreach json assignment in assignments {
+        if (check trap <string>assignment.id == ministryId) {
+            isMinistryAssigned = true;
+            assignmentInfo = assignment;
+            string|error prerequisiteId = trap <string>assignment.prerequisiteId;
+            if (prerequisiteId is string) {
+                hasPrerequisite = true;
+                isPrerequisiteCompeted = check isMinistryCompleted(assignments, prerequisiteId);
+            }
+            break;
+        }
+    }
+    return [isMinistryAssigned, assignmentInfo, hasPrerequisite, isPrerequisiteCompeted];
+}
+
+# The `isMinistryCompleted` function will return whether a particular ministry has completed processing the application.
+# 
+# + assignments - All the assignments of the application.
+# + ministryId - Id of the ministry.
+# + return - This will return whether ministry has completed processing or data type conversion errors.
+function isMinistryCompleted(json[] assignments, string ministryId) returns boolean|error {
+    foreach json assignment in assignments {
+        if (check trap <string>assignment.id == ministryId) {
+            json[] status = check trap <json[]>assignment.status;
+            string progress = check trap <string>status[status.length() - 1].progress;
+            if (progress == "Completed") {
+                return true;
+            }
+            break;
+        }
+    }
+    return false;
+}
+
+# The `updateAssignment` function will push the incoming status to the status array of the assignment.
+# 
+# + assignment - Single ministry assignment.
+# + status - Incomming status.
+# + return - This function will return updated assignment or an error if occurred.
+function updateAssignment(json assignment, Status status) returns json|error {
+    map<json> assignmentInfo = check trap <map<json>>assignment;
+    json[] statusArray = check trap <json[]>assignmentInfo.status;
+    statusArray.push(check constructStatus(status));
+    return assignmentInfo;
+}
+
+# The `constructStatus` function will construct the given status to an appropriate format.
+# 
+# + status - Status which should be formatted.
+# + return - This function will return either formatted json or an appropriate error.
+function constructStatus(Status status) returns json|error {
+    if (status?.reason is ()) {
+        return {
+            progress: status.progress,
+            changedBy: check json.constructFrom(status.changedBy),
+            timestamp: check json.constructFrom(status.timestamp)
+        };
+    } else {
+        return {
+            progress: status.progress,
+            changedBy: check json.constructFrom(status.changedBy),
+            timestamp: check json.constructFrom(status.timestamp),
+            reason: status?.reason
+        };
+    }
+}
+
+# The `updateAssignments` function will updated the assignment array with updated assignment.
+# 
+# + assignments - Array of assignments of the application.
+# + updatedAssignment - Assignment which is updated with incoming status.
+# + ministryId - Id of the ministry which assignment should be altered.
+# + return - This function will return null or not exist error.
+function updateAssignments(json[] assignments, json updatedAssignment, string ministryId) returns error?{
+    int id = 0;
+    foreach json assignment in assignments {
+        if (check trap assignment.id==ministryId) {
+            assignments[id] = updatedAssignment;
+            break;
+        }
+        id = id + 1;
+    }
+}
