@@ -370,7 +370,7 @@ function updateStatus(Status status, string applicationId) returns boolean|error
                 if (!hasPrerequisite || (hasPrerequisite && isPrerequisiteCompeted)){
                     // Update the assignment with new status.
                     json updatedAssignment = check updateAssignment(assignment, status);
-                    // Update the assignments array
+                    // Update the assignments array.
                     check updateAssignments(assignments,updatedAssignment, status.ministry.id);
                     int updated = check applicationCollection->update({assignments: assignments}, {"applicationId": applicationId});
                     return updated==1? true: false; 
