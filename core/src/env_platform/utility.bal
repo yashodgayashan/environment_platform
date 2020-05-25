@@ -263,7 +263,7 @@ function updateAssignment(json assignment, Status status) returns json|error {
     return assignmentInfo;
 }
 
-# The `constructStatus` function will construct the given status to a appropriate format.
+# The `constructStatus` function will construct the given status to an appropriate format.
 # 
 # + status - Status which should be formatted.
 # + return - This function will return either formatted json or an appropriate error.
