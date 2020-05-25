@@ -290,7 +290,7 @@ function constructStatus(Status status) returns json|error {
 # + assignments - Array of assignments of the application.
 # + updatedAssignment - Assignment which is updated with incoming status.
 # + ministryId - Id of the ministry which assignment should be altered.
-# + return - This function will return null or not exsits error.
+# + return - This function will return null or not exist error.
 function updateAssignments(json[] assignments, json updatedAssignment, string ministryId) returns error?{
 
     int id = 0;
