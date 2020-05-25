@@ -350,3 +350,38 @@ function isMinistry(string ministryId) returns boolean|error {
         return found.length() == 1 ? true : false;
     }
 }
+
+# The `updateStatus` function will create a new verison of the status and push it to the status array of the appropriate assignment 
+# in the assignments array and  array.
+# 
+# + status - Incoming status for the application.
+# + applicationId - Application Id of the application.
+# + return - This function will return either status is updated or appropriate error.
+function updateStatus(Status status, string applicationId) returns boolean|error {
+    map<json>[] applications = check applicationCollection->find({"applicationId": applicationId, status: "submit"});
+    if (applications.length() == 0) {
+        return error("Not found", message = "Application with application Id: " + applicationId + " is not found.");
+    } else {
+        map<json> application = check trap <map<json>>applications[0];
+        json[]|error assignments = trap <json[]>application.assignments;
+        if (assignments is json[]) {
+            [boolean, json?, boolean, boolean] [isMinistryAssigned, assignment, hasPrerequisite, isPrerequisiteCompeted] = check getAssignedMinistryInfo(assignments, status.ministry.id);
+            if (isMinistryAssigned) {
+                if (!hasPrerequisite || (hasPrerequisite && isPrerequisiteCompeted)){
+                    // Update the assignment with new status
+                    json updatedAssignment = check updateAssignment(assignment, status);
+                    // Update the assignments array
+                    check updateAssignments(assignments,updatedAssignment, status.ministry.id);
+                    int updated = check applicationCollection->update({assignments: assignments}, {"applicationId": applicationId});
+                    return updated==1? true: false; 
+                }else{
+                    return error("Prerequisite must completed", message="Prerequisite ministry is not completed processing the application");
+                }
+            } else {
+                return error("Ministry not assigned", message = status.ministry.name + " is not assigned to application with application Id: " + applicationId + ".");
+            }
+        } else {
+            return error("Ministry not assigned", message = status.ministry.name + " is not assigned to application with application Id: " + applicationId + ".");
+        }
+    }
+}
