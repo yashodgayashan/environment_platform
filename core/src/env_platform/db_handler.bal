@@ -375,7 +375,7 @@ function updateStatus(Status status, string applicationId) returns boolean|error
                     int updated = check applicationCollection->update({assignments: assignments}, {"applicationId": applicationId});
                     return updated == 1 ? true : false; 
                 }else{
-                    return error("Prerequisite Ministry approval pending", message="Prerequisite ministry has not completed processing the application");
+                    return error("Prerequisite Ministry approval pending", message="Prerequisite ministry has not completed processing the application.");
                 }
             } else {
                 return error("Ministry not assigned", message = status.ministry.name + " is not assigned to application with application Id: " + applicationId + ".");
