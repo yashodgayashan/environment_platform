@@ -1,21 +1,11 @@
-import ballerina/config as conf;
+import config_handler;
 import ballerina/log;
 import ballerina/mongodb;
 
-// Mongodb configurations.
-mongodb:ClientConfig mongoConfig = {
-    host: conf:getAsString("DB_HOST"),
-    username: conf:getAsString("DB_USER_NAME"),
-    password: conf:getAsString("DB_PASSWORD"),
-    options: {sslEnabled: false, serverSelectionTimeout: 500}
-};
-mongodb:Client mongoClient = check new (mongoConfig);
-mongodb:Database mongoDatabase = check mongoClient->getDatabase("EnvironmentPlatform");
-mongodb:Collection applicationCollection = check mongoDatabase->getCollection("applications");
-mongodb:Collection usersCollection = check mongoDatabase->getCollection("users");
-mongodb:Collection ministryCollection = check mongoDatabase->getCollection("ministries");
-mongodb:Collection adminCollection = check mongoDatabase->getCollection("admins");
-mongodb:Collection applicationMetaDataCollection = check mongoDatabase->getCollection("applicationMetaData");
+mongodb:Collection applicationCollection = config_handler:getApplicationCollection();
+mongodb:Collection applicationMetaDataCollection = config_handler:getApplicationMetadataCollection();
+mongodb:Collection ministryCollection = config_handler:getMinistryCollection();
+mongodb:Collection userCollection = config_handler:getUserCollection();
 
 # The `saveApplication` function will save the application to the applications collection in the database.
 # 
@@ -187,7 +177,7 @@ function getApplicationCountByTitle(string applicationType) returns int|error {
 # error if there is a mongodb:DatabaseError.
 function isValidUser(string userId) returns boolean|error {
 
-    int numOfDocuments = check usersCollection->countDocuments({id: userId});
+    int numOfDocuments = check userCollection->countDocuments({id: userId});
     if (numOfDocuments == 1) {
         return true;
     } else {
@@ -209,7 +199,7 @@ function saveApplicationInUser(string userId, string applicationId, string appli
     if (isValid) {
 
         // Get the user information.
-        map<json>[] find = check usersCollection->find({id: userId});
+        map<json>[] find = check userCollection->find({id: userId});
         json|error applications = find[0].applications;
 
         // Construct the applicationList.
@@ -223,7 +213,7 @@ function saveApplicationInUser(string userId, string applicationId, string appli
         }
 
         // Update the user applications array with incoming value.
-        int updated = check usersCollection->update({"applications": applicationList}, {id: userId});
+        int updated = check userCollection->update({"applications": applicationList}, {id: userId});
         log:printDebug("Updated application list for user " + userId + ": " + applicationList.toString());
 
         return updated > 0 ? true : false;
@@ -243,7 +233,7 @@ function removeApplicationInUser(string userId, string applicationId) returns bo
     if (isValid) {
 
         // Get the user information.
-        map<json>[] find = check usersCollection->find({id: userId});
+        map<json>[] find = check userCollection->find({id: userId});
         json|error applications = find[0].applications;
 
         if (applications is error) {
@@ -263,7 +253,7 @@ function removeApplicationInUser(string userId, string applicationId) returns bo
             });
 
             // Update the user collection.
-            int updated = check usersCollection->update({"applications": alteredApplicationList}, {id: userId});
+            int updated = check userCollection->update({"applications": alteredApplicationList}, {id: userId});
             log:printDebug("Updated application list for user " + userId + ": " + alteredApplicationList.toString());
             return updated > 0 ? true : false;
         }
@@ -367,15 +357,15 @@ function updateStatus(Status status, string applicationId) returns boolean|error
         if (assignments is json[]) {
             [boolean, json?, boolean, boolean] [isMinistryAssigned, assignment, hasPrerequisite, isPrerequisiteCompeted] = check getAssignedMinistryInfo(assignments, status.ministry.id);
             if (isMinistryAssigned) {
-                if (!hasPrerequisite || (hasPrerequisite && isPrerequisiteCompeted)){
+                if (!hasPrerequisite || (hasPrerequisite && isPrerequisiteCompeted)) {
                     // Update the assignment with new status.
                     json updatedAssignment = check updateAssignment(assignment, status);
                     // Update the assignments array.
-                    check updateAssignments(assignments,updatedAssignment, status.ministry.id);
+                    check updateAssignments(assignments, updatedAssignment, status.ministry.id);
                     int updated = check applicationCollection->update({assignments: assignments}, {"applicationId": applicationId});
-                    return updated == 1 ? true : false; 
-                } else{
-                    return error("Prerequisite Ministry approval pending", message="Prerequisite ministry has not completed processing the application.");
+                    return updated == 1 ? true : false;
+                } else {
+                    return error("Prerequisite Ministry approval pending", message = "Prerequisite ministry has not completed processing the application.");
                 }
             } else {
                 return error("Ministry not assigned", message = status.ministry.name + " is not assigned to application with application Id: " + applicationId + ".");
