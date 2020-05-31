@@ -6,9 +6,8 @@ import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
 import Button from '@material-ui/core/Button';
 import CardHeader from '@material-ui/core/CardHeader';
-import Link from '@material-ui/core/Link';
-import Navbar from '../../common/navbar/navbar';
 import Footer from '../../common/footer/footer';
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -44,22 +43,6 @@ const Login = () => {
   const [helperText, setHelperText] = useState('');
   const [error, setError] = useState(false);
 
-  const navigation = {
-    brand: { name: 'Environment Platform', to: '/' },
-    links: [
-      { name: 'Home', to: '/' },
-      { name: 'Item 2', to: '/' },
-      { name: 'Item 3', to: '/' },
-      { name: 'Item 4', to: '/' },
-      { name: 'Item 5', to: '/' },
-      { name: 'Item 6', to: '/' },
-      { name: 'Item 7', to: '/' },
-      { name: 'Item 8', to: '/' },
-      { name: 'Item 9', to: '/' },
-      { name: 'Item 10', to: '/' }
-    ]
-  };
-
   useEffect(() => {
     if (username.trim() && password.trim()) {
       setIsButtonDisabled(false);
@@ -79,21 +62,23 @@ const Login = () => {
     }
   };
 
+  // const showForgotPassword = () => {
+  //   let path = `/passwordreset`; 
+  //   useHistory.push(path);
+  // }
+
   const handleKeyPress = (e:any) => {
     if (e.keyCode === 13 || e.which === 13) {
       isButtonDisabled || handleLogin();
     }
   };
 
-  const { brand, links } = navigation;
-
   return (
     <>
-      <Navbar brand={brand} links={links} />
       <React.Fragment>
         <form className={classes.container} noValidate autoComplete="off">
           <Card className={classes.card}>
-            <CardHeader className={classes.header} title="Environment Platform" />
+            <CardHeader className={classes.header} title="Login" />
             <CardContent>
               <div>
                 <TextField
@@ -120,9 +105,7 @@ const Login = () => {
                   onKeyPress={(e)=>handleKeyPress(e)}
                 />
                 <Link
-                  component="button"
-                  variant="body2"
-                  // onClick={() => {}}
+                  to='/forgotpassword'
                 >
                   Forgot Password?
                 </Link>

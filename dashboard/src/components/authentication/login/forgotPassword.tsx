@@ -6,7 +6,6 @@ import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
 import Button from '@material-ui/core/Button';
 import CardHeader from '@material-ui/core/CardHeader';
-import Navbar from '../../common/navbar/navbar';
 import Footer from '../../common/footer/footer';
 import { FormattedMessage } from 'react-intl';
 
@@ -43,15 +42,6 @@ const ForgotPassword = () => {
   const [helperText, setHelperText] = useState('');
   const [error, setError] = useState(false);
 
-  const navigation = {
-    brand: { name: 'Environment Platform', to: '/' },
-    links: [
-      { name: 'Home', to: '/' },
-      { name: 'Login', to: '/' },
-      { name: 'Signup', to: '/' },
-    ]
-  };
-
   useEffect(() => {
     if (email.trim()) {
       setIsButtonDisabled(false);
@@ -77,11 +67,8 @@ const ForgotPassword = () => {
     }
   };
 
-  const { brand, links } = navigation;
-
   return (
     <>
-      <Navbar brand={brand} links={links} />
       <React.Fragment>
         <form className={classes.container} noValidate autoComplete="off">
           <Card className={classes.card}>

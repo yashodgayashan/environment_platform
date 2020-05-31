@@ -6,7 +6,6 @@ import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
 import Button from '@material-ui/core/Button';
 import CardHeader from '@material-ui/core/CardHeader';
-import Navbar from '../../common/navbar/navbar';
 import Footer from '../../common/footer/footer';
 import { FormattedMessage } from 'react-intl';
 
@@ -39,20 +38,10 @@ const useStyles = makeStyles((theme: Theme) =>
 const ResetPassword = () => {
   const classes = useStyles();
   const [password, setPassword] = useState('');
-  // eslint-disable-next-line
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
   const [helperText, setHelperText] = useState('');
   const [error, setError] = useState(false);
-
-  const navigation = {
-    brand: { name: 'Environment Platform', to: '/' },
-    links: [
-      { name: 'Home', to: '/' },
-      { name: 'Login', to: '/' },
-      { name: 'Signup', to: '/' },
-    ]
-  };
 
   useEffect(() => {
     if (password.trim()) {
@@ -62,7 +51,7 @@ const ResetPassword = () => {
     }
   }, [password]);
 
-  const handleForgotPassword = () => {
+  const handleResetPassword = () => {
     // TODO - Handle validation
     if (password === 'admin' && confirmPassword === 'admin') {
       setError(false);
@@ -75,15 +64,12 @@ const ResetPassword = () => {
 
   const handleKeyPress = (e:any) => {
     if (e.keyCode === 13 || e.which === 13) {
-      isButtonDisabled || handleForgotPassword();
+      isButtonDisabled || handleResetPassword();
     }
   };
 
-  const { brand, links } = navigation;
-
   return (
     <>
-      <Navbar brand={brand} links={links} />
       <React.Fragment>
         <form className={classes.container} noValidate autoComplete="off">
           <Card className={classes.card}>
@@ -124,9 +110,9 @@ const ResetPassword = () => {
                 variant="contained"
                 size="large"
                 className={classes.submitBtn}
-                onClick={()=>handleForgotPassword()}
+                onClick={()=>handleResetPassword()}
                 disabled={isButtonDisabled}>
-                Submit
+                Change Password
               </Button>
             </CardActions>
           </Card>
