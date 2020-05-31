@@ -62,11 +62,6 @@ const Login = () => {
     }
   };
 
-  // const showForgotPassword = () => {
-  //   let path = `/passwordreset`; 
-  //   useHistory.push(path);
-  // }
-
   const handleKeyPress = (e:any) => {
     if (e.keyCode === 13 || e.which === 13) {
       isButtonDisabled || handleLogin();
