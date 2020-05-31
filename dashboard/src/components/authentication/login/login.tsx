@@ -6,8 +6,8 @@ import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
 import Button from '@material-ui/core/Button';
 import CardHeader from '@material-ui/core/CardHeader';
-import Footer from '../../common/footer/footer';
 import { Link } from 'react-router-dom';
+import Footer from '../../common/footer/footer';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
