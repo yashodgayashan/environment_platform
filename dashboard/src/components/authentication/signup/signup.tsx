@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import TextField from '@material-ui/core/TextField';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
@@ -6,8 +7,6 @@ import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
 import Button from '@material-ui/core/Button';
 import CardHeader from '@material-ui/core/CardHeader';
-import Link from '@material-ui/core/Link';
-import Navbar from '../../common/navbar/navbar';
 import Footer from '../../common/footer/footer';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -46,15 +45,6 @@ const Signup = () => {
   const [helperText, setHelperText] = useState('');
   const [error, setError] = useState(false);
 
-  const navigation = {
-    brand: { name: 'Environment Platform', to: '/' },
-    links: [
-      { name: 'Home', to: '/' },
-      { name: 'Login', to: '/' },
-      { name: 'Signup', to: '/' },
-    ]
-  };
-
   useEffect(() => {
     if (displayName.trim() && email.trim() && password.trim() && confirmPassword.trim()) {
       setIsButtonDisabled(false);
@@ -80,11 +70,8 @@ const Signup = () => {
     }
   };
 
-  const { brand, links } = navigation;
-
   return (
     <>
-      <Navbar brand={brand} links={links} />
       <React.Fragment>
         <form className={classes.container} noValidate autoComplete="off">
           <Card className={classes.card}>
@@ -137,9 +124,7 @@ const Signup = () => {
                   onKeyPress={(e)=>handleKeyPress(e)}
                 />
                 <Link
-                  component="button"
-                  variant="body2"
-                  // onClick={() => {}}
+                  to='/login'
                 >
                   Already have an account?
                 </Link>

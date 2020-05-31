@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { FormattedMessage } from 'react-intl';
 import TextField from '@material-ui/core/TextField';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme: Theme) =>
       width: 400,
       margin: `${theme.spacing(0)} auto`
     },
-    loginBtn: {
+    submitBtn: {
       marginTop: theme.spacing(2),
       flexGrow: 1,
       background: '#24292e',
@@ -30,41 +30,41 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     card: {
       marginTop: theme.spacing(10)
-    },
+    }
 
   }),
 );
 
-const Login = () => {
+const ResetPassword = () => {
   const classes = useStyles();
-  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
   const [helperText, setHelperText] = useState('');
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    if (username.trim() && password.trim()) {
+    if (password.trim()) {
       setIsButtonDisabled(false);
     } else {
       setIsButtonDisabled(true);
     }
-  }, [username, password]);
+  }, [password]);
 
-  const handleLogin = () => {
-    // TODO - Handle login validation
-    if (username === 'john@smith.com' && password === 'password') {
+  const handleResetPassword = () => {
+    // TODO - Handle validation
+    if (password === 'admin' && confirmPassword === 'admin') {
       setError(false);
-      setHelperText('Login Successful.');
+      setHelperText('The password has been changed');
     } else {
       setError(true);
-      setHelperText('Incorrect username or password.')
+      setHelperText('The passwords do not match');
     }
   };
 
   const handleKeyPress = (e:any) => {
     if (e.keyCode === 13 || e.which === 13) {
-      isButtonDisabled || handleLogin();
+      isButtonDisabled || handleResetPassword();
     }
   };
 
@@ -73,47 +73,46 @@ const Login = () => {
       <React.Fragment>
         <form className={classes.container} noValidate autoComplete="off">
           <Card className={classes.card}>
-            <CardHeader className={classes.header} title="Login" />
+            <CardHeader className={classes.header} title="Reset Password" />
             <CardContent>
               <div>
-                <TextField
-                  error={error}
-                  fullWidth
-                  id="username"
-                  type="email"
-                  label="Username"
-                  placeholder="Username"
-                  margin="normal"
-                  onChange={(e)=>setUsername(e.target.value)}
-                  onKeyPress={(e)=>handleKeyPress(e)}
+                <FormattedMessage
+                            id='Reset.Password.Label'
+                            defaultMessage='Enter the new password'
                 />
                 <TextField
                   error={error}
                   fullWidth
-                  id="password"
+                  id="Password"
                   type="password"
-                  label="Password"
-                  placeholder="Password"
+                  label="New Password"
+                  placeholder="New Password"
                   margin="normal"
-                  helperText={helperText}
                   onChange={(e)=>setPassword(e.target.value)}
                   onKeyPress={(e)=>handleKeyPress(e)}
                 />
-                <Link
-                  to='/forgotpassword'
-                >
-                  Forgot Password?
-                </Link>
+                <TextField
+                  error={error}
+                  fullWidth
+                  id="ConfirmPassword"
+                  type="password"
+                  label="Confirm New Password"
+                  placeholder="Confirm New Password"
+                  margin="normal"
+                  onChange={(e)=>setConfirmPassword(e.target.value)}
+                  onKeyPress={(e)=>handleKeyPress(e)}
+                  helperText={helperText}
+                />
               </div>
             </CardContent>
             <CardActions>
               <Button
                 variant="contained"
                 size="large"
-                className={classes.loginBtn}
-                onClick={()=>handleLogin()}
+                className={classes.submitBtn}
+                onClick={()=>handleResetPassword()}
                 disabled={isButtonDisabled}>
-                Login
+                Change Password
               </Button>
             </CardActions>
           </Card>
@@ -124,4 +123,4 @@ const Login = () => {
   );
 }
 
-export default Login;
+export default ResetPassword;
