@@ -48,7 +48,7 @@ When you develop a feature and run using containers. You have to build the jar f
 
 # Run the project using docker
 
-**Important** - Make sure that configuration files are setup for local machine.
+**Important** - Make sure that the configuration files are setup for your local machine.
 
 To run the project,
 
