@@ -19,7 +19,7 @@ To build the module execute the command:
 
 ### Configuration file
 
-Please Make a file called `ballerina.conf` in core/resources as given in the `example.conf` and update the values.
+Make a file named `ballerina.conf` in `core/resources`. You can refer the file `example.conf` located at `core/resources/` for more details. Then, update the created file with your preference of values.
 
 ### Run the project using docker
 
