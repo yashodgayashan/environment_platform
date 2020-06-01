@@ -39,7 +39,7 @@ docker-compose up
 
 ##### Terminate the docker container
 
-- First press `ctl+c`.
+- Press `Ctrl+C` to terminate the program.
 - Then run `docker-compose down`
 
 #### Develop and run using docker
