@@ -46,7 +46,7 @@ docker-compose up
 
 When you develop a feature and run using containers. You have to build the jar files using `./setup.sh` and then you have to build and up the docker composer.
 
-# Run the project using docker
+### Run the module locally
 
 **Important** - Make sure that the configuration files are setup for your local machine.
 
