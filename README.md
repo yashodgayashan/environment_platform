@@ -21,7 +21,7 @@ To build the module execute the command:
 
 Make a file named `ballerina.conf` in `core/resources`. You can refer the file `example.conf` located at `core/resources/` for more details. Then, update the created file with your preference of values.
 
-### Run the project using docker
+### Run the module using docker
 
 All the volumes and internal networking for mongodb container is set using the docker-composer. Please follow the following commands to build the image and run.
 
