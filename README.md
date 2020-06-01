@@ -4,7 +4,7 @@
 
 The following instructions below will guide you through the process of setting up the back-end server in your local machine.
 
-### Requirments
+### Prerequisites
 
 - Ballerina 1.2.x
 - Docker
