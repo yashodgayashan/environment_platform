@@ -53,4 +53,4 @@ When you develop a feature and run using containers. You have to build the jar f
 To run the project,
 
 - Execute the command `cd core` to navigate to the `core` module.
-- Then run `./scripts/run-local.sh`.
+- Then, run the script using the command `./scripts/run-local.sh`.
