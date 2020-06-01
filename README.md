@@ -6,7 +6,7 @@ The following instructions below will guide you through the process of setting u
 
 ### Requirments
 
-- Ballerina 1.2
+- Ballerina 1.2.x
 - Docker
 
 ### Build
