@@ -2,7 +2,7 @@
 
 ## Core
 
-The following instruction must be followed to setup the backend in your local machine
+The following instructions below will guide you through the process of setting up the back-end server in your local machine.
 
 ### Requirments
 
