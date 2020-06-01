@@ -11,7 +11,7 @@ The following instructions below will guide you through the process of setting u
 
 ### Build
 
-To build the Core please execute the following command
+To build the module execute the command:
 
 ```
 ./setup.sh
