@@ -1,4 +1,4 @@
-# environment_platform
+# Environment Platform
 
 ## Module Core(contains the back-end functionalities).
 
