@@ -1,6 +1,6 @@
 # environment_platform
 
-## Core
+## Module Core(contains the back-end functionalities).
 
 The following instructions below will guide you through the process of setting up the back-end server in your local machine.
 
