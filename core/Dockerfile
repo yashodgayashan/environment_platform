@@ -7,4 +7,4 @@ COPY ./target/bin ./target
 COPY ./resources/. ./resources
 EXPOSE 9090 9080
 
-CMD ["./run.sh"]
+CMD ["./run-docker.sh"]
