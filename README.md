@@ -9,7 +9,7 @@ The following instructions below will guide you through the process of setting u
 - Ballerina 1.2.x
 - Docker
 
-### Build
+### How to Build?
 
 To build the module execute the command:
 
