@@ -5,6 +5,7 @@ services:
     build: ./core
     ports:
       - "9090:9090"
+      - "9080:9080"
     depends_on:
       - "mongo"
   mongo:
