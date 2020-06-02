@@ -2,8 +2,9 @@ FROM ballerina/ballerina:1.2.3
 
 WORKDIR /env_platform
 
-COPY ./target/bin .
+COPY ./scripts .
+COPY ./target/bin ./target
 COPY ./resources/. ./resources
-EXPOSE 9090
+EXPOSE 9090 9080
 
-CMD ["ballerina", "run", "env_platform.jar","--b7a.config.file=resources/ballerina.conf"]
+CMD ["./run-docker.sh"]
