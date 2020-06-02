@@ -350,7 +350,7 @@ function isMinistry(string ministryId) returns boolean|error {
 function updateStatus(Status status, string applicationId) returns boolean|error {
     map<json>[] applications = check applicationCollection->find({"applicationId": applicationId, status: "submit"});
 
-    // If no application is found or application is still a draft.
+    // If no application is found or if the application is still a draft.
     if (applications.length() == 0) {
         return error("Not found", message = "Application with application Id: " + applicationId + " is not found.");
     } else {
