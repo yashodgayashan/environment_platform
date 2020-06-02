@@ -293,7 +293,7 @@ function assignMinistry(AssignedMinistry assignedMinistry, string applicationId)
 
     map<json>[] find = check applicationCollection->find({"applicationId": applicationId, status: "submit"});
 
-    // If no application is found or application is still a draft.
+    // If no application is found or if the application is still a draft.
     if (find.length() == 0) {
         return error("Invalid application", message = "There is no application with application ID: " + applicationId + ".");
     } else if (find.length() > 1) {
