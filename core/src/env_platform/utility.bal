@@ -333,7 +333,7 @@ function getUserInfoFromJWT(string jwt) returns @tainted [string, string]|error 
     if (customInfo is map<json>) {
         string userName = check trap <string>customInfo.name;
         string userType = check trap <string>customInfo.scope;
-        return [UserName, UserType];
+        return [userName, userType];
     } else {
         return error("Authorization failier", message = "Custom claims are not found");
     }
