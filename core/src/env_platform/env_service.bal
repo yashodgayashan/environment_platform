@@ -1,13 +1,42 @@
+import ballerina/config as conf;
 import ballerina/http;
+import ballerina/jwt;
 import ballerina/openapi;
 
-listener http:Listener ep0 = new (9090);
+jwt:InboundJwtAuthProvider jwtAuthProvider = new ({
+    issuer: "environment platform",
+    trustStoreConfig: {
+        certificateAlias: "ballerina",
+        trustStore: {
+            path: conf:getAsString("TRUST_STORE_PATH"),
+            password: conf:getAsString("TRUST_STORE_PASSWORD")
+        }
+    }
+});
+
+http:BearerAuthHandler jwtAuthHandler = new (jwtAuthProvider);
+
+listener http:Listener ep0 = new (9090, config = {
+    auth: {
+        authHandlers: [jwtAuthHandler]
+    },
+
+    secureSocket: {
+        keyStore: {
+            path: conf:getAsString("KEY_STORE_PATH"),
+            password: conf:getAsString("KEY_STORE_PASSWORD")
+        }
+    }
+});
 
 @openapi:ServiceInfo {
     contract: "resources/openapi_v3.yaml"
 }
 @http:ServiceConfig {
-    basePath: "/"
+    basePath: "/",
+    cors: {
+        allowOrigins: ["*"]
+    }
 }
 
 service envservice on ep0 {
@@ -24,7 +53,11 @@ service envservice on ep0 {
         methods: ["POST"],
         path: "/applications",
         consumes: ["application/json"],
-        body: "body"
+        body: "body",
+        auth: {
+            scopes: ["User"],
+            enabled: true
+        }
     }
     resource function postApplication(http:Caller caller, http:Request req, TreeRemovalForm body) returns error? {
 
@@ -41,7 +74,11 @@ service envservice on ep0 {
     @http:ResourceConfig {
         methods: ["PUT"],
         path: "/applications/{applicationId}",
-        body: "body"
+        body: "body",
+        auth: {
+            scopes: ["User"],
+            enabled: true
+        }
     }
     resource function putApplicationById(http:Caller caller, http:Request req, string applicationId, TreeRemovalForm body) returns error? {
 
@@ -49,7 +86,11 @@ service envservice on ep0 {
 
     @http:ResourceConfig {
         methods: ["DELETE"],
-        path: "/applications/{applicationId}"
+        path: "/applications/{applicationId}",
+        auth: {
+            scopes: ["User"],
+            enabled: true
+        }
     }
     resource function deleteApplicationById(http:Caller caller, http:Request req, string applicationId) returns error? {
 
@@ -58,7 +99,11 @@ service envservice on ep0 {
     @http:ResourceConfig {
         methods: ["POST"],
         path: "/applications/{applicationId}/assign-ministry",
-        body: "body"
+        body: "body",
+        auth: {
+            scopes: ["Admin"],
+            enabled: true
+        }
     }
     resource function assignMinistry(http:Caller caller, http:Request req, string applicationId, AssignedMinistry body) returns error? {
 
@@ -67,7 +112,11 @@ service envservice on ep0 {
     @http:ResourceConfig {
         methods: ["POST"],
         path: "/applications/{applicationId}/update-status",
-        body: "body"
+        body: "body",
+        auth: {
+            scopes: ["Admin", "Ministry"],
+            enabled: true
+        }
     }
     resource function updateStatus(http:Caller caller, http:Request req, string applicationId, Status body) returns error? {
 

@@ -291,9 +291,9 @@ function saveApplicationMetadata(string applicationType) returns boolean|error {
 # + return - This function will return whether the ministry is assigned or error if any occurs.
 function assignMinistry(AssignedMinistry assignedMinistry, string applicationId) returns boolean|error {
 
-    map<json>[] find = check applicationCollection->find({"applicationId": applicationId});
+    map<json>[] find = check applicationCollection->find({"applicationId": applicationId, status: "submit"});
 
-    // If no application is found.
+    // If no application is found or if the application is still a draft.
     if (find.length() == 0) {
         return error("Invalid application", message = "There is no application with application ID: " + applicationId + ".");
     } else if (find.length() > 1) {
@@ -349,8 +349,10 @@ function isMinistry(string ministryId) returns boolean|error {
 # + return - This function will return either the updated status or appropriate error.
 function updateStatus(Status status, string applicationId) returns boolean|error {
     map<json>[] applications = check applicationCollection->find({"applicationId": applicationId, status: "submit"});
+
+    // If no application is found or if the application is still a draft.
     if (applications.length() == 0) {
-        return error("Not found", message = "Application with application Id: " + applicationId + " is not found.");
+        return error("Not found", message = "Application with application ID: " + applicationId + " is not found.");
     } else {
         map<json> application = check trap <map<json>>applications[0];
         json[]|error assignments = trap <json[]>application.assignments;
