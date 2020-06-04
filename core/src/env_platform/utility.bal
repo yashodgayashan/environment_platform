@@ -1,3 +1,7 @@
+import ballerina/config as conf;
+import ballerina/crypto;
+import ballerina/jwt;
+import ballerina/stringutils;
 import ballerina/time;
 # The `extractAreaAsJSONArray` function will extract a JSON array 
 # indicating the area using given locations array.
@@ -298,5 +302,39 @@ function updateAssignments(json[] assignments, json updatedAssignment, string mi
             break;
         }
         id = id + 1;
+    }
+}
+
+# The `getUserInfoFromJWT` function will decode the JWT token and return the userType and the userId.
+# 
+# + jwt - JWT token.
+# + return - This function will either return the array of strings which includes userId and userType or 
+# and error.
+function getUserInfoFromJWT(string jwt) returns @tainted [string, string]|error {
+
+    string[] split = stringutils:split(jwt, " ");
+    crypto:TrustStore trustStore = {
+        path: conf:getAsString("TRUST_STORE_PATH"),
+        password: conf:getAsString("TRUST_STORE_PASSWORD")
+    };
+
+    jwt:JwtValidatorConfig validatorConfig = {
+        issuer: "environment platform",
+        clockSkewInSeconds: 60,
+        trustStoreConfig: {
+            certificateAlias: "ballerina",
+            trustStore: trustStore
+        }
+    };
+
+    jwt:JwtPayload result = check jwt:validateJwt(check trap <string>split[1], validatorConfig);
+
+    map<json>? customInfo = result?.customClaims;
+    if (customInfo is map<json>) {
+        string UserName = check trap <string>customInfo.name;
+        string UserType = check trap <string>customInfo.scope;
+        return [UserName, UserType];
+    } else {
+        return error("Authorization failier", message = "Custom claims are not found");
     }
 }
