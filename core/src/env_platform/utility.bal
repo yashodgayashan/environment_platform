@@ -305,7 +305,7 @@ function updateAssignments(json[] assignments, json updatedAssignment, string mi
     }
 }
 
-# The `getUserInfoFromJWT` function will decode the JWT token and return the userType and the userId.
+# The `getUserInfoFromJWT` function will decode the JWT token and return the userType and the userId of the user.
 # 
 # + jwt - JWT token.
 # + return - This function will either return the array of strings which includes userId and userType or 
