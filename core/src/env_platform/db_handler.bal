@@ -352,7 +352,7 @@ function updateStatus(Status status, string applicationId) returns boolean|error
 
     // If no application is found or if the application is still a draft.
     if (applications.length() == 0) {
-        return error("Not found", message = "Application with application Id: " + applicationId + " is not found.");
+        return error("Not found", message = "Application with application ID: " + applicationId + " is not found.");
     } else {
         map<json> application = check trap <map<json>>applications[0];
         json[]|error assignments = trap <json[]>application.assignments;
