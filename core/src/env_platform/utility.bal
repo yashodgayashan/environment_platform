@@ -331,7 +331,7 @@ function getUserInfoFromJWT(string jwt) returns @tainted [string, string]|error 
 
     map<json>? customInfo = result?.customClaims;
     if (customInfo is map<json>) {
-        string UserName = check trap <string>customInfo.name;
+        string userName = check trap <string>customInfo.name;
         string UserType = check trap <string>customInfo.scope;
         return [UserName, UserType];
     } else {
