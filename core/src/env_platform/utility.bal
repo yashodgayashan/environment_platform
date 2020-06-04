@@ -335,6 +335,6 @@ function getUserInfoFromJWT(string jwt) returns @tainted [string, string]|error 
         string userType = check trap <string>customInfo.scope;
         return [userName, userType];
     } else {
-        return error("Authorization failier", message = "Custom claims are not found");
+        return error("Authorization failure", message = "Custom claims could not be found.");
     }
 }
