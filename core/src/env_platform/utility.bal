@@ -310,7 +310,7 @@ function updateAssignments(json[] assignments, json updatedAssignment, string mi
 # 
 # + jwt - The JWT token.
 # + return - This function will either return an array of strings which includes the userId and userType or 
-# and error.
+# an error.
 function getUserInfoFromJWT(string jwt) returns @tainted [string, string]|error {
 
     string[] split = stringutils:split(jwt, " ");
