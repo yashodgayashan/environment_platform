@@ -82,16 +82,23 @@ function saveApplication(TreeRemovalForm form, string userId) returns [boolean, 
 # The `deleteApplication` function will delete application drafts with the status "draft".
 # 
 # + applicationId - The Id of the application to be deleted.
+# + userId - Id of the User. 
 # + return - Returns true if the application is deleted, false if not or else returns mongodb:DatabaseError
 # array index out of bound if there are no applications with the specific application Id.
-function deleteApplication(string applicationId) returns boolean|error {
+function deleteApplication(string applicationId, string userId) returns boolean|error {
 
     string applicationStatus = check getApplicationStatusByApplicationId(applicationId);
     if (applicationStatus == "draft") {
         int|error deleted = applicationCollection->delete({"applicationId": applicationId, "status": "draft"});
         if (deleted is int) {
             log:printDebug("Deleted application count: " + deleted.toString());
-            return deleted == 1 ? true : false;
+            if (deleted == 1) {
+                boolean removeApplicationInUserResult = check removeApplicationInUser(userId, applicationId);
+                log:printDebug("Application is removed from the user: " + removeApplicationInUserResult.toString());
+                return true;
+            } else {
+                return false;
+            }
         } else {
             // Returns the error.
             log:printDebug("An error occurred while deleting the draft with the application ID: " + applicationId + ". " + deleted.reason() + ".");
