@@ -1,4 +1,5 @@
 import config_handler;
+import ballerina/io;
 import ballerina/log;
 import ballerina/mongodb;
 
@@ -11,7 +12,7 @@ mongodb:Collection userCollection = config_handler:getUserCollection();
 # 
 # + form - Form containing the tree removal data.
 # + userId - Id of the User. 
-# + return - Returns true if the application is saved, error if there is a mongodb:DatabaseError or  
+# + return - Returns true and applicationId if the application is saved, error if there is a mongodb:DatabaseError or  
 # there's an error while generating the applicationId.
 function saveApplication(TreeRemovalForm form, string userId) returns [boolean, string]|error {
 
@@ -271,6 +272,40 @@ function removeApplicationInUser(string userId, string applicationId) returns bo
             log:printDebug("Updated application list for user " + userId + ": " + alteredApplicationList.toString());
             return updated > 0 ? true : false;
         }
+    } else {
+        return error("Invalid User", message = "Couldn't find the user with given User ID");
+    }
+}
+
+# The `userHasapplication` function will validate whether user submitted the given application.
+# 
+# + applicationId - Id of the application.
+# + userId - Id of the user.
+# + return - This will return whether user has the given application or an error if occured.
+function userHasApplication(string applicationId, string userId) returns boolean|error {
+    boolean isValid = check isValidUser(userId);
+    if (isValid) {
+
+        // Get the user information.
+        map<json>[] find = check userCollection->find({id: userId});
+        json|error applications = find[0].applications;
+
+        // Construct the applicationList.
+        json[] applicationList;
+        if (applications is error) {
+            return error("No applications", message = "User with userId: " + userId + " doesn't have any application.");
+        } else {
+            applicationList = <json[]>applications;
+            log:printDebug("The user with the user ID: " + userId + " has " + applicationList.length().toString() + " applications stored in the database.");
+            foreach json application in applicationList {
+                if (application.id == applicationId) {
+                    io:println("found");
+                }
+            }
+            io:println("not found");
+        }
+        // return updated > 0 ? true : false;
+        return true;
     } else {
         return error("Invalid User", message = "Couldn't find the user with given User ID");
     }
