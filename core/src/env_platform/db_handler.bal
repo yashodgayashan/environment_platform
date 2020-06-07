@@ -13,7 +13,7 @@ mongodb:Collection userCollection = config_handler:getUserCollection();
 # + userId - Id of the User. 
 # + return - Returns true if the application is saved, error if there is a mongodb:DatabaseError or  
 # there's an error while generating the applicationId.
-function saveApplication(TreeRemovalForm form, string userId) returns boolean|error {
+function saveApplication(TreeRemovalForm form, string userId) returns [boolean, string]|error {
 
     if (check isValidUser(userId)) {
 
@@ -73,7 +73,7 @@ function saveApplication(TreeRemovalForm form, string userId) returns boolean|er
         } else {
             log:printDebug("Application with application ID: " + application.applicationId.toString() + " was saved successfully.");
         }
-        return inserted is mongodb:DatabaseError ? inserted : true;
+        return inserted is mongodb:DatabaseError ? inserted : [true, applicationId];
     } else {
         return error("Invalid User", message = "Couldn't find the user with given User ID");
     }
