@@ -10,59 +10,73 @@ mongodb:Collection userCollection = config_handler:getUserCollection();
 # The `saveApplication` function will save the application to the applications collection in the database.
 # 
 # + form - Form containing the tree removal data.
+# + userId - Id of the User. 
 # + return - Returns true if the application is saved, error if there is a mongodb:DatabaseError or  
 # there's an error while generating the applicationId.
-function saveApplication(TreeRemovalForm form) returns boolean|error {
+function saveApplication(TreeRemovalForm form, string userId) returns boolean|error {
 
-    boolean result = check saveApplicationMetadata(form.title);
-    log:printDebug("Saved information in application metadata: " + result.toString());
-    // Construct the application.
-    map<json> application = {
-        "applicationId": check generateApplicationId(form.applicationCreatedDate, form.title),
-        "status": form.status,
-        "numberOfVersions": 1,
-        "title": form.title,
-        "versions": [
-                {
-                    "applicationCreatedDate": {
-                        "year": form.applicationCreatedDate.year,
-                        "month": form.applicationCreatedDate.month,
-                        "day": form.applicationCreatedDate.day,
-                        "hour": form.applicationCreatedDate.hour,
-                        "minute": form.applicationCreatedDate.minute
-                    },
-                    "removalDate": {
-                        "year": form.removalDate.year,
-                        "month": form.removalDate.month,
-                        "day": form.removalDate.day,
-                        "hour": form.removalDate.hour,
-                        "minute": form.removalDate.minute
-                    },
-                    "reason": form.reason,
-                    "applicationType": form.applicationType,
-                    "requestedBy": form.requestedBy,
-                    "permitRequired": form.permitRequired,
-                    "landOwner": form.landOwner,
-                    "treeRemovalAuthority": form.treeRemovalAuthority,
-                    "city": form.city,
-                    "district": form.district,
-                    "nameOfTheLand": form.nameOfTheLand,
-                    "planNumber": form.planNumber,
-                    "area": extractAreaAsJSONArray(form.area),
-                    "treeInformation": extractTreeInformationAsJSONArray(form.treeInformation)
-                }
-            ]
-    };
-    log:printDebug("Constructed application: " + application.toString());
+    if (check isValidUser(userId)) {
 
-    mongodb:DatabaseError? inserted = applicationCollection->insert(application);
+        string applicationId = check generateApplicationId(form.applicationCreatedDate, form.title);
 
-    if (inserted is mongodb:DatabaseError) {
-        log:printDebug("An error occurred while saving the application with ID: " + application.applicationId.toString() + ". " + inserted.reason().toString() + ".");
+        // Added form information to metadata.
+        boolean result = check saveApplicationMetadata(form.title);
+        log:printDebug("Saved information in application metadata: " + result.toString());
+
+        // Add the form application Id to the user.
+        boolean saveApplicationInUserResult = check saveApplicationInUser(userId, applicationId, form.title);
+        log:printDebug("Saved information in users account: " + saveApplicationInUserResult.toString());
+
+        // Construct the application.
+        map<json> application = {
+            "applicationId": applicationId,
+            "status": form.status,
+            "numberOfVersions": 1,
+            "title": form.title,
+            "versions": [
+                    {
+                        "applicationCreatedDate": {
+                            "year": form.applicationCreatedDate.year,
+                            "month": form.applicationCreatedDate.month,
+                            "day": form.applicationCreatedDate.day,
+                            "hour": form.applicationCreatedDate.hour,
+                            "minute": form.applicationCreatedDate.minute
+                        },
+                        "removalDate": {
+                            "year": form.removalDate.year,
+                            "month": form.removalDate.month,
+                            "day": form.removalDate.day,
+                            "hour": form.removalDate.hour,
+                            "minute": form.removalDate.minute
+                        },
+                        "reason": form.reason,
+                        "applicationType": form.applicationType,
+                        "requestedBy": form.requestedBy,
+                        "permitRequired": form.permitRequired,
+                        "landOwner": form.landOwner,
+                        "treeRemovalAuthority": form.treeRemovalAuthority,
+                        "city": form.city,
+                        "district": form.district,
+                        "nameOfTheLand": form.nameOfTheLand,
+                        "planNumber": form.planNumber,
+                        "area": extractAreaAsJSONArray(form.area),
+                        "treeInformation": extractTreeInformationAsJSONArray(form.treeInformation)
+                    }
+                ]
+        };
+        log:printDebug("Constructed application: " + application.toString());
+
+        mongodb:DatabaseError? inserted = applicationCollection->insert(application);
+
+        if (inserted is mongodb:DatabaseError) {
+            log:printDebug("An error occurred while saving the application with ID: " + application.applicationId.toString() + ". " + inserted.reason().toString() + ".");
+        } else {
+            log:printDebug("Application with application ID: " + application.applicationId.toString() + " was saved successfully.");
+        }
+        return inserted is mongodb:DatabaseError ? inserted : true;
     } else {
-        log:printDebug("Application with application ID: " + application.applicationId.toString() + " was saved successfully.");
+        return error("Invalid User", message = "Couldn't find the user with given User ID");
     }
-    return inserted is mongodb:DatabaseError ? inserted : true;
 }
 
 # The `deleteApplication` function will delete application drafts with the status "draft".
@@ -282,6 +296,22 @@ function saveApplicationMetadata(string applicationType) returns boolean|error {
         int update = check applicationMetaDataCollection->update({"count": applicationCount}, {"applicationType": applicationType});
         return update > 0 ? true : false;
     }
+}
+
+# The `removeApplicationMetadata` function will remove application metadata count by one from the database.
+# 
+# + applicationType - Type of the application.
+# + return - This function will return either whether the application meta data is removed or 
+# error if there is a mongodb:DatabaseError.
+function removeApplicationMetadata(string applicationType) returns boolean|error {
+    map<json>[] find = check applicationMetaDataCollection->find({"applicationType": applicationType});
+
+    map<json> applicationMetaData = find[0];
+    int applicationCount = check trap <int>applicationMetaData.count - 1;
+
+    // Update the count by  minus one
+    int update = check applicationMetaDataCollection->update({"count": applicationCount}, {"applicationType": applicationType});
+    return update > 0 ? true : false;
 }
 
 # The `assignMinistry` function will assign a ministry to an application.
