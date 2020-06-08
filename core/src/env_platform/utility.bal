@@ -140,9 +140,10 @@ function getCurrentDateObject() returns Date {
 # The `constructAssignment` function will construct the assignment from the given AssignedMinistry record.
 # 
 # + assignedMinistry - AssignedMinistry record.
+# + adminId - Id of the assigned Admin.
 # + return - This function will return a assignment json or an error if the Data record is not converted to the json, 
 # Mongodb:DatabaseError or prerequisite ministry is not found.
-function constructAssignment(AssignedMinistry assignedMinistry) returns json|error {
+function constructAssignment(AssignedMinistry assignedMinistry, string adminId) returns json|error {
 
     json data;
     Ministry? prerequisite = assignedMinistry?.prerequisite;
@@ -155,6 +156,7 @@ function constructAssignment(AssignedMinistry assignedMinistry) returns json|err
             data = {
                 id: assignedMinistry.ministry.id,
                 name: assignedMinistry.ministry.name,
+                assignedBy: adminId,
                 prerequisiteId: prerequisite.id,
                 prerequisiteName: prerequisite.name,
                 status: [
@@ -171,6 +173,7 @@ function constructAssignment(AssignedMinistry assignedMinistry) returns json|err
         data = {
             id: assignedMinistry.ministry.id,
             name: assignedMinistry.ministry.name,
+            assignedBy: adminId,
             status: [
                     {
                         progress: "New",
@@ -187,7 +190,7 @@ function constructAssignment(AssignedMinistry assignedMinistry) returns json|err
 # + assignedMinistry - AssignedMinistry record which must be add to the assignments.
 # + assignments - All the assignments of an application.
 # + return - This function will return either constructed assigned ministry array or an error.
-function constructAssignmentArray(AssignedMinistry assignedMinistry, json[] assignments) returns json|error {
+function constructAssignmentArray(AssignedMinistry assignedMinistry, string adminId, json[] assignments) returns json|error {
 
     error duplicateError = error("Ministry already assigned", message = "Ministry with the ID: " + assignedMinistry.ministry.id + " is already assigned");
     boolean isError = false;
@@ -204,7 +207,7 @@ function constructAssignmentArray(AssignedMinistry assignedMinistry, json[] assi
     if (isError) {
         return duplicateError;
     } else {
-        assignments.push(check constructAssignment(assignedMinistry));
+        assignments.push(check constructAssignment(assignedMinistry, adminId));
         return assignments;
     }
 }
