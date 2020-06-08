@@ -331,6 +331,33 @@ function getApplicationTypeById(string applicationId) returns string|error {
     }
 }
 
+function saveApplicationInMinistry(string ministryId, string applicationId) returns boolean|error {
+    string applicationType = check getApplicationTypeById(applicationId);
+    if(check isMinistry(ministryId)){
+        // Get the ministry information.
+        map<json>[] find = check ministryCollection->find({id: ministryId});
+        json|error applications = find[0].applications;
+
+        // Construct the applicationList.
+        json[] applicationList;
+        if (applications is error) {
+            applicationList = [{id: applicationId, name: applicationType}];
+        } else {
+            applicationList = <json[]>applications;
+            log:printDebug("The ministry with the ministry ID: " + ministryId + " has " + applicationList.length().toString() + " applications stored in the database.");
+            applicationList.push(<json>{id: applicationId, name: applicationType});
+        }
+
+        // Update the user applications array with incoming value.
+        int updated = check ministryCollection->update({"applications": applicationList}, {id: ministryId});
+        log:printDebug("Updated application list for ministry " + ministryId + ": " + applicationList.toString());
+
+        return updated > 0 ? true : false;
+    }else{
+        return error("Invalid Ministry", message = "Couldn't find the ministry with given ministry ID");
+    }
+}
+
 # The `saveApplicationMetadata` function will save application metadata to the database.
 # 
 # + applicationType - Type of the application.
