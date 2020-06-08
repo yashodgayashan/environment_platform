@@ -150,6 +150,39 @@ service envservice on ep0 {
     }
     resource function deleteApplicationById(http:Caller caller, http:Request req, string applicationId) returns error? {
 
+        http:Response response = new;
+        string authHeader = req.getHeader("Authorization");
+        [string, string]|error userInfoFromJWT = getUserInfoFromJWT(authHeader);
+        if (userInfoFromJWT is [string, string]) {
+            [string, string] [userId, userType] = userInfoFromJWT;
+            boolean|error userHasApplicationResult = userHasApplication(applicationId, userId);
+            if (userHasApplicationResult is error) {
+                response.statusCode = http:STATUS_NOT_FOUND;
+                if (userHasApplicationResult.reason() == "No applications") {
+                    response.setPayload({"reason": "No applications for given user"});
+                } else {
+                    response.setPayload({"reason": "No such user"});
+                }
+            } else {
+                boolean|error application = deleteApplication(applicationId, userId);
+                if (application is error) {
+                    response.statusCode = http:STATUS_INTERNAL_SERVER_ERROR;
+                    response.setPayload({"reason": "Application is not deleted"});
+                } else {
+                    // If application is deleted.
+                    if (application) {
+                        response.statusCode = http:STATUS_OK;
+                        response.setPayload({"reason": "Application is deleted"});
+                    } else {
+                        response.statusCode = http:STATUS_INTERNAL_SERVER_ERROR;
+                        response.setPayload({"reason": "Application is not deleted"});
+                    }
+                }
+            }
+        } else {
+            response.statusCode = http:STATUS_UNAUTHORIZED;
+        }
+        error? respond = caller->respond(response);
     }
 
     @http:ResourceConfig {
