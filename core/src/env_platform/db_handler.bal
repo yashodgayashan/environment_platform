@@ -333,7 +333,7 @@ function getApplicationTypeById(string applicationId) returns string|error {
 
 function saveApplicationInMinistry(string ministryId, string applicationId) returns boolean|error {
     string applicationType = check getApplicationTypeById(applicationId);
-    if(check isMinistry(ministryId)){
+    if (check isMinistry(ministryId)) {
         // Get the ministry information.
         map<json>[] find = check ministryCollection->find({id: ministryId});
         json|error applications = find[0].applications;
@@ -353,7 +353,7 @@ function saveApplicationInMinistry(string ministryId, string applicationId) retu
         log:printDebug("Updated application list for ministry " + ministryId + ": " + applicationList.toString());
 
         return updated > 0 ? true : false;
-    }else{
+    } else {
         return error("Invalid Ministry", message = "Couldn't find the ministry with given ministry ID");
     }
 }
@@ -432,8 +432,17 @@ function assignMinistry(AssignedMinistry assignedMinistry, string applicationId,
                 json constructAssignmentArrayResult = check constructAssignmentArray(assignedMinistry, adminId, assignments);
                 updated = check applicationCollection->update({assignments: assignments}, {"applicationId": applicationId});
             }
-
-            return updated == 1 ? true : false;
+            if (updated == 1) {
+                // Save application metadata in ministry.
+                boolean saveApplicationInMinistryResult = check saveApplicationInMinistry(ministryId, applicationId);
+                if (saveApplicationInMinistryResult) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
         } else {
             return error("Invalid Operation", message = "There is no ministry found with the ID: " + ministryId + ".");
         }
