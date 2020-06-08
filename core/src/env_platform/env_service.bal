@@ -196,6 +196,30 @@ service envservice on ep0 {
     }
     resource function assignMinistry(http:Caller caller, http:Request req, string applicationId, AssignedMinistry body) returns error? {
 
+        http:Response response = new;
+        string authHeader = req.getHeader("Authorization");
+        [string, string]|error adminInfoFromJWT = getUserInfoFromJWT(authHeader);
+        if (adminInfoFromJWT is [string, string]) {
+            [string, string] [adminId, adminType] = adminInfoFromJWT;
+
+            boolean|error assignMinistryResult = assignMinistry(body, applicationId, adminId);
+            if (assignMinistryResult is error) {
+                response.statusCode = http:STATUS_INTERNAL_SERVER_ERROR;
+                response.setPayload({"message": "Failed to assigned the ministry"});
+            } else {
+                if (assignMinistryResult) {
+                    response.statusCode = http:STATUS_OK;
+                    response.setPayload({"message": "Successfully assigned the ministry"});
+                } else {
+                    response.statusCode = http:STATUS_INTERNAL_SERVER_ERROR;
+                    response.setPayload({"message": "Failed to assigned the ministry"});
+                }
+            }
+        } else {
+            response.statusCode = http:STATUS_UNAUTHORIZED;
+        }
+        error? respond = caller->respond(response);
+
     }
 
     @http:ResourceConfig {
