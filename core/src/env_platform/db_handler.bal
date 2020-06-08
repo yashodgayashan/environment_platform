@@ -317,6 +317,20 @@ function userHasApplication(string applicationId, string userId) returns boolean
     }
 }
 
+# `getApplicationTypeById` function will return the application type of the given application.
+# 
+# + applicationId - Id of the application.
+# + return - 
+function getApplicationTypeById(string applicationId) returns string|error {
+    map<json>[] find = check applicationCollection->find({"applicationId": applicationId});
+    int arrayLength = find.length();
+    if (arrayLength == 0) {
+        return error("Not found", message = "Application is not found for the given Id: " + applicationId);
+    } else {
+        return check trap <string>find[0].title;
+    }
+}
+
 # The `saveApplicationMetadata` function will save application metadata to the database.
 # 
 # + applicationType - Type of the application.
