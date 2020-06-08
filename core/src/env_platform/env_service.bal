@@ -233,6 +233,50 @@ service envservice on ep0 {
     }
     resource function updateStatus(http:Caller caller, http:Request req, string applicationId, Status body) returns error? {
 
+        http:Response response = new;
+        string authHeader = req.getHeader("Authorization");
+        [string, string]|error userInfoFromJWT = getUserInfoFromJWT(authHeader);
+        if (userInfoFromJWT is [string, string]) {
+            [string, string] [userId, userType] = userInfoFromJWT;
+            if (body.changedBy.id == userId) {
+
+                // Check whether ministry has such user.
+                boolean|error isMinistryHasUserResult = isMinistryHasUser(body.ministry.id, userId);
+                if (isMinistryHasUserResult is error) {
+                    response.statusCode = http:STATUS_INTERNAL_SERVER_ERROR;
+                    response.setPayload({"message": "Unable to update the status."});
+                } else {
+                    if (isMinistryHasUserResult) {
+
+                        // Update the status.
+                        boolean|error status = updateStatus(body, applicationId);
+                        if (status is error) {
+                            response.statusCode = http:STATUS_INTERNAL_SERVER_ERROR;
+                            response.setPayload({"message": "Unable to update the status."});
+                        } else {
+                            if (status) {
+                                response.statusCode = http:STATUS_OK;
+                                response.setPayload({"message": "Successfully update the status."});
+
+                            } else {
+                                response.statusCode = http:STATUS_NOT_FOUND;
+                                response.setPayload({"message": "Unable to update the status."});
+
+                            }
+                        }
+                    } else {
+                        response.statusCode = http:STATUS_NOT_FOUND;
+                        response.setPayload({"message": "Ministry doesn't have the corresponding user."});
+                    }
+                }
+            } else {
+                response.statusCode = http:STATUS_UNAUTHORIZED;
+                response.setPayload({"message": "Requested user and the body information missmatched."});
+            }
+        } else {
+            response.statusCode = http:STATUS_UNAUTHORIZED;
+        }
+        error? respond = caller->respond(response);
     }
 
     @http:ResourceConfig {
