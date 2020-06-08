@@ -99,6 +99,45 @@ service envservice on ep0 {
     }
     resource function putApplicationById(http:Caller caller, http:Request req, string applicationId, TreeRemovalForm body) returns error? {
 
+        http:Response response = new;
+        string authHeader = req.getHeader("Authorization");
+        [string, string]|error userInfoFromJWT = getUserInfoFromJWT(authHeader);
+        if (userInfoFromJWT is [string, string]) {
+            [string, string] [userId, userType] = userInfoFromJWT;
+            boolean|error userHasApplicationResult = userHasApplication(applicationId, userId);
+            if (userHasApplicationResult is error) {
+                response.statusCode = http:STATUS_NOT_FOUND;
+                if (userHasApplicationResult.reason() == "No applications") {
+                    response.setPayload({"reason": "No applications for given user"});
+                } else {
+                    response.setPayload({"reason": "No such user"});
+                }
+            } else {
+                // If application is found.
+                if (userHasApplicationResult) {
+                    boolean|error application = updateApplication(body, applicationId);
+                    if (application is error) {
+                        response.statusCode = http:STATUS_INTERNAL_SERVER_ERROR;
+                        response.setPayload({"reason": "Application is not updated"});
+                    } else {
+                        // If application is updated.
+                        if (application) {
+                            response.statusCode = http:STATUS_OK;
+                            response.setPayload({"reason": "Application is updated"});
+                        } else {
+                            response.statusCode = http:STATUS_INTERNAL_SERVER_ERROR;
+                            response.setPayload({"reason": "Application is not updated"});
+                        }
+                    }
+                } else {
+                    response.statusCode = http:STATUS_NOT_FOUND;
+                    response.setPayload({"reason": "Application is not submitted by the given user"});
+                }
+            }
+        } else {
+            response.statusCode = http:STATUS_UNAUTHORIZED;
+        }
+        error? respond = caller->respond(response);
     }
 
     @http:ResourceConfig {
