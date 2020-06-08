@@ -317,10 +317,10 @@ function userHasApplication(string applicationId, string userId) returns boolean
     }
 }
 
-# `getApplicationTypeById` function will return the application type of the given application.
+# The `getApplicationTypeById` function will return the application type of the given application.
 # 
 # + applicationId - Id of the application.
-# + return - 
+# + return - This will return either application title for the given user or an error.
 function getApplicationTypeById(string applicationId) returns string|error {
     map<json>[] find = check applicationCollection->find({"applicationId": applicationId});
     int arrayLength = find.length();
@@ -331,6 +331,11 @@ function getApplicationTypeById(string applicationId) returns string|error {
     }
 }
 
+# The `saveApplicationInMinistry` function will save the application reference in corresponding ministry.
+# 
+# + ministryId - Id of the ministry.
+# + applicationId - Id of the application.
+# + return - This will return either application metadata is saved in ministry or an error.
 function saveApplicationInMinistry(string ministryId, string applicationId) returns boolean|error {
     string applicationType = check getApplicationTypeById(applicationId);
     if (check isMinistry(ministryId)) {
@@ -497,5 +502,29 @@ function updateStatus(Status status, string applicationId) returns boolean|error
         } else {
             return error("Ministry not assigned", message = status.ministry.name + " is not assigned to application with application Id: " + applicationId + ".");
         }
+    }
+}
+
+# The `isMinistryHasUser` function will check the corresponding user is in the ministry.
+# 
+# + ministryId - Id of the ministry.
+# + userId - Id of the user.
+# + return - This function will either ministru has corresponding user or an error.
+function isMinistryHasUser(string ministryId, string userId) returns boolean|error {
+
+    // Get ministry information.
+    map<json>[] find = check ministryCollection->find({id: ministryId});
+    int arrayLength = find.length();
+    if (arrayLength == 0) {
+        return error("Not found", message = "There is no ministry with ministryId: " + ministryId);
+    } else {
+        map<json> ministry = find[0];
+        json[] users = check trap <json[]>ministry.users;
+        foreach json user in users {
+            if (user.id == userId) {
+                return true;
+            }
+        }
+        return false;
     }
 }
