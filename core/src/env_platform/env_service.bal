@@ -61,6 +61,23 @@ service envservice on ep0 {
     }
     resource function postApplication(http:Caller caller, http:Request req, TreeRemovalForm body) returns error? {
 
+        http:Response response = new;
+        string authHeader = req.getHeader("Authorization");
+        [string, string]|error userInfoFromJWT = getUserInfoFromJWT(authHeader);
+        if (userInfoFromJWT is [string, string]) {
+            [string, string] [userId, userType] = userInfoFromJWT;
+            [boolean, string]|error saveApplicationResult = saveApplication(body, userId);
+            if (saveApplicationResult is error) {
+                response.statusCode = http:STATUS_INTERNAL_SERVER_ERROR;
+            } else {
+                [boolean, string] [isSaved, applicationId] = saveApplicationResult;
+                response.statusCode = http:STATUS_CREATED;
+                response.setPayload(<@untainted>{"applicationId": applicationId});
+            }
+        } else {
+            response.statusCode = http:STATUS_UNAUTHORIZED;
+        }
+        error? respond = caller->respond(response);
     }
 
     @http:ResourceConfig {
