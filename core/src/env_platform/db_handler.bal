@@ -89,10 +89,12 @@ function deleteApplication(string applicationId, string userId) returns boolean|
 
     string applicationStatus = check getApplicationStatusByApplicationId(applicationId);
     if (applicationStatus == "draft") {
+        // Remove application from applications.
         int|error deleted = applicationCollection->delete({"applicationId": applicationId, "status": "draft"});
         if (deleted is int) {
             log:printDebug("Deleted application count: " + deleted.toString());
             if (deleted == 1) {
+                // Remove application from user.
                 boolean removeApplicationInUserResult = check removeApplicationInUser(userId, applicationId);
                 log:printDebug("Application is removed from the user: " + removeApplicationInUserResult.toString());
                 return true;
@@ -357,8 +359,9 @@ function removeApplicationMetadata(string applicationType) returns boolean|error
 # 
 # + assignedMinistry - AssignedMinistry record which should be assigned.
 # + applicationId - Application ID of the application.
+# + adminId - Id of the assigned Admin.
 # + return - This function will return whether the ministry is assigned or error if any occurs.
-function assignMinistry(AssignedMinistry assignedMinistry, string applicationId) returns boolean|error {
+function assignMinistry(AssignedMinistry assignedMinistry, string applicationId, string adminId) returns boolean|error {
 
     map<json>[] find = check applicationCollection->find({"applicationId": applicationId, status: "submit"});
 
@@ -380,12 +383,12 @@ function assignMinistry(AssignedMinistry assignedMinistry, string applicationId)
             if (assignments is error) {
 
                 // Construct the assignment and update.
-                json data = check constructAssignment(assignedMinistry);
+                json data = check constructAssignment(assignedMinistry, adminId);
                 updated = check applicationCollection->update({assignments: [data]}, {"applicationId": applicationId});
             } else {
 
                 // Append the new assignment to the array and update.
-                json constructAssignmentArrayResult = check constructAssignmentArray(assignedMinistry, assignments);
+                json constructAssignmentArrayResult = check constructAssignmentArray(assignedMinistry, adminId, assignments);
                 updated = check applicationCollection->update({assignments: assignments}, {"applicationId": applicationId});
             }
 
