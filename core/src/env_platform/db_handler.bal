@@ -312,7 +312,7 @@ function applicationBelongsToUser(string applicationId, string userId) returns b
             return false;
         }
     } else {
-        return error("Invalid User", message = "Couldn't find the user with given User ID.");
+        return error("Invalid User", message = "Couldn't find a user with the given ID: " + userId + ".");
     }
 }
 
