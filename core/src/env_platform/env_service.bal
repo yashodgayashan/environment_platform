@@ -123,7 +123,7 @@ service envservice on ep0 {
                         // If application is updated.
                         if (application) {
                             response.statusCode = http:STATUS_OK;
-                            response.setPayload({"reason": "Application is updated"});
+                            response.setPayload({"reason": "Application is updated."});
                         } else {
                             response.statusCode = http:STATUS_INTERNAL_SERVER_ERROR;
                             response.setPayload({"reason": "Application is not updated"});
