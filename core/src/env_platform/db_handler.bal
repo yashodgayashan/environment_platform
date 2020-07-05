@@ -439,11 +439,7 @@ function assignMinistry(AssignedMinistry assignedMinistry, string applicationId,
             if (updated == 1) {
                 // Save application metadata in ministry.
                 boolean saveApplicationInMinistryResult = check saveApplicationInMinistry(ministryId, applicationId);
-                if (saveApplicationInMinistryResult) {
-                    return true;
-                } else {
-                    return false;
-                }
+                saveApplicationInMinistryResult ? return true:false;
             } else {
                 return false;
             }
