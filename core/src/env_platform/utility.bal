@@ -140,7 +140,7 @@ function getCurrentDateObject() returns Date {
 # The `constructAssignment` function will construct the assignment from the given AssignedMinistry record.
 # 
 # + assignedMinistry - AssignedMinistry record.
-# + adminId - Id of the assigned Admin.
+# + adminId - Id of the assigned administrator.
 # + return - This function will return a assignment json or an error if the Data record is not converted to the json, 
 # Mongodb:DatabaseError or prerequisite ministry is not found.
 function constructAssignment(AssignedMinistry assignedMinistry, string adminId) returns json|error {
