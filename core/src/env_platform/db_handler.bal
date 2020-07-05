@@ -11,7 +11,7 @@ mongodb:Collection userCollection = config_handler:getUserCollection();
 # 
 # + form - Form containing the tree removal data.
 # + userId - Id of the User. 
-# + return - Returns true and applicationId if the application is saved, error if there is a mongodb:DatabaseError or  
+# + return - Returns [true, applicationId] if the application is saved, error if there is a mongodb:DatabaseError or  
 # there's an error while generating the applicationId.
 function saveApplication(TreeRemovalForm form, string userId) returns [boolean, string]|error {
 
