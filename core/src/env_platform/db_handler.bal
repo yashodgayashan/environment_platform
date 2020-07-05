@@ -316,7 +316,7 @@ function userHasApplication(string applicationId, string userId) returns boolean
     }
 }
 
-# The `getApplicationTypeById` function will return the application type of the given application.
+# The `getApplicationTypeById` function will return the application type of a given application.
 # 
 # + applicationId - Id of the application.
 # + return - This will return either application title for the given user or an error.
