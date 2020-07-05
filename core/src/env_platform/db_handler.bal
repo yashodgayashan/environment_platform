@@ -387,7 +387,7 @@ function saveApplicationMetadata(string applicationType) returns boolean|error {
 # The `removeApplicationMetadata` function will subtract application metadata count by one from the database.
 # 
 # + applicationType - Type of the application.
-# + return - This function will return either whether the application meta data is removed or 
+# + return - This function will return either whether the application meta data count is updated or 
 # error if there is a mongodb:DatabaseError.
 function removeApplicationMetadata(string applicationType) returns boolean|error {
     map<json>[] find = check applicationMetaDataCollection->find({"applicationType": applicationType});
