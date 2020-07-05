@@ -74,7 +74,7 @@ function saveApplication(TreeRemovalForm form, string userId) returns [boolean, 
         }
         return inserted is mongodb:DatabaseError ? inserted : [true, applicationId];
     } else {
-        return error("Invalid User", message = "Couldn't find the user with given User ID.");
+        return error("Invalid User", message = "Couldn't find a user with given User ID.");
     }
 }
 
