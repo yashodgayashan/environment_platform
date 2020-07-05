@@ -334,7 +334,7 @@ function getApplicationTypeById(string applicationId) returns string|error {
 # 
 # + ministryId - Id of the ministry.
 # + applicationId - Id of the application.
-# + return - This will return either application metadata is saved in ministry or an error.
+# + return - This will return either the application metadata if it is saved in ministry or a corresponding error.
 function saveApplicationInMinistry(string ministryId, string applicationId) returns boolean|error {
     string applicationType = check getApplicationTypeById(applicationId);
     if (check isMinistry(ministryId)) {
