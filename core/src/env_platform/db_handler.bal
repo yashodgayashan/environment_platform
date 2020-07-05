@@ -93,7 +93,7 @@ function deleteApplication(string applicationId, string userId) returns boolean|
         if (deleted is int) {
             log:printDebug("Deleted application count: " + deleted.toString());
             if (deleted == 1) {
-                // Remove application from user.
+                // Remove application from the user.
                 boolean removeApplicationInUserResult = check removeApplicationInUser(userId, applicationId);
                 log:printDebug("Application is removed from the user: " + removeApplicationInUserResult.toString());
                 return true;
