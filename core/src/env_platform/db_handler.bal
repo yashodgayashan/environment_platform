@@ -300,7 +300,7 @@ function applicationBelongsToUser(string applicationId, string userId) returns b
         // Construct the application list.
         json[] applicationList;
         if (applications is error) {
-            return error("No applications", message = "User with userId: " + userId + " doesn't have any application.");
+            return error("No applications", message = "User with ID: " + userId + " doesn't have any application.");
         } else {
             applicationList = <json[]>applications;
             log:printDebug("The user with the user ID: " + userId + " has " + applicationList.length().toString() + " applications stored in the database.");
