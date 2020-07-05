@@ -284,7 +284,7 @@ function removeApplicationInUser(string userId, string applicationId) returns bo
     }
 }
 
-# The `userHasapplication` function will validate whether user submitted the given application.
+# The `applicationBelongsToUser` function will validate whether the application belongs to the user.
 # 
 # + applicationId - Id of the application.
 # + userId - Id of the user.
