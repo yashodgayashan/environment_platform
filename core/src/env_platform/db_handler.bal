@@ -297,7 +297,7 @@ function userHasApplication(string applicationId, string userId) returns boolean
         map<json>[] find = check userCollection->find({id: userId});
         json|error applications = find[0].applications;
 
-        // Construct the applicationList.
+        // Construct the application list.
         json[] applicationList;
         if (applications is error) {
             return error("No applications", message = "User with userId: " + userId + " doesn't have any application.");
