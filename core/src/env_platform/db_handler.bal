@@ -395,7 +395,7 @@ function removeApplicationMetadata(string applicationType) returns boolean|error
     map<json> applicationMetaData = find[0];
     int applicationCount = check trap <int>applicationMetaData.count - 1;
 
-    // Update the count by  minus one
+    // Update the count by minus one.
     int update = check applicationMetaDataCollection->update({"count": applicationCount}, {"applicationType": applicationType});
     return update > 0 ? true : false;
 }
