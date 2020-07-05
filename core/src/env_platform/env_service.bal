@@ -131,7 +131,7 @@ service envservice on ep0 {
                     }
                 } else {
                     response.statusCode = http:STATUS_NOT_FOUND;
-                    response.setPayload({"reason": "Application is not submitted by the given user."});
+                    response.setPayload({"reason": "Application has not been submitted by the user."});
                 }
             }
         } else {
