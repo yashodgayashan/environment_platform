@@ -289,7 +289,7 @@ function removeApplicationInUser(string userId, string applicationId) returns bo
 # + applicationId - Id of the application.
 # + userId - Id of the user.
 # + return - This will return whether the application belongs to the user or an error.
-function userHasApplication(string applicationId, string userId) returns boolean|error {
+function applicationBelongsToUser(string applicationId, string userId) returns boolean|error {
     boolean isValid = check isValidUser(userId);
     if (isValid) {
 
