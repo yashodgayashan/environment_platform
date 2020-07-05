@@ -384,7 +384,7 @@ function saveApplicationMetadata(string applicationType) returns boolean|error {
     }
 }
 
-# The `removeApplicationMetadata` function will remove application metadata count by one from the database.
+# The `removeApplicationMetadata` function will subtract application metadata count by one from the database.
 # 
 # + applicationType - Type of the application.
 # + return - This function will return either whether the application meta data is removed or 
