@@ -330,7 +330,7 @@ function getApplicationTypeById(string applicationId) returns string|error {
     }
 }
 
-# The `saveApplicationInMinistry` function will save the application reference in corresponding ministry.
+# The `saveApplicationInMinistry` function will save the application reference in the corresponding ministry.
 # 
 # + ministryId - Id of the ministry.
 # + applicationId - Id of the application.
