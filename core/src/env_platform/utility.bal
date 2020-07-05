@@ -188,6 +188,7 @@ function constructAssignment(AssignedMinistry assignedMinistry, string adminId) 
 # The `constructAssignmentArray` function will construct the assignments array by pushing the new assigned ministry.
 # 
 # + assignedMinistry - AssignedMinistry record which must be add to the assignments.
+# + adminId - Id of the assigned administrator
 # + assignments - All the assignments of an application.
 # + return - This function will return either constructed assigned ministry array or an error.
 function constructAssignmentArray(AssignedMinistry assignedMinistry, string adminId, json[] assignments) returns json|error {
