@@ -126,7 +126,7 @@ service envservice on ep0 {
                             response.setPayload({"reason": "Application is updated."});
                         } else {
                             response.statusCode = http:STATUS_INTERNAL_SERVER_ERROR;
-                            response.setPayload({"reason": "Application is not updated"});
+                            response.setPayload({"reason": "Application is not updated."});
                         }
                     }
                 } else {
