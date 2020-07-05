@@ -110,7 +110,7 @@ service envservice on ep0 {
                 if (applicationBelongsToUserResult.reason() == "No applications") {
                     response.setPayload({"reason": "No applications for given user."});
                 } else {
-                    response.setPayload({"reason": "No such user"});
+                    response.setPayload({"reason": "No such user."});
                 }
             } else {
                 // If application is found.
