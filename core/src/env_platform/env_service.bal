@@ -107,7 +107,7 @@ service envservice on ep0 {
             boolean|error applicationBelongsToUserResult = applicationBelongsToUser(applicationId, userId);
             if (applicationBelongsToUserResult is error) {
                 response.statusCode = http:STATUS_NOT_FOUND;
-                if (userHasApplicationResult.reason() == "No applications") {
+                if (applicationBelongsToUserResult.reason() == "No applications") {
                     response.setPayload({"reason": "No applications for given user"});
                 } else {
                     response.setPayload({"reason": "No such user"});
