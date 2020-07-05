@@ -324,7 +324,7 @@ function getApplicationTypeById(string applicationId) returns string|error {
     map<json>[] find = check applicationCollection->find({"applicationId": applicationId});
     int arrayLength = find.length();
     if (arrayLength == 0) {
-        return error("Not found", message = "Application is not found for the given Id: " + applicationId);
+        return error("Not found", message = "Application is not found for the given Id: " + applicationId + ".");
     } else {
         return check trap <string>find[0].title;
     }
