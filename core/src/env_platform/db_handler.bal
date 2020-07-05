@@ -511,7 +511,7 @@ function isMinistryHasUser(string ministryId, string userId) returns boolean|err
     map<json>[] find = check ministryCollection->find({id: ministryId});
     int arrayLength = find.length();
     if (arrayLength == 0) {
-        return error("Not found", message = "There is no ministry with ministryId: " + ministryId);
+        return error("Not found", message = "Ministry with the ID: " + ministryId + " was not found.");
     } else {
         map<json> ministry = find[0];
         json[] users = check trap <json[]>ministry.users;
