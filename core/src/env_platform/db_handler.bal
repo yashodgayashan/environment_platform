@@ -348,7 +348,7 @@ function saveApplicationInMinistry(string ministryId, string applicationId) retu
             applicationList = [{id: applicationId, name: applicationType}];
         } else {
             applicationList = <json[]>applications;
-            log:printDebug("The ministry with the ministry ID: " + ministryId + " has " + applicationList.length().toString() + " applications stored in the database.");
+            log:printDebug("The ministry with the ID: " + ministryId + " has " + applicationList.length().toString() + " applications stored in the database.");
             applicationList.push(<json>{id: applicationId, name: applicationType});
         }
 
