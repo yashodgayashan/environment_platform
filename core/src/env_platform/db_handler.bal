@@ -303,7 +303,7 @@ function applicationBelongsToUser(string applicationId, string userId) returns b
             return error("No applications", message = "User with ID: " + userId + " doesn't have any application.");
         } else {
             applicationList = <json[]>applications;
-            log:printDebug("The user with the user ID: " + userId + " has " + applicationList.length().toString() + " applications stored in the database.");
+            log:printDebug("The user with ID: " + userId + " has " + applicationList.length().toString() + " applications stored in the database.");
             foreach json application in applicationList {
                 if (application.id == applicationId) {
                     return true;
