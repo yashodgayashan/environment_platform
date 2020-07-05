@@ -114,7 +114,7 @@ service envservice on ep0 {
                 }
             } else {
                 // If application is found.
-                if (userHasApplicationResult) {
+                if (applicationBelongsToUserResult) {
                     boolean|error application = updateApplication(body, applicationId);
                     if (application is error) {
                         response.statusCode = http:STATUS_INTERNAL_SERVER_ERROR;
