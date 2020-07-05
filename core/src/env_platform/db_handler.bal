@@ -354,7 +354,7 @@ function saveApplicationInMinistry(string ministryId, string applicationId) retu
 
         // Update the user applications array with incoming value.
         int updated = check ministryCollection->update({"applications": applicationList}, {id: ministryId});
-        log:printDebug("Updated application list for ministry " + ministryId + ": " + applicationList.toString() + ".");
+        log:printDebug("Updated application list for Ministry ID: " + ministryId + ". Added application with ID: " + applicationId + ".");
 
         return updated > 0 ? true : false;
     } else {
