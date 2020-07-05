@@ -22,7 +22,7 @@ function saveApplication(TreeRemovalForm form, string userId) returns [boolean, 
         boolean result = check saveApplicationMetadata(form.title);
         log:printDebug("Saved information in application metadata: " + result.toString());
 
-        // Add the form application Id to the user.
+        // Add the form application ID to the user.
         boolean saveApplicationInUserResult = check saveApplicationInUser(userId, applicationId, form.title);
         log:printDebug("Saved information in users account: " + saveApplicationInUserResult.toString());
 
