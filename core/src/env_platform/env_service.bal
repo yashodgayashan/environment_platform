@@ -118,7 +118,7 @@ service envservice on ep0 {
                     boolean|error application = updateApplication(body, applicationId);
                     if (application is error) {
                         response.statusCode = http:STATUS_INTERNAL_SERVER_ERROR;
-                        response.setPayload({"reason": "Application is not updated"});
+                        response.setPayload({"reason": "Application is not updated."});
                     } else {
                         // If application is updated.
                         if (application) {
