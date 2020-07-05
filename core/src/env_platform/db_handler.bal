@@ -102,7 +102,7 @@ function deleteDraftApplication(string applicationId, string userId) returns boo
             }
         } else {
             // Returns an error.
-            log:printDebug("An error occurred while deleting the draft with the application ID: " + applicationId + ". " + deleted.reason() + ".");
+            log:printDebug("An error occurred while deleting the draft with the application ID: " + applicationId + ". Reason: " + deleted.reason() + ".");
             return deleted;
         }
     } else {
