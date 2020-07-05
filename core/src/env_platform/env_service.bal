@@ -104,7 +104,7 @@ service envservice on ep0 {
         [string, string]|error userInfoFromJWT = getUserInfoFromJWT(authHeader);
         if (userInfoFromJWT is [string, string]) {
             [string, string] [userId, userType] = userInfoFromJWT;
-            boolean|error userHasApplicationResult = userHasApplication(applicationId, userId);
+            boolean|error applicationBelongsToUserResult = applicationBelongsToUser(applicationId, userId);
             if (userHasApplicationResult is error) {
                 response.statusCode = http:STATUS_NOT_FOUND;
                 if (userHasApplicationResult.reason() == "No applications") {
