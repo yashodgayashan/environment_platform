@@ -404,7 +404,7 @@ function removeApplicationMetadata(string applicationType) returns boolean|error
 # 
 # + assignedMinistry - AssignedMinistry record which should be assigned.
 # + applicationId - Application ID of the application.
-# + adminId - Id of the assigned Admin.
+# + adminId - Id of the assigned administrator.
 # + return - This function will return whether the ministry is assigned or error if any occurs.
 function assignMinistry(AssignedMinistry assignedMinistry, string applicationId, string adminId) returns boolean|error {
 
