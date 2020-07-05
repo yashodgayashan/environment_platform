@@ -88,7 +88,7 @@ function deleteApplication(string applicationId, string userId) returns boolean|
 
     string applicationStatus = check getApplicationStatusByApplicationId(applicationId);
     if (applicationStatus == "draft") {
-        // Remove application from applications.
+        // Remove an application from the applications collection.
         int|error deleted = applicationCollection->delete({"applicationId": applicationId, "status": "draft"});
         if (deleted is int) {
             log:printDebug("Deleted application count: " + deleted.toString());
