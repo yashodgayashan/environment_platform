@@ -16,7 +16,6 @@ mongodb:Collection userCollection = config_handler:getUserCollection();
 function saveApplication(TreeRemovalForm form, string userId) returns [boolean, string]|error {
 
     if (check isValidUser(userId)) {
-
         string applicationId = check generateApplicationId(form.applicationCreatedDate, form.title);
 
         // Added form information to metadata.
