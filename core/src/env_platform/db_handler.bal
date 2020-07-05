@@ -312,7 +312,7 @@ function userHasApplication(string applicationId, string userId) returns boolean
             return false;
         }
     } else {
-        return error("Invalid User", message = "Couldn't find the user with given User ID");
+        return error("Invalid User", message = "Couldn't find the user with given User ID.");
     }
 }
 
