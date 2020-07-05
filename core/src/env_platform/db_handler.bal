@@ -84,7 +84,7 @@ function saveApplication(TreeRemovalForm form, string userId) returns [boolean, 
 # + userId - Id of the User. 
 # + return - Returns true if the application is deleted, false if not or else returns mongodb:DatabaseError
 # array index out of bound if there are no applications with the specific application Id.
-function deleteApplication(string applicationId, string userId) returns boolean|error {
+function deleteDraftApplication(string applicationId, string userId) returns boolean|error {
 
     string applicationStatus = check getApplicationStatusByApplicationId(applicationId);
     if (applicationStatus == "draft") {
