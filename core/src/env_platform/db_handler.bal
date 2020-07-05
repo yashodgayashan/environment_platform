@@ -358,7 +358,7 @@ function saveApplicationInMinistry(string ministryId, string applicationId) retu
 
         return updated > 0 ? true : false;
     } else {
-        return error("Invalid Ministry", message = "Couldn't find the ministry with given ministry ID");
+        return error("Invalid Ministry", message = "Couldn't find the ministry with the given ministry ID.");
     }
 }
 
