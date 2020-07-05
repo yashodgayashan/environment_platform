@@ -63,7 +63,7 @@ function saveApplication(TreeRemovalForm form, string userId) returns [boolean, 
                     }
                 ]
         };
-        log:printDebug("Constructed application: " + application.toString());
+        log:printDebug("Constructed application with application ID: " + application.applicationId.toString());
 
         mongodb:DatabaseError? inserted = applicationCollection->insert(application);
 
