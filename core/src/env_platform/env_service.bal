@@ -205,7 +205,7 @@ service envservice on ep0 {
             boolean|error assignMinistryResult = assignMinistry(body, applicationId, adminId);
             if (assignMinistryResult is error) {
                 response.statusCode = http:STATUS_INTERNAL_SERVER_ERROR;
-                response.setPayload({"message": "Failed to assigned the ministry"});
+                response.setPayload({"message": "Failed to assign the ministry due to a temporary server error."});
             } else {
                 if (assignMinistryResult) {
                     response.statusCode = http:STATUS_OK;
