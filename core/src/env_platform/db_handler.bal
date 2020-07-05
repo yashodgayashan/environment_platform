@@ -78,7 +78,7 @@ function saveApplication(TreeRemovalForm form, string userId) returns [boolean, 
     }
 }
 
-# The `deleteApplication` function will delete application drafts with the status "draft".
+# The `deleteDraftApplication` function will delete application drafts with the status "draft".
 # 
 # + applicationId - The Id of the application to be deleted.
 # + userId - Id of the User. 
