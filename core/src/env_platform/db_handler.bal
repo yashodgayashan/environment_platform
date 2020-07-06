@@ -24,7 +24,7 @@ function saveApplication(TreeRemovalForm form, string userId) returns [boolean, 
 
         // Add the form application ID to the user.
         boolean saveApplicationInUserResult = check saveApplicationInUser(userId, applicationId, form.title);
-        log:printDebug("Saved information in users account: " + saveApplicationInUserResult.toString());
+        log:printDebug("Saved information in users account? => " + saveApplicationInUserResult.toString());
 
         // Construct the application.
         map<json> application = {
