@@ -136,7 +136,7 @@ service envservice on ep0 {
                         }
                     }
                 } else {
-                    log:printDebug(applicationId + "application is not belong to the user with user ID: " + userId + ".");
+                    log:printDebug(applicationId + "application does not belong to the user with user ID: " + userId + ".");
                     response.statusCode = http:STATUS_NOT_FOUND;
                     response.setPayload({"reason": "Application has not been submitted by the user."});
                 }
