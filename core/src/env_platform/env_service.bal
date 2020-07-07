@@ -266,7 +266,7 @@ service envservice on ep0 {
                                 log:printDebug("Error occured is " + status.reason() + ".");
                                 response.setPayload(<@untainted>{"message": status.reason()});
                             } else {
-                                log:printDebug("Unable to update the status.");
+                                log:printDebug("Unable to update the status. Please try again later.");
                                 response.setPayload({"message": "Unable to update the status."});
                             }
                         }
