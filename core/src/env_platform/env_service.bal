@@ -267,7 +267,7 @@ service envservice on ep0 {
                                 response.setPayload(<@untainted>{"message": status.reason()});
                             } else {
                                 log:printDebug("Unable to update the status. Please try again later.");
-                                response.setPayload({"message": "Unable to update the status."});
+                                response.setPayload({"message": "Unable to update the status. Please try again later."});
                             }
                         }
                     } else {
