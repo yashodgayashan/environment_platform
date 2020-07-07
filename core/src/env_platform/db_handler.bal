@@ -189,11 +189,7 @@ function getApplicationCountByTitle(string applicationType) returns int|error {
 
     map<json>[] find = check applicationMetaDataCollection->find({"applicationType": applicationType});
     map<json>|error applicationMetaData = trap find[0];
-    if (applicationMetaData is error) {
-        return 0;
-    } else {
-        return <int>applicationMetaData.count;
-    }
+    return applicationMetaData is error ? 0 : <int>applicationMetaData.count
 }
 
 # The `isValidUser` function will return whether the user is valid or not.
