@@ -20,11 +20,11 @@ function saveApplication(TreeRemovalForm form, string userId) returns [boolean, 
 
         // Added form information to metadata.
         boolean result = check saveApplicationMetadata(form.title);
-        log:printDebug("Saved information in application metadata? => " + result.toString());
+        log:printDebug("Saved information in application metadata? => " + result.toString() + ".");
 
         // Add the form application ID to the user.
         boolean saveApplicationInUserResult = check saveApplicationInUser(userId, applicationId, form.title);
-        log:printDebug("Saved information in users account? => " + saveApplicationInUserResult.toString());
+        log:printDebug("Saved information in users account? => " + saveApplicationInUserResult.toString() + ".");
 
         // Construct the application.
         map<json> application = {
@@ -63,7 +63,7 @@ function saveApplication(TreeRemovalForm form, string userId) returns [boolean, 
                     }
                 ]
         };
-        log:printDebug("Constructed application with application ID: " + application.applicationId.toString());
+        log:printDebug("Constructed application with application ID: " + application.applicationId.toString() + ".");
 
         mongodb:DatabaseError? inserted = applicationCollection->insert(application);
 
@@ -94,8 +94,8 @@ function deleteDraftApplication(string applicationId, string userId) returns boo
             log:printDebug("Deleted application count: " + deleted.toString());
             if (deleted == 1) {
                 // Delete the specified application from the user.
-                boolean removeApplicationInUserResult = check removeApplicationInUser(userId, applicationId);
-                log:printDebug("Application is removed from the user: " + removeApplicationInUserResult.toString() + ".");
+                boolean removeApplicationReferenceInUserResult = check removeApplicationReferenceInUser(userId, applicationId);
+                log:printDebug("Application removed from the user? => " + removeApplicationReferenceInUserResult.toString() + ".");
                 return true;
             } else {
                 return false;
@@ -188,8 +188,12 @@ function updateApplication(TreeRemovalForm form, string applicationId) returns b
 function getApplicationCountByTitle(string applicationType) returns int|error {
 
     map<json>[] find = check applicationMetaDataCollection->find({"applicationType": applicationType});
-    map<json> applicationMetaData = check trap find[0];
-    return <int>applicationMetaData.count;
+    map<json>|error applicationMetaData = trap find[0];
+    if (applicationMetaData is error) {
+        return 0;
+    } else {
+        return <int>applicationMetaData.count;
+    }
 }
 
 # The `isValidUser` function will return whether the user is valid or not.
@@ -200,6 +204,7 @@ function getApplicationCountByTitle(string applicationType) returns int|error {
 function isValidUser(string userId) returns boolean|error {
 
     int numOfDocuments = check userCollection->countDocuments({id: userId});
+    log:printDebug("isValidUser function => number of documents : " + numOfDocuments.toString());
     if (numOfDocuments == 1) {
         return true;
     } else {
@@ -244,13 +249,13 @@ function saveApplicationInUser(string userId, string applicationId, string appli
     }
 }
 
-# The `removeApplicationInUser` function will remove the application reference in the corresponding user.
+# The `removeApplicationReferenceInUser` function will remove the application reference in the corresponding user.
 # 
 # + userId - Id of the user.
 # + applicationId - Id of the application which should be removed.
 # + return - This function will return either application is removed in the given user document or 
 # error if there is a mongodb:DatabaseError.
-function removeApplicationInUser(string userId, string applicationId) returns boolean|error {
+function removeApplicationReferenceInUser(string userId, string applicationId) returns boolean|error {
     boolean isValid = check isValidUser(userId);
     if (isValid) {
 
@@ -290,19 +295,17 @@ function removeApplicationInUser(string userId, string applicationId) returns bo
 # + userId - Id of the user.
 # + return - This will return whether the application belongs to the user or an error.
 function applicationBelongsToUser(string applicationId, string userId) returns boolean|error {
-    boolean isValid = check isValidUser(userId);
-    if (isValid) {
+
+    if (check isValidUser(userId)) {
 
         // Get the user information.
         map<json>[] find = check userCollection->find({id: userId});
         json|error applications = find[0].applications;
 
-        // Construct the application list.
-        json[] applicationList;
         if (applications is error) {
             return error("No applications", message = "User with ID: " + userId + " doesn't have any application.");
         } else {
-            applicationList = <json[]>applications;
+            json[] applicationList = check trap <json[]>applications;
             log:printDebug("The user with ID: " + userId + " has " + applicationList.length().toString() + " applications stored in the database.");
             foreach json application in applicationList {
                 if (application.id == applicationId) {
@@ -369,7 +372,6 @@ function saveApplicationInMinistry(string ministryId, string applicationId) retu
 # error if there is a mongodb:DatabaseError.
 function saveApplicationMetadata(string applicationType) returns boolean|error {
     map<json>[] find = check applicationMetaDataCollection->find({"applicationType": applicationType});
-
     // If a new entry
     if (find.length() == 0) {
         () insert = check applicationMetaDataCollection->insert({"applicationType": applicationType, "count": 1});
@@ -384,12 +386,12 @@ function saveApplicationMetadata(string applicationType) returns boolean|error {
     }
 }
 
-# The `removeApplicationMetadata` function will subtract application metadata count by one from the database.
+# The `updateApplicationMetadata` function will subtract application metadata count by one from the database.
 # 
 # + applicationType - Type of the application.
 # + return - This function will return either whether the application meta data count is updated or 
 # error if there is a mongodb:DatabaseError.
-function removeApplicationMetadata(string applicationType) returns boolean|error {
+function updateApplicationMetadata(string applicationType) returns boolean|error {
     map<json>[] find = check applicationMetaDataCollection->find({"applicationType": applicationType});
 
     map<json> applicationMetaData = find[0];
@@ -439,7 +441,7 @@ function assignMinistry(AssignedMinistry assignedMinistry, string applicationId,
             if (updated == 1) {
                 // Save application metadata in ministry.
                 boolean saveApplicationInMinistryResult = check saveApplicationInMinistry(ministryId, applicationId);
-                saveApplicationInMinistryResult ? return true:false;
+                return saveApplicationInMinistryResult ? true : false;
             } else {
                 return false;
             }
