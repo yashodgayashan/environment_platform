@@ -1,6 +1,7 @@
 import ballerina/config as conf;
 import ballerina/http;
 import ballerina/jwt;
+import ballerina/log;
 import ballerina/openapi;
 
 jwt:InboundJwtAuthProvider jwtAuthProvider = new ({
@@ -61,6 +62,28 @@ service envservice on ep0 {
     }
     resource function postApplication(http:Caller caller, http:Request req, TreeRemovalForm body) returns error? {
 
+        http:Response response = new;
+        string authHeader = req.getHeader("Authorization");
+        [string, string]|error userInfoFromJWT = getUserInfoFromJWT(authHeader);
+        if (userInfoFromJWT is [string, string]) {
+            [string, string] [userId, userType] = userInfoFromJWT;
+            log:printDebug("User information - user ID: " + userId + ", userType: " + userType + ".");
+            [boolean, string]|error saveApplicationResult = saveApplication(body, userId);
+            if (saveApplicationResult is error) {
+                log:printDebug("Error occured is - " + saveApplicationResult.toString() + ".");
+                response.statusCode = http:STATUS_INTERNAL_SERVER_ERROR;
+                response.setPayload(<@untainted>{message: "Internal Server Error occurred."});
+            } else {
+                [boolean, string] [isSaved, applicationId] = saveApplicationResult;
+                log:printDebug("Application is saved and application ID is " + applicationId + ".");
+                response.statusCode = http:STATUS_CREATED;
+                response.setPayload(<@untainted>{"applicationId": applicationId});
+            }
+        } else {
+            response.statusCode = http:STATUS_UNAUTHORIZED;
+            response.setPayload({message: "Unauthorized operation. Try again with valid credentials."});
+        }
+        error? respond = caller->respond(response);
     }
 
     @http:ResourceConfig {
@@ -80,8 +103,49 @@ service envservice on ep0 {
             enabled: true
         }
     }
-    resource function putApplicationById(http:Caller caller, http:Request req, string applicationId, TreeRemovalForm body) returns error? {
+    resource function putApplicationById(http:Caller caller, http:Request req, string applicationId, TreeRemovalForm body)
+    returns error? {
 
+        http:Response response = new;
+        string authHeader = req.getHeader("Authorization");
+        [string, string]|error userInfoFromJWT = getUserInfoFromJWT(authHeader);
+        if (userInfoFromJWT is [string, string]) {
+            [string, string] [userId, userType] = userInfoFromJWT;
+            log:printDebug("User information - user ID: " + userId + ", user type: " + userType + ".");
+            boolean|error applicationBelongsToUserResult = applicationBelongsToUser(applicationId, userId);
+            if (applicationBelongsToUserResult is error) {
+                log:printDebug("Error occured is - " + applicationBelongsToUserResult.toString() + ".");
+                response.statusCode = http:STATUS_NOT_FOUND;
+                response.setPayload(<@untainted>{"reason": applicationBelongsToUserResult.reason()});
+            } else {
+                // If application is releated to the user.
+                if (applicationBelongsToUserResult) {
+                    boolean|error application = updateApplication(body, applicationId);
+                    if (application is boolean && application) {
+                        log:printDebug("Application is updated");
+                        response.statusCode = http:STATUS_OK;
+                        response.setPayload({"reason": "Application is updated."});
+                    } else {
+                        response.statusCode = http:STATUS_INTERNAL_SERVER_ERROR;
+                        if (application is error) {
+                            log:printDebug("Error occured is: " + application.reason() + ".");
+                            response.setPayload(<@untainted>{"reason": application.reason()});
+                        } else {
+                            log:printDebug("Application is not updated.");
+                            response.setPayload({"reason": "Application is not updated."});
+                        }
+                    }
+                } else {
+                    log:printDebug(applicationId + "application does not belong to the user with user ID: " + userId + ".");
+                    response.statusCode = http:STATUS_NOT_FOUND;
+                    response.setPayload({"reason": "Application has not been submitted by the user."});
+                }
+            }
+        } else {
+            response.statusCode = http:STATUS_UNAUTHORIZED;
+            response.setPayload({message: "Unauthorized operation. Try again with valid credentials."});
+        }
+        error? respond = caller->respond(response);
     }
 
     @http:ResourceConfig {
@@ -94,6 +158,34 @@ service envservice on ep0 {
     }
     resource function deleteApplicationById(http:Caller caller, http:Request req, string applicationId) returns error? {
 
+        http:Response response = new;
+        string authHeader = req.getHeader("Authorization");
+        [string, string]|error userInfoFromJWT = getUserInfoFromJWT(authHeader);
+        if (userInfoFromJWT is [string, string]) {
+            [string, string] [userId, userType] = userInfoFromJWT;
+            log:printDebug("User information - user ID: " + userId + ", user type: " + userType + ".");
+            boolean|error applicationBelongsToUserResult = applicationBelongsToUser(applicationId, userId);
+            if (applicationBelongsToUserResult is error) {
+                log:printDebug("Error occured is: " + applicationBelongsToUserResult.reason());
+                response.statusCode = http:STATUS_NOT_FOUND;
+                response.setPayload(<@untainted>{"reason": applicationBelongsToUserResult.reason()});
+            } else {
+                boolean|error application = deleteDraftApplication(applicationId, userId);
+                if (application is boolean && application) {
+                    log:printDebug("Application is deleted.");
+                    response.statusCode = http:STATUS_OK;
+                    response.setPayload({"reason": "Application is deleted."});
+                } else {
+                    log:printDebug("Application is not deleted.");
+                    response.statusCode = http:STATUS_INTERNAL_SERVER_ERROR;
+                    response.setPayload({"reason": "Application is not deleted."});
+                }
+            }
+        } else {
+            response.statusCode = http:STATUS_UNAUTHORIZED;
+            response.setPayload({message: "Unauthorized operation. Try again with valid credentials."});
+        }
+        error? respond = caller->respond(response);
     }
 
     @http:ResourceConfig {
@@ -107,6 +199,33 @@ service envservice on ep0 {
     }
     resource function assignMinistry(http:Caller caller, http:Request req, string applicationId, AssignedMinistry body) returns error? {
 
+        http:Response response = new;
+        string authHeader = req.getHeader("Authorization");
+        [string, string]|error adminInfoFromJWT = getUserInfoFromJWT(authHeader);
+        if (adminInfoFromJWT is [string, string]) {
+            [string, string] [adminId, adminType] = adminInfoFromJWT;
+            log:printDebug("User information - admin ID: " + adminId + ", admin type: " + adminType + ".");
+            boolean|error assignMinistryResult = assignMinistry(body, applicationId, adminId);
+            if (assignMinistryResult is boolean && assignMinistryResult) {
+                log:printDebug("Successfully assigned the ministry " + body.ministry.name + " for the application with ID: "
+                    + applicationId + ".");
+                response.statusCode = http:STATUS_OK;
+                response.setPayload({"message": "Successfully assigned the ministry."});
+            } else {
+                response.statusCode = http:STATUS_INTERNAL_SERVER_ERROR;
+                if (assignMinistryResult is error) {
+                    log:printDebug("Error occured is " + assignMinistryResult.reason() + ".");
+                    response.setPayload(<@untainted>{"message": assignMinistryResult.reason()});
+                } else {
+                    log:printDebug("Failed to assigned the ministry.");
+                    response.setPayload({"message": "Failed to assigned the ministry."});
+                }
+            }
+        } else {
+            response.statusCode = http:STATUS_UNAUTHORIZED;
+            response.setPayload({message: "Unauthorized operation. Try again with valid credentials."});
+        }
+        error? respond = caller->respond(response);
     }
 
     @http:ResourceConfig {
@@ -120,6 +239,51 @@ service envservice on ep0 {
     }
     resource function updateStatus(http:Caller caller, http:Request req, string applicationId, Status body) returns error? {
 
+        http:Response response = new;
+        string authHeader = req.getHeader("Authorization");
+        [string, string]|error userInfoFromJWT = getUserInfoFromJWT(authHeader);
+        if (userInfoFromJWT is [string, string]) {
+            [string, string] [userId, userType] = userInfoFromJWT;
+            log:printDebug("User information - user ID: " + userId + ", user type: " + userType + ".");
+            if (body.changedBy.id == userId) {
+                // Check whether ministry has such user.
+                boolean|error isMinistryHasUserResult = isMinistryHasUser(body.ministry.id, userId);
+                if (isMinistryHasUserResult is error) {
+                    log:printDebug("Error occured is : " + isMinistryHasUserResult.reason() + ".");
+                    response.statusCode = http:STATUS_INTERNAL_SERVER_ERROR;
+                    response.setPayload(<@untainted>{"message": isMinistryHasUserResult.reason()});
+                } else {
+                    if (isMinistryHasUserResult) {
+                        // Update the status.
+                        boolean|error status = updateStatus(body, applicationId);
+                        if (status is boolean && status) {
+                            log:printDebug("Successfully update the status as " + body.progress + ".");
+                            response.statusCode = http:STATUS_OK;
+                            response.setPayload({"message": "Successfully update the status."});
+                        } else {
+                            response.statusCode = http:STATUS_INTERNAL_SERVER_ERROR;
+                            if (status is error) {
+                                log:printDebug("Error occured is " + status.reason() + ".");
+                                response.setPayload(<@untainted>{"message": status.reason()});
+                            } else {
+                                log:printDebug("Unable to update the status. Please try again later.");
+                                response.setPayload({"message": "Unable to update the status. Please try again later."});
+                            }
+                        }
+                    } else {
+                        response.statusCode = http:STATUS_NOT_FOUND;
+                        response.setPayload({"message": "Ministry doesn't have the corresponding user."});
+                    }
+                }
+            } else {
+                response.statusCode = http:STATUS_UNAUTHORIZED;
+                response.setPayload({"message": "Requested user and the body information missmatched."});
+            }
+        } else {
+            response.statusCode = http:STATUS_UNAUTHORIZED;
+            response.setPayload({message: "Unauthorized operation. Try again with valid credentials."});
+        }
+        error? respond = caller->respond(response);
     }
 
     @http:ResourceConfig {
