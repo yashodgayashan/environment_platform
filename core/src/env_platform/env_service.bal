@@ -224,7 +224,6 @@ service envservice on ep0 {
             response.setPayload({message: "Unauthorized operation. Try again with valid credentials."});
         }
         error? respond = caller->respond(response);
-
     }
 
     @http:ResourceConfig {
