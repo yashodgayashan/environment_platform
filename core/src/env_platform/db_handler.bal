@@ -68,9 +68,11 @@ function saveApplication(TreeRemovalForm form, string userId) returns [boolean, 
         mongodb:DatabaseError? inserted = applicationCollection->insert(application);
 
         if (inserted is mongodb:DatabaseError) {
-            log:printDebug("An error occurred while saving the application with ID: " + application.applicationId.toString() + ". Reason: " + inserted.reason().toString() + ".");
+            log:printDebug("An error occurred while saving the application with ID: " + application.applicationId.toString()
+                + ". Reason: " + inserted.reason().toString() + ".");
         } else {
-            log:printDebug("Application with application ID: " + application.applicationId.toString() + " was saved successfully.");
+            log:printDebug("Application with application ID: " + application.applicationId.toString() +
+                " was saved successfully.");
         }
         return inserted is mongodb:DatabaseError ? inserted : [true, applicationId];
     } else {
@@ -95,18 +97,21 @@ function deleteDraftApplication(string applicationId, string userId) returns boo
             if (deleted == 1) {
                 // Delete the specified application from the user.
                 boolean removeApplicationReferenceInUserResult = check removeApplicationReferenceInUser(userId, applicationId);
-                log:printDebug("Application removed from the user? => " + removeApplicationReferenceInUserResult.toString() + ".");
+                log:printDebug("Application removed from the user? => "
+                    + removeApplicationReferenceInUserResult.toString() + ".");
                 return true;
             } else {
                 return false;
             }
         } else {
             // Returns an error.
-            log:printDebug("An error occurred while deleting the draft with the application ID: " + applicationId + ". Reason: " + deleted.reason() + ".");
+            log:printDebug("An error occurred while deleting the draft with the application ID: " + applicationId +
+                ". Reason: " + deleted.reason() + ".");
             return deleted;
         }
     } else {
-        log:printDebug("Cannot delete the application with application ID: " + applicationId + " since it is already submitted.");
+        log:printDebug("Cannot delete the application with application ID: " + applicationId
+            + " since it is already submitted.");
         return error("Invalid Operation", message = "Cannot delete the application with the appilcation ID: "
             + applicationId + " since it is already submitted.");
     }
@@ -122,7 +127,8 @@ function getApplicationStatusByApplicationId(string applicationId) returns strin
     map<json>[] find = check applicationCollection->find({"applicationId": applicationId});
     map<json>|error application = trap find[0];
     if (application is map<json>) {
-        log:printDebug("Status of the application with application ID: " + applicationId + " is " + application.status.toString() + ".");
+        log:printDebug("Status of the application with application ID: " + applicationId + " is "
+            + application.status.toString() + ".");
         return trap <string>application.status;
     } else {
         log:printDebug("An error occurred while retrieving the application:  " + application.toString() + ".");
@@ -150,7 +156,8 @@ function updateApplication(TreeRemovalForm form, string applicationId) returns b
         if (form.status == "draft") {
             updated = applicationCollection->update({"versions.0": application}, {"applicationId": applicationId});
         } else if (form.status == "submit") {
-            updated = applicationCollection->update({"versions.0": application, "status": "submit"}, {"applicationId": applicationId});
+            updated = applicationCollection->update({"versions.0": application, "status": "submit"},
+                {"applicationId": applicationId});
         } else {
             return error("Invalid Operation", message = "Cannot resolve the application status with the appilcation ID: "
                 + applicationId + ".");
@@ -165,17 +172,20 @@ function updateApplication(TreeRemovalForm form, string applicationId) returns b
         versions.push(application);
 
         // Added new versions array to the application
-        updated = applicationCollection->update({"versions": versions, numberOfVersions: numberOfVersions + 1}, {"applicationId": applicationId});
+        updated = applicationCollection->update({"versions": versions, numberOfVersions: numberOfVersions + 1},
+            {"applicationId": applicationId});
     } else {
         return error("Invalid Operation", message = "Cannot resolve the application status with the appilcation ID: "
             + applicationId + ".");
     }
 
     if (updated is int) {
-        log:printDebug("Updated status for application with application ID: " + applicationId + " is " + updated.toString() + ".");
+        log:printDebug("Updated status for application with application ID: " + applicationId + " is "
+            + updated.toString() + ".");
         return updated == 1 ? true : false;
     } else {
-        log:printDebug("An error occurred while updating the draft application with the application ID: " + applicationId + ". " + updated.reason().toString() + ".");
+        log:printDebug("An error occurred while updating the draft application with the application ID: "
+            + applicationId + ". " + updated.reason().toString() + ".");
         return updated;
     }
 }
@@ -189,7 +199,7 @@ function getApplicationCountByTitle(string applicationType) returns int|error {
 
     map<json>[] find = check applicationMetaDataCollection->find({"applicationType": applicationType});
     map<json>|error applicationMetaData = trap find[0];
-    return applicationMetaData is error ? 0 : <int>applicationMetaData.count
+    return applicationMetaData is error ? 0 : <int>applicationMetaData.count;
 }
 
 # The `isValidUser` function will return whether the user is valid or not.
@@ -231,7 +241,8 @@ function saveApplicationInUser(string userId, string applicationId, string appli
             applicationList = [{id: applicationId, name: applicationType}];
         } else {
             applicationList = <json[]>applications;
-            log:printDebug("The user with the user ID: " + userId + " has " + applicationList.length().toString() + " applications stored in the database.");
+            log:printDebug("The user with the user ID: " + userId + " has " + applicationList.length().toString()
+                + " applications stored in the database.");
             applicationList.push(<json>{id: applicationId, name: applicationType});
         }
 
@@ -265,7 +276,8 @@ function removeApplicationReferenceInUser(string userId, string applicationId) r
         } else {
             // Convert json to json array.
             json[] applicationArray = <json[]>applications;
-            log:printDebug("The user with the user ID: " + userId + " has " + applicationArray.length().toString() + " applications stored in the database.");
+            log:printDebug("The user with the user ID: " + userId + " has " + applicationArray.length().toString()
+                + " applications stored in the database.");
 
             // Remove the application metadata.
             json[] alteredApplicationList = [];
@@ -302,7 +314,8 @@ function applicationBelongsToUser(string applicationId, string userId) returns b
             return error("No applications", message = "User with ID: " + userId + " doesn't have any application.");
         } else {
             json[] applicationList = check trap <json[]>applications;
-            log:printDebug("The user with ID: " + userId + " has " + applicationList.length().toString() + " applications stored in the database.");
+            log:printDebug("The user with ID: " + userId + " has " + applicationList.length().toString()
+                + " applications stored in the database.");
             foreach json application in applicationList {
                 if (application.id == applicationId) {
                     return true;
@@ -347,13 +360,15 @@ function saveApplicationInMinistry(string ministryId, string applicationId) retu
             applicationList = [{id: applicationId, name: applicationType}];
         } else {
             applicationList = <json[]>applications;
-            log:printDebug("The ministry with the ID: " + ministryId + " has " + applicationList.length().toString() + " applications stored in the database.");
+            log:printDebug("The ministry with the ID: " + ministryId + " has " + applicationList.length().toString()
+                + " applications stored in the database.");
             applicationList.push(<json>{id: applicationId, name: applicationType});
         }
 
         // Update the user applications array with incoming value.
         int updated = check ministryCollection->update({"applications": applicationList}, {id: ministryId});
-        log:printDebug("Updated application list for Ministry ID: " + ministryId + ". Added application with ID: " + applicationId + ".");
+        log:printDebug("Updated application list for Ministry ID: " + ministryId + ". Added application with ID: "
+            + applicationId + ".");
 
         return updated > 0 ? true : false;
     } else {
@@ -410,9 +425,11 @@ function assignMinistry(AssignedMinistry assignedMinistry, string applicationId,
 
     // If no application is found or if the application is still a draft.
     if (find.length() == 0) {
-        return error("Invalid application", message = "There is no application with application ID: " + applicationId + ".");
+        return error("Invalid application", message = "There is no application with application ID: "
+            + applicationId + ".");
     } else if (find.length() > 1) {
-        return error("Invalid application", message = "There are one or more applications with the application ID: " + applicationId + ".");
+        return error("Invalid application", message = "There are one or more applications with the application ID: "
+            + applicationId + ".");
     } else {
         string ministryId = assignedMinistry.ministry.id;
 
@@ -477,23 +494,28 @@ function updateStatus(Status status, string applicationId) returns boolean|error
         map<json> application = check trap <map<json>>applications[0];
         json[]|error assignments = trap <json[]>application.assignments;
         if (assignments is json[]) {
-            [boolean, json?, boolean, boolean] [isMinistryAssigned, assignment, hasPrerequisite, isPrerequisiteCompeted] = check getAssignedMinistryInfo(assignments, status.ministry.id);
+            [boolean, json?, boolean, boolean] [isMinistryAssigned, assignment, hasPrerequisite, isPrerequisiteCompeted]
+            = check getAssignedMinistryInfo(assignments, status.ministry.id);
             if (isMinistryAssigned) {
                 if (!hasPrerequisite || (hasPrerequisite && isPrerequisiteCompeted)) {
                     // Update the assignment with new status.
                     json updatedAssignment = check updateAssignment(assignment, status);
                     // Update the assignments array.
                     check updateAssignments(assignments, updatedAssignment, status.ministry.id);
-                    int updated = check applicationCollection->update({assignments: assignments}, {"applicationId": applicationId});
+                    int updated = check applicationCollection->update({assignments: assignments},
+                        {"applicationId": applicationId});
                     return updated == 1 ? true : false;
                 } else {
-                    return error("Prerequisite Ministry approval pending", message = "Prerequisite ministry has not completed processing the application.");
+                    return error("Prerequisite Ministry approval pending",
+                        message = "Prerequisite ministry has not completed processing the application.");
                 }
             } else {
-                return error("Ministry not assigned", message = status.ministry.name + " is not assigned to application with application Id: " + applicationId + ".");
+                return error("Ministry not assigned", message = status.ministry.name +
+                    " is not assigned to application with application Id: " + applicationId + ".");
             }
         } else {
-            return error("Ministry not assigned", message = status.ministry.name + " is not assigned to application with application Id: " + applicationId + ".");
+            return error("Ministry not assigned", message = status.ministry.name
+                + " is not assigned to application with application Id: " + applicationId + ".");
         }
     }
 }
