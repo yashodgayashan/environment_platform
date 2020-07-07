@@ -103,7 +103,8 @@ service envservice on ep0 {
             enabled: true
         }
     }
-    resource function putApplicationById(http:Caller caller, http:Request req, string applicationId, TreeRemovalForm body) returns error? {
+    resource function putApplicationById(http:Caller caller, http:Request req, string applicationId, TreeRemovalForm body)
+    returns error? {
 
         http:Response response = new;
         string authHeader = req.getHeader("Authorization");
@@ -206,7 +207,8 @@ service envservice on ep0 {
             log:printDebug("User information - admin ID: " + adminId + ", admin type: " + adminType + ".");
             boolean|error assignMinistryResult = assignMinistry(body, applicationId, adminId);
             if (assignMinistryResult is boolean && assignMinistryResult) {
-                log:printDebug("Successfully assigned the ministry " + body.ministry.name + " for the application with ID: " + applicationId + ".");
+                log:printDebug("Successfully assigned the ministry " + body.ministry.name + " for the application with ID: "
+                    + applicationId + ".");
                 response.statusCode = http:STATUS_OK;
                 response.setPayload({"message": "Successfully assigned the ministry."});
             } else {
