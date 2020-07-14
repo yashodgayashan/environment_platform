@@ -623,3 +623,30 @@ function getMinistryRelatedToUser(string userId) returns string|error {
     }
     return error("Not found", message="Ministry is not found related to the user with ID " + userId + ".");
 }
+
+# The `isMinistryAssigned` function will check whether the given ministry is assigned to the given application.
+# 
+# + applicationId - ID of the application.
+# + ministryId - ID of the ministry.
+# + return - This function will return whether the ministry is assigned or an appropriate error.
+function isMinistryAssigned(string applicationId, string ministryId) returns boolean|error{
+    map<json>[] applications = check applicationCollection->find({"applicationId": applicationId, status: "submit"});
+    if(applications.length() == 0){
+        return error("Not found", message="Application is not found");
+    }else{
+        map<json> application = <map<json>>applications[0];
+        json[]|error assignments = trap <json[]> application.assignments;
+        if(assignments is error){
+            return false;
+        }else{
+            foreach json assignment in assignments {
+                if(assignment.id == ministryId){
+                    log:printDebug("Ministry with ID " + ministryId + "is assiged to the application with ID " 
+                        + assignment.id.toString() + ".");
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+}
