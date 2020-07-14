@@ -579,3 +579,23 @@ function postCommentInApplication(string applicationId, Message message) returns
         }
     }
 }
+
+# The `isApplicationRelatedTo` function will check whether the given application with application ID is related to the
+# user with given userId.
+# 
+# + userType - Type of the user.
+# + userId - ID of the user.
+# + applicationId - ID of the application.
+# + return - This will return whether the application is related to the user or an appropriate error.
+function isApplicationRelatedTo(string userType, string userId, string applicationId) returns boolean|error{
+    if(userType=="Admin"){
+        return true;
+    }else if(userType=="User"){
+        return applicationBelongsToUser(applicationId, userId);
+    }else if(userType=="Ministry"){
+        string ministryRelatedToUser = check getMinistryRelatedToUser(userId);
+        return isMinistryAssigned(applicationId, ministryRelatedToUser);
+    }else{
+        return false;
+    }
+}
