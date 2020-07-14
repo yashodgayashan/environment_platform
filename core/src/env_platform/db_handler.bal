@@ -6,6 +6,7 @@ mongodb:Collection applicationCollection = config_handler:getApplicationCollecti
 mongodb:Collection applicationMetaDataCollection = config_handler:getApplicationMetadataCollection();
 mongodb:Collection ministryCollection = config_handler:getMinistryCollection();
 mongodb:Collection userCollection = config_handler:getUserCollection();
+mongodb:Collection adminCollection = config_handler:getAdminCollection();
 
 # The `saveApplication` function will save the application to the applications collection in the database.
 # 
@@ -541,5 +542,40 @@ function isMinistryHasUser(string ministryId, string userId) returns boolean|err
             }
         }
         return false;
+    }
+}
+
+# The `postCommentInApplication` function will apend the comment to the existing comment array in the application with
+# given application ID.
+# 
+# + applicationId - ID of the application.
+# + message - Message to be added.  
+# + return - This fundtion will return boolean indicating whether the message is added or an appropriate error.
+function postCommentInApplication(string applicationId, Message message) returns boolean|error {
+
+    map<json>[] applications = check applicationCollection->find({"applicationId": applicationId, status: "submit"});
+    if (applications.length() == 0) {
+        return error("Not found", message = "Application is not found with ID " + applicationId);
+    } else {
+        map<json>|error application = <map<json>>applications[0];
+        if (application is error) {
+            return error("Not found", message = "Application is not found with ID " + applicationId);
+        } else {
+            if (application.comments is error) {
+                map<json> comment = constructComment(message, 0);
+                log:printDebug("The constructed comment is " + comment.toString());
+                int updated = check applicationCollection->update({comments: [comment]},
+                    {"applicationId": applicationId});
+                return updated == 1 ? true : false;
+            } else {
+                json[] comments = check trap <json[]>application.comments;
+                map<json> comment = constructComment(message, comments.length());
+                log:printDebug("The constructed comment is " + comment.toString());
+                comments.push(comment);
+                int updated = check applicationCollection->update({comments: comments},
+                    {"applicationId": applicationId});
+                return updated == 1 ? true : false;
+            }
+        }
     }
 }
