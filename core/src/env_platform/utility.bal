@@ -343,3 +343,52 @@ function getUserInfoFromJWT(string jwt) returns @tainted [string, string]|error 
         return error("Authorization failure", message = "Custom claims could not be found.");
     }
 }
+
+# The `constructComment` function will construct the input comment to a format which will be suitable for the database.
+# 
+# + message - The input message.
+# + count - remaining comments count.
+# + return - This functiom will return a constructed comment which will be suitable for the database.
+function constructComment(Message message, int count) returns map<json> {
+
+    // Check the receivers are added.
+    Person[]? receivers = message?.receiver;
+    if (receivers is Person[]) {
+        map<json>[] receiversArray = [];
+        foreach Person reciever in receivers {
+            receiversArray.push(<map<json>>{"id": reciever.id, "name": reciever.name});
+        }
+        return {
+            "id": count + 1,
+            "content": message.message,
+            "sender": {
+                "name": message.sender.name,
+                "id": message.sender.id
+            },
+            "timestamp": {
+                "year": message.timestamp.year,
+                "month": message.timestamp.month,
+                "day": message.timestamp.day,
+                "hour": message.timestamp.hour,
+                "minute": message.timestamp.minute
+            },
+            "receivers": receiversArray
+        };
+    } else {
+        return {
+            "id": count + 1,
+            "content": message.message,
+            "sender": {
+                "name": message.sender.name,
+                "id": message.sender.id
+            },
+            "timestamp": {
+                "year": message.timestamp.year,
+                "month": message.timestamp.month,
+                "day": message.timestamp.day,
+                "hour": message.timestamp.hour,
+                "minute": message.timestamp.minute
+            }
+        };
+    }
+}
