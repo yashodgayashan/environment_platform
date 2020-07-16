@@ -681,3 +681,28 @@ function getComment(string applicationId, string commentId) returns json|error {
         }
     }
 }
+
+# The `getComment` function will return the comments related to the given application with application ID.
+# 
+# + applicationId - ID of the application.
+# + return - This function will return either comments or an appropriate error.
+function getComments(string applicationId) returns json|error {
+
+    map<json>[] applications = check applicationCollection->find({"applicationId": applicationId, status: "submit"});
+    if (applications.length() == 0) {
+        return error("Not found", message = "Application is not found with ID " + applicationId + ".");
+    } else {
+        map<json>|error application = <map<json>>applications[0];
+        if (application is error) {
+            return error("Not found", message = "Application is not found with ID " + applicationId + ".");
+        } else {
+            if (application.comments is error) {
+                return error("Not found", message = "Comments is not found for the application with ID " 
+                    + applicationId + ".");
+            } else {
+                json[] comments = check trap <json[]>application.comments;
+                return comments;
+            }
+        }
+    }
+}
