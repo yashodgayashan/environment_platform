@@ -633,7 +633,7 @@ function getMinistryRelatedToUser(string userId) returns string|error {
 function isMinistryAssigned(string applicationId, string ministryId) returns boolean|error {
     map<json>[] applications = check applicationCollection->find({"applicationId": applicationId, status: "submit"});
     if (applications.length() == 0) {
-        return error("Not found", message = "Application is not found");
+        return error("Not found", message = "Application is not found.");
     } else {
         map<json> application = <map<json>>applications[0];
         json[]|error assignments = trap <json[]>application.assignments;
