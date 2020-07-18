@@ -601,7 +601,7 @@ function isApplicationRelatedTo(string userType, string userId, string applicati
     }
 }
 
-# The `getMinistryRelatedToUser` function will output the ministry which the given user is registered to.
+# The `getMinistryRelatedToUser` function will return the ministry ID which the user is registered to.
 # 
 # + userId - ID of the user.
 # + return - This function will return either the ministry ID or an appropriate error.
