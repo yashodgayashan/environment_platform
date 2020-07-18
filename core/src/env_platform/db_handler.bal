@@ -555,22 +555,22 @@ function postCommentInApplication(string applicationId, Message message) returns
 
     map<json>[] applications = check applicationCollection->find({"applicationId": applicationId, status: "submit"});
     if (applications.length() == 0) {
-        return error("Not found", message = "Application is not found with ID " + applicationId);
+        return error("Not found", message = "Application is not found with ID " + applicationId + ".");
     } else {
         map<json>|error application = <map<json>>applications[0];
         if (application is error) {
-            return error("Not found", message = "Application is not found with ID " + applicationId);
+            return error("Not found", message = "Application is not found with ID " + applicationId + ".");
         } else {
             if (application.comments is error) {
                 map<json> comment = constructComment(message, 0);
-                log:printDebug("The constructed comment is " + comment.toString());
+                log:printDebug("The constructed comment is " + comment.toString() + ".");
                 int updated = check applicationCollection->update({comments: [comment]},
                     {"applicationId": applicationId});
                 return updated == 1 ? true : false;
             } else {
                 json[] comments = check trap <json[]>application.comments;
                 map<json> comment = constructComment(message, comments.length());
-                log:printDebug("The constructed comment is " + comment.toString());
+                log:printDebug("The constructed comment is " + comment.toString() + ".");
                 comments.push(comment);
                 int updated = check applicationCollection->update({comments: comments},
                     {"applicationId": applicationId});
@@ -698,7 +698,7 @@ function getComments(string applicationId) returns json|error {
             return error("Not found", message = "Application is not found with ID " + applicationId + ".");
         } else {
             if (application.comments is error) {
-                return error("Not found", message = "Comments is not found for the application with ID " 
+                return error("Not found", message = "Comments is not found for the application with ID "
                     + applicationId + ".");
             } else {
                 json[] comments = check trap <json[]>application.comments;
