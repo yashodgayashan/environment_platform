@@ -580,8 +580,8 @@ function postCommentInApplication(string applicationId, Message message) returns
     }
 }
 
-# The `isApplicationRelatedTo` function will check whether the given application with application ID is related to the
-# user with given userId.
+# The `isApplicationRelatedTo` function will check whether the given application is related 
+# to the user.
 # 
 # + userType - Type of the user.
 # + userId - ID of the user.
