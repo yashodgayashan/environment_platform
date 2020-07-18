@@ -586,7 +586,8 @@ function postCommentInApplication(string applicationId, Message message) returns
 # + userType - Type of the user.
 # + userId - ID of the user.
 # + applicationId - ID of the application.
-# + return - This will return whether the application is related to the user or an appropriate error.
+# + return - This will return a boolean indicating whether the application is related 
+# to the user or an appropriate error.
 function isApplicationRelatedTo(string userType, string userId, string applicationId) returns boolean|error {
     if (userType == "Admin") {
         return true;
