@@ -652,7 +652,7 @@ function isMinistryAssigned(string applicationId, string ministryId) returns boo
     return false;
 }
 
-# The `getComment` function will return the comment with the ID for the given application with application ID.
+# The `getComment` function returns the comment which is related to the application based on the provided arguments.
 # 
 # + applicationId - ID of the application.
 # + commentId - ID of the comment.
