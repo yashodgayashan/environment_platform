@@ -545,8 +545,8 @@ function isMinistryHasUser(string ministryId, string userId) returns boolean|err
     }
 }
 
-# The `postCommentInApplication` function will apend the comment to the existing comment array in the application with
-# given application ID.
+# The `postCommentInApplication` function will append the comment to the existing 
+# comment array of the application with the help of the given application ID.
 # 
 # + applicationId - ID of the application.
 # + message - Message to be added.  
