@@ -550,7 +550,7 @@ function isMinistryHasUser(string ministryId, string userId) returns boolean|err
 # 
 # + applicationId - ID of the application.
 # + message - Message to be added.  
-# + return - This fundtion will return boolean indicating whether the message is added or an appropriate error.
+# + return - This function will return a boolean indicating whether the message is added or an appropriate error.
 function postCommentInApplication(string applicationId, Message message) returns boolean|error {
 
     map<json>[] applications = check applicationCollection->find({"applicationId": applicationId, status: "submit"});
