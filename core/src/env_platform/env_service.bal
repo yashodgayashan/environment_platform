@@ -350,7 +350,7 @@ service envservice on ep0 {
             boolean|error isApplicationRelatedToResult = isApplicationRelatedTo(userType, userId, applicationId);
             if (isApplicationRelatedToResult is boolean && isApplicationRelatedToResult) {
                 log:printDebug("Application with ID : " + applicationId + " related to the user with ID: " 
-                    + userId + ".");
+                    + userId + " is found.");
                 json|error comments = getComments(applicationId);
                 if (comments is json) {
                     log:printDebug("Successfully retrieved comments.");
