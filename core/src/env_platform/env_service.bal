@@ -464,7 +464,7 @@ service envservice on ep0 {
                 } else {
                     response.statusCode = http:STATUS_INTERNAL_SERVER_ERROR;
                     log:printDebug("Error occured while retrieving the comment and the error occured is " 
-                        + comment.toString() +".");
+                        + comment.toString() + ".");
                     response.setPayload(<@untainted>{message: comment.reason()}); 
                 }
             } else {
