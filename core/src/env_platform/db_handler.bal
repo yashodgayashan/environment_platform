@@ -656,7 +656,7 @@ function isMinistryAssigned(string applicationId, string ministryId) returns boo
 # 
 # + applicationId - ID of the application.
 # + commentId - ID of the comment.
-# + return - This function will return either the comment or an appropriate error.
+# + return - Either the comment or an appropriate error.
 function getComment(string applicationId, string commentId) returns json|error {
 
     map<json>[] applications = check applicationCollection->find({"applicationId": applicationId, status: "submit"});
