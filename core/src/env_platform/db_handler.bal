@@ -609,7 +609,7 @@ function getMinistryRelatedToUser(string userId) returns string|error {
     map<json>[] ministries = check ministryCollection->find();
     foreach map<json> ministry in ministries {
         json[]|error users = trap <json[]>ministry.users;
-        // If ministry does not contains users.
+        // If ministry does not contain users.
         if (users is error) {
             continue;
         } else {
