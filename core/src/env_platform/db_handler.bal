@@ -642,7 +642,7 @@ function isMinistryAssigned(string applicationId, string ministryId) returns boo
         } else {
             foreach json assignment in assignments {
                 if (assignment.id == ministryId) {
-                    log:printDebug("Ministry with ID " + ministryId + "is assiged to the application with ID "
+                    log:printDebug("Ministry with ID " + ministryId + " is assigned to the application with ID "
                         + assignment.id.toString() + ".");
                     return true;
                 }
