@@ -399,7 +399,7 @@ service envservice on ep0 {
                 boolean|error isApplicationRelatedToResult = isApplicationRelatedTo(userType, userId, applicationId);
                 if (isApplicationRelatedToResult is boolean && isApplicationRelatedToResult) {
                     log:printDebug("Application with ID : " + applicationId + " related to the user with ID " 
-                        + userId + ".");
+                        + userId + " is found.");
                     boolean|error postCommentInApplicationResult = postCommentInApplication(applicationId,body);
                     if (postCommentInApplicationResult is boolean && postCommentInApplicationResult) {
                         log:printDebug("Succesfully posted the comment.");
