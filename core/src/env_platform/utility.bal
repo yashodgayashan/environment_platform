@@ -348,7 +348,7 @@ function getUserInfoFromJWT(string jwt) returns @tainted [string, string]|error 
 # 
 # + message - The input message.
 # + count - Remaining comments count.
-# + return - This functiom will return a constructed comment which will be suitable for the database.
+# + return - A constructed comment which will be suitable for the database.
 function constructComment(Message message, int count) returns map<json> {
 
     // Check the receivers are added.
