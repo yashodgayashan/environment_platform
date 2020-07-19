@@ -458,7 +458,7 @@ service envservice on ep0 {
                     + userId + ".");
                 json|error comment = getComment(applicationId, commentId);
                 if (comment is json) {
-                    log:printDebug("Succesfully retrive the comment.");
+                    log:printDebug("Successfully retrieved the comment.");
                     response.statusCode = http:STATUS_OK;
                     response.setPayload(<@untainted>{comment: comment}); 
                 } else {
