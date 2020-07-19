@@ -418,7 +418,7 @@ service envservice on ep0 {
                     }
                 } else {
                     if (isApplicationRelatedToResult is error) {
-                        log:printDebug("Error occured while checking the application is related to the user with ID " 
+                        log:printDebug("Error occurred while checking whether the application is related to the user with ID " 
                             + userId + ", and the error occured is " + isApplicationRelatedToResult.toString() + ".");
                         response.statusCode = http:STATUS_INTERNAL_SERVER_ERROR;
                         response.setPayload(<@untainted>{message: isApplicationRelatedToResult.reason()}); 
