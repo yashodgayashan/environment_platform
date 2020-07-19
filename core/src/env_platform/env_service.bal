@@ -408,7 +408,7 @@ service envservice on ep0 {
                     } else {
                         response.statusCode = http:STATUS_INTERNAL_SERVER_ERROR;
                         if (postCommentInApplicationResult is error) {
-                            log:printDebug("Error occured while posting the comment and the error occured is " 
+                            log:printDebug("Error occurred while posting the comment: " 
                             + postCommentInApplicationResult.toString() +".");
                             response.setPayload(<@untainted>{message: postCommentInApplicationResult.reason()}); 
                         } else {
