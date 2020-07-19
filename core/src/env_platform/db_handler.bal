@@ -629,7 +629,7 @@ function getMinistryRelatedToUser(string userId) returns string|error {
 # 
 # + applicationId - ID of the application.
 # + ministryId - ID of the ministry.
-# + return - This function will return whether the ministry is assigned or an appropriate error.
+# + return - Whether the ministry is assigned or an appropriate error.
 function isMinistryAssigned(string applicationId, string ministryId) returns boolean|error {
     map<json>[] applications = check applicationCollection->find({"applicationId": applicationId, status: "submit"});
     if (applications.length() == 0) {
