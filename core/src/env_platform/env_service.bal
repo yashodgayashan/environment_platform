@@ -424,7 +424,7 @@ service envservice on ep0 {
                         response.setPayload(<@untainted>{message: isApplicationRelatedToResult.reason()}); 
                     } else {
                         log:printDebug("Apploication is not found with ID : " + applicationId 
-                            + " related to the user with ID " + userId + ".");
+                            + " related to the user with ID: " + userId + " is not found.");
                         response.statusCode = http:STATUS_NOT_FOUND;
                         response.setPayload({message: "Application is not found."}); 
                     }
