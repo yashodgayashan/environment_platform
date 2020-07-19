@@ -353,7 +353,7 @@ service envservice on ep0 {
                     + userId + ".");
                 json|error comments = getComments(applicationId);
                 if (comments is json) {
-                    log:printDebug("Succesfully retrive comments.");
+                    log:printDebug("Successfully retrieved comments.");
                     response.statusCode = http:STATUS_OK;
                     response.setPayload(<@untainted>{comments: comments}); 
                 } else {
