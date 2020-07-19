@@ -604,7 +604,7 @@ function isApplicationRelatedTo(string userType, string userId, string applicati
 # The `getMinistryRelatedToUser` function will return the ministry ID which the user is registered to.
 # 
 # + userId - ID of the user.
-# + return - This function will return either the ministry ID or an appropriate error.
+# + return - Either the ministry ID or an appropriate error.
 function getMinistryRelatedToUser(string userId) returns string|error {
     map<json>[] ministries = check ministryCollection->find();
     foreach map<json> ministry in ministries {
