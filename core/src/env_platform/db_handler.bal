@@ -686,7 +686,7 @@ function getComment(string applicationId, string commentId) returns json|error {
 # The `getComment` function will return the comments related to the given application.
 # 
 # + applicationId - ID of the application.
-# + return - This function will return either comments or an appropriate error.
+# + return - Either comments or an appropriate error.
 function getComments(string applicationId) returns json|error {
 
     map<json>[] applications = check applicationCollection->find({"applicationId": applicationId, status: "submit"});
