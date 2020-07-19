@@ -398,7 +398,7 @@ service envservice on ep0 {
             if (body.sender.id == userId) {
                 boolean|error isApplicationRelatedToResult = isApplicationRelatedTo(userType, userId, applicationId);
                 if (isApplicationRelatedToResult is boolean && isApplicationRelatedToResult) {
-                    log:printDebug("Application is found with ID : " + applicationId + " related to the user with ID " 
+                    log:printDebug("Application with ID : " + applicationId + " related to the user with ID " 
                         + userId + ".");
                     boolean|error postCommentInApplicationResult = postCommentInApplication(applicationId,body);
                     if (postCommentInApplicationResult is boolean && postCommentInApplicationResult) {
