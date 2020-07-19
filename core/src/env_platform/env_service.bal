@@ -358,7 +358,7 @@ service envservice on ep0 {
                     response.setPayload(<@untainted>{comments: comments}); 
                 } else {
                     response.statusCode = http:STATUS_INTERNAL_SERVER_ERROR;
-                    log:printDebug("Error occured while retrieving comments and the error occured is " 
+                    log:printDebug("Error occurred while retrieving comments: " 
                         + comments.toString() +".");
                     response.setPayload(<@untainted>{message: comments.reason()}); 
                 }
