@@ -2,7 +2,7 @@ import ballerina/config as conf;
 import ballerina/http;
 import ballerina/jwt;
 import ballerina/log;
-// import ballerina/openapi;
+import ballerina/openapi;
 
 jwt:InboundJwtAuthProvider jwtAuthProvider = new ({
     issuer: "environment platform",
@@ -30,9 +30,9 @@ listener http:Listener ep0 = new (9090, config = {
     }
 });
 
-// @openapi:ServiceInfo {
-//     contract: "resources/openapi_v3.yaml"
-// }
+@openapi:ServiceInfo {
+    contract: "resources/openapi_v3.yaml"
+}
 @http:ServiceConfig {
     basePath: "/",
     cors: {

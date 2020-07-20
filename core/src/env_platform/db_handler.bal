@@ -590,15 +590,21 @@ function postCommentInApplication(string applicationId, Message message) returns
 # to the user or an appropriate error.
 function isApplicationRelatedTo(string userType, string userId, string applicationId) returns boolean|error {
     if (userType == "Admin") {
+        log:printDebug("User Type is admin for the userId : " + userId + ".");
         return true;
     } else if (userType == "User") {
-        return applicationBelongsToUser(applicationId, userId);
+        boolean applicationBelongsToUserResult = check applicationBelongsToUser(applicationId, userId);
+        log:printDebug("User Type is User for the userId : " + userId + "and it belong to the application id => " 
+            + applicationBelongsToUserResult.toString() + ".");
     } else if (userType == "Ministry") {
         string ministryRelatedToUser = check getMinistryRelatedToUser(userId);
-        return isMinistryAssigned(applicationId, ministryRelatedToUser);
+        boolean isMinistryAssignedResult = check isMinistryAssigned(applicationId, ministryRelatedToUser);
+        log:printDebug("User Type is Ministry for the userId : " + userId + "and it assigned to the application id => " 
+            + isMinistryAssignedResult.toString() + ".");
     } else {
         return false;
     }
+    return true;
 }
 
 # The `getMinistryRelatedToUser` function will return the ministry ID which the user is registered to.
