@@ -341,6 +341,45 @@ service envservice on ep0 {
     }
     resource function getApplicationComments(http:Caller caller, http:Request req, string applicationId) returns error? {
 
+        http:Response response = new;
+        string authHeader = req.getHeader("Authorization");
+        [string, string]|error userInfoFromJWT = getUserInfoFromJWT(authHeader);
+        if (userInfoFromJWT is [string, string]) {
+            [string, string] [userId, userType] = userInfoFromJWT;
+            log:printDebug("User information - user ID: " + userId + ", user type: " + userType + ".");
+            boolean|error isApplicationRelatedToResult = isApplicationRelatedTo(userType, userId, applicationId);
+            if (isApplicationRelatedToResult is boolean && isApplicationRelatedToResult) {
+                log:printDebug("Application with ID : " + applicationId + " related to the user with ID: " 
+                    + userId + " is found.");
+                json|error comments = getComments(applicationId);
+                if (comments is json) {
+                    log:printDebug("Successfully retrieved comments.");
+                    response.statusCode = http:STATUS_OK;
+                    response.setPayload(<@untainted>{comments: comments}); 
+                } else {
+                    response.statusCode = http:STATUS_INTERNAL_SERVER_ERROR;
+                    log:printDebug("Error occurred while retrieving comments: " 
+                        + comments.toString() +".");
+                    response.setPayload(<@untainted>{message: comments.reason()}); 
+                }
+            } else {
+                if (isApplicationRelatedToResult is error) {
+                    log:printDebug("Error occurred while checking whether the application is related to the user with ID " 
+                        + userId + ", and the error occured is " + isApplicationRelatedToResult.toString() + ".");
+                    response.statusCode = http:STATUS_INTERNAL_SERVER_ERROR;
+                    response.setPayload(<@untainted>{message: isApplicationRelatedToResult.reason()}); 
+                } else {
+                    log:printDebug("Application with ID : " + applicationId 
+                        + " related to the user with ID " + userId + "  is not found.");
+                    response.statusCode = http:STATUS_NOT_FOUND;
+                    response.setPayload({message: "Application is not found."});                    
+                }
+            }
+        } else {
+            response.statusCode = http:STATUS_UNAUTHORIZED;
+            response.setPayload({message: "Unauthorized operation. Try again with valid credentials."});
+        }
+        error? respond = caller->respond(response);
     }
 
     @http:ResourceConfig {
@@ -349,7 +388,56 @@ service envservice on ep0 {
         body: "body"
     }
     resource function postApplicationComment(http:Caller caller, http:Request req, string applicationId, Message body) returns error? {
-
+     
+        http:Response response = new;
+        string authHeader = req.getHeader("Authorization");
+        [string, string]|error userInfoFromJWT = getUserInfoFromJWT(authHeader);
+        if (userInfoFromJWT is [string, string]) {
+            [string, string] [userId, userType] = userInfoFromJWT;
+            log:printDebug("User information - user ID: " + userId + ", user type: " + userType + ".");
+            if (body.sender.id == userId) {
+                boolean|error isApplicationRelatedToResult = isApplicationRelatedTo(userType, userId, applicationId);
+                if (isApplicationRelatedToResult is boolean && isApplicationRelatedToResult) {
+                    log:printDebug("Application with ID : " + applicationId + " related to the user with ID " 
+                        + userId + " is found.");
+                    boolean|error postCommentInApplicationResult = postCommentInApplication(applicationId,body);
+                    if (postCommentInApplicationResult is boolean && postCommentInApplicationResult) {
+                        log:printDebug("Succesfully posted the comment.");
+                        response.statusCode = http:STATUS_OK;
+                        response.setPayload({message: "Succesfully posted."}); 
+                    } else {
+                        response.statusCode = http:STATUS_INTERNAL_SERVER_ERROR;
+                        if (postCommentInApplicationResult is error) {
+                            log:printDebug("Error occurred while posting the comment: " 
+                            + postCommentInApplicationResult.toString() +".");
+                            response.setPayload(<@untainted>{message: postCommentInApplicationResult.reason()}); 
+                        } else {
+                            log:printDebug("Comment is not posted.");
+                            response.setPayload({message: "Comment is not posted."}); 
+                        }
+                    }
+                } else {
+                    if (isApplicationRelatedToResult is error) {
+                        log:printDebug("Error occurred while checking whether the application is related to the user with ID " 
+                            + userId + ", and the error occured is " + isApplicationRelatedToResult.toString() + ".");
+                        response.statusCode = http:STATUS_INTERNAL_SERVER_ERROR;
+                        response.setPayload(<@untainted>{message: isApplicationRelatedToResult.reason()}); 
+                    } else {
+                        log:printDebug("Application with ID: " + applicationId 
+                            + " related to the user with ID: " + userId + " is not found.");
+                        response.statusCode = http:STATUS_NOT_FOUND;
+                        response.setPayload({message: "Application is not found."}); 
+                    }
+                }
+            } else {
+                response.statusCode = http:STATUS_UNAUTHORIZED;
+                response.setPayload({message: "Unauthorized operation. Try again with valid credentials."}); 
+            }
+        } else {
+            response.statusCode = http:STATUS_UNAUTHORIZED;
+            response.setPayload({message: "Unauthorized operation. Try again with valid credentials."});
+        }
+        error? respond = caller->respond(response);
     }
 
     @http:ResourceConfig {
@@ -357,7 +445,46 @@ service envservice on ep0 {
         path: "/applications/{applicationId}/comments/{commentId}"
     }
     resource function getApplicationComment(http:Caller caller, http:Request req, string applicationId, string commentId) returns error? {
-
+        
+        http:Response response = new;
+        string authHeader = req.getHeader("Authorization");
+        [string, string]|error userInfoFromJWT = getUserInfoFromJWT(authHeader);
+        if (userInfoFromJWT is [string, string]) {
+            [string, string] [userId, userType] = userInfoFromJWT;
+            log:printDebug("User information - user ID: " + userId + ", user type: " + userType + ".");
+            boolean|error isApplicationRelatedToResult = isApplicationRelatedTo(userType, userId, applicationId);
+            if (isApplicationRelatedToResult is boolean && isApplicationRelatedToResult) {
+                log:printDebug("Application with ID : " + applicationId + " related to the user with ID: " 
+                    + userId + " is found.");
+                json|error comment = getComment(applicationId, commentId);
+                if (comment is json) {
+                    log:printDebug("Successfully retrieved the comment.");
+                    response.statusCode = http:STATUS_OK;
+                    response.setPayload(<@untainted>{comment: comment}); 
+                } else {
+                    response.statusCode = http:STATUS_INTERNAL_SERVER_ERROR;
+                    log:printDebug("Error occurred while retrieving the comment: " 
+                        + comment.toString() + ".");
+                    response.setPayload(<@untainted>{message: comment.reason()}); 
+                }
+            } else {
+                if (isApplicationRelatedToResult is error) {
+                    log:printDebug("Error occured while checking the application is related to the user with ID " 
+                        + userId + ", and the error occurred is " + isApplicationRelatedToResult.toString() + ".");
+                    response.statusCode = http:STATUS_INTERNAL_SERVER_ERROR;
+                    response.setPayload(<@untainted>{message: isApplicationRelatedToResult.reason()}); 
+                } else {
+                    log:printDebug("Application with ID : " + applicationId 
+                        + " related to the user with ID: " + userId + " is not found.");
+                    response.statusCode = http:STATUS_NOT_FOUND;
+                    response.setPayload({message: "Application is not found."});                    
+                }
+            }
+        } else {
+            response.statusCode = http:STATUS_UNAUTHORIZED;
+            response.setPayload({message: "Unauthorized operation. Try again with valid credentials."});
+        }
+        error? respond = caller->respond(response);
     }
 
     @http:ResourceConfig {

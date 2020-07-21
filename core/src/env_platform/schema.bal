@@ -59,9 +59,11 @@ type TreeInformation record {
     record {int minGirth; int maxGirth; int height;}[] logDetails;
 };
 type Message record {
-    any sender;
+    Person sender;
+    Person[] receiver?;
     Date timestamp;
     string message;
+    Person[] seenBy?;
 };
 type Person record {
     string name;

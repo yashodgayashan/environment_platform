@@ -6,6 +6,7 @@ mongodb:Collection applicationCollection = config_handler:getApplicationCollecti
 mongodb:Collection applicationMetaDataCollection = config_handler:getApplicationMetadataCollection();
 mongodb:Collection ministryCollection = config_handler:getMinistryCollection();
 mongodb:Collection userCollection = config_handler:getUserCollection();
+mongodb:Collection adminCollection = config_handler:getAdminCollection();
 
 # The `saveApplication` function will save the application to the applications collection in the database.
 # 
@@ -541,5 +542,174 @@ function isMinistryHasUser(string ministryId, string userId) returns boolean|err
             }
         }
         return false;
+    }
+}
+
+# The `postCommentInApplication` function will append the comment to the existing 
+# comment array of the application with the help of the given application ID.
+# 
+# + applicationId - ID of the application.
+# + message - Message to be added.  
+# + return - A boolean indicating whether the message is added or an appropriate error.
+function postCommentInApplication(string applicationId, Message message) returns boolean|error {
+
+    map<json>[] applications = check applicationCollection->find({"applicationId": applicationId, status: "submit"});
+    if (applications.length() == 0) {
+        return error("Not found", message = "Application is not found with ID " + applicationId + ".");
+    } else {
+        map<json>|error application = <map<json>>applications[0];
+        if (application is error) {
+            return error("Not found", message = "Application is not found with ID " + applicationId + ".");
+        } else {
+            if (application.comments is error) {
+                map<json> comment = constructComment(message, 0);
+                log:printDebug("The constructed comment is " + comment.toString() + ".");
+                int updated = check applicationCollection->update({comments: [comment]},
+                    {"applicationId": applicationId});
+                return updated == 1 ? true : false;
+            } else {
+                json[] comments = check trap <json[]>application.comments;
+                map<json> comment = constructComment(message, comments.length());
+                log:printDebug("The constructed comment is " + comment.toString() + ".");
+                comments.push(comment);
+                int updated = check applicationCollection->update({comments: comments},
+                    {"applicationId": applicationId});
+                return updated == 1 ? true : false;
+            }
+        }
+    }
+}
+
+# The `isApplicationRelatedTo` function will check whether the given application is related 
+# to the user.
+# 
+# + userType - Type of the user.
+# + userId - ID of the user.
+# + applicationId - ID of the application.
+# + return - A boolean indicating whether the application is related or not.
+# to the user or an appropriate error.
+function isApplicationRelatedTo(string userType, string userId, string applicationId) returns boolean|error {
+    if (userType == "Admin") {
+        log:printDebug("User Type is admin for the userId : " + userId + ".");
+        return true;
+    } else if (userType == "User") {
+        boolean applicationBelongsToUserResult = check applicationBelongsToUser(applicationId, userId);
+        log:printDebug("User Type is User for the userId : " + userId + "and it belong to the application id => " 
+            + applicationBelongsToUserResult.toString() + ".");
+    } else if (userType == "Ministry") {
+        string ministryRelatedToUser = check getMinistryRelatedToUser(userId);
+        boolean isMinistryAssignedResult = check isMinistryAssigned(applicationId, ministryRelatedToUser);
+        log:printDebug("User Type is Ministry for the userId : " + userId + "and it assigned to the application id => " 
+            + isMinistryAssignedResult.toString() + ".");
+    } else {
+        return false;
+    }
+    return true;
+}
+
+# The `getMinistryRelatedToUser` function will return the ministry ID which the user is registered to.
+# 
+# + userId - ID of the user.
+# + return - Either the ministry ID or an appropriate error.
+function getMinistryRelatedToUser(string userId) returns string|error {
+    map<json>[] ministries = check ministryCollection->find();
+    foreach map<json> ministry in ministries {
+        json[]|error users = trap <json[]>ministry.users;
+        // If ministry does not contain users.
+        if (users is error) {
+            continue;
+        } else {
+            foreach json user in users {
+                if (user.id == userId) {
+                    log:printDebug("User with user ID " + userId + " is a member of ministry with ID "
+                        + ministry.id.toString() + ".");
+                    return ministry.id.toString();
+                }
+            }
+        }
+    }
+    return error("Not found", message = "Ministry is not found related to the user with ID " + userId + ".");
+}
+
+# The `isMinistryAssigned` function will check whether the given ministry is assigned to the given application.
+# 
+# + applicationId - ID of the application.
+# + ministryId - ID of the ministry.
+# + return - Whether the ministry is assigned or an appropriate error.
+function isMinistryAssigned(string applicationId, string ministryId) returns boolean|error {
+    map<json>[] applications = check applicationCollection->find({"applicationId": applicationId, status: "submit"});
+    if (applications.length() == 0) {
+        return error("Not found", message = "Application is not found.");
+    } else {
+        map<json> application = <map<json>>applications[0];
+        json[]|error assignments = trap <json[]>application.assignments;
+        if (assignments is error) {
+            return false;
+        } else {
+            foreach json assignment in assignments {
+                if (assignment.id == ministryId) {
+                    log:printDebug("Ministry with ID " + ministryId + " is assigned to the application with ID "
+                        + assignment.id.toString() + ".");
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+}
+
+# The `getComment` function returns the comment which is related to the application based on the provided arguments.
+# 
+# + applicationId - ID of the application.
+# + commentId - ID of the comment.
+# + return - Either the comment or an appropriate error.
+function getComment(string applicationId, string commentId) returns json|error {
+
+    map<json>[] applications = check applicationCollection->find({"applicationId": applicationId, status: "submit"});
+    if (applications.length() == 0) {
+        return error("Not found", message = "Application is not found with ID " + applicationId + ".");
+    } else {
+        map<json>|error application = <map<json>>applications[0];
+        if (application is error) {
+            return error("Not found", message = "Application is not found with ID " + applicationId + ".");
+        } else {
+            if (application.comments is error) {
+                return error("Not found", message = "Comment is not found with ID " + commentId + ".");
+            } else {
+                json[] comments = check trap <json[]>application.comments;
+                foreach json commentJson in comments {
+                    map<json> comment = <map<json>>commentJson;
+                    if (comment.id.toString() == commentId) {
+                        return comment;
+                    }
+                }
+                return error("Not found", message = "Comment is not found with ID " + commentId + ".");
+            }
+        }
+    }
+}
+
+# The `getComment` function will return the comments related to the given application.
+# 
+# + applicationId - ID of the application.
+# + return - Either comments or an appropriate error.
+function getComments(string applicationId) returns json|error {
+
+    map<json>[] applications = check applicationCollection->find({"applicationId": applicationId, status: "submit"});
+    if (applications.length() == 0) {
+        return error("Not found", message = "Application is not found with ID " + applicationId + ".");
+    } else {
+        map<json>|error application = <map<json>>applications[0];
+        if (application is error) {
+            return error("Not found", message = "Application is not found with ID " + applicationId + ".");
+        } else {
+            if (application.comments is error) {
+                return error("Not found", message = "Comments is not found for the application with ID "
+                    + applicationId + ".");
+            } else {
+                json[] comments = check trap <json[]>application.comments;
+                return comments;
+            }
+        }
     }
 }
